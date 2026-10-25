@@ -27,14 +27,22 @@
           align-items:center; justify-content:center; cursor:pointer; z-index:10; }
   #gate b { color:var(--gold); font-size:clamp(1.2rem,4vw,2.5rem); letter-spacing:.3em; }
   #gate span { color:#888; letter-spacing:.2em; }
-  #mute { position:fixed; top:1rem; right:1rem; background:none; border:1px solid #444; color:#aaa; padding:.5rem .9rem;
+  #bar { position:fixed; top:1rem; right:1rem; display:flex; gap:.5rem; align-items:center; z-index:5; flex-wrap:wrap; justify-content:flex-end; }
+  #bar input { width:90px; accent-color:var(--gold); }
+  #ytbox { position:fixed; width:1px; height:1px; bottom:0; right:0; opacity:0; pointer-events:none; overflow:hidden; }
+  #mute, #mmute {  background:none; border:1px solid #444; color:#aaa; padding:.5rem .9rem;
           font:inherit; cursor:pointer; z-index:5; }
-  #mute:hover { color:#fff; border-color:#fff; }
+  #mute:hover, #mmute:hover { color:#fff; border-color:#fff; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
 <body>
-  <button id="mute" aria-label="Toggle sound">🔊 Sound on</button>
+  <div id="bar">
+    <button id="mmute" aria-label="Toggle music">🎵 Music on</button>
+    <input id="vol" type="range" min="0" max="100" value="35" aria-label="Music volume">
+    <button id="mute" aria-label="Toggle sound">🔊 Ticks on</button>
+  </div>
+  <div id="ytbox"><div id="yt"></div></div>
   <h1>World of Warcraft: Forever</h1>
   <div id="clock">
     <div class="unit"><div class="num" id="d">00</div><div class="lbl">Days</div></div><div class="sep">:</div>
@@ -44,7 +52,7 @@
   </div>
   <div id="done">IT HAS BEGUN</div>
   <p id="sub"></p>
-  <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem">sound v4: soft clack + reverb</p>
+  <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem">v5: soft clack + reverb + music</p>
 
   <div id="gate"><b>ENTER</b><span>click anywhere to start the countdown with sound</span></div>
 
@@ -52,6 +60,8 @@
 // ===== CONFIG: edit this to change the launch moment (ISO 8601, with timezone) =====
 // Nov 4, 2026, 3 PM Pacific = midnight CET Nov 5 = 23:00 UTC
 const LAUNCH = new Date("2026-11-04T23:00:00Z");
+// Background music: YouTube video id (Seasons of War, WoW soundtrack). Plays audio only, loops.
+const MUSIC_ID = "X-PNMaf7C-o";
 // ===================================================================================
 
 const $ = id => document.getElementById(id);
@@ -162,10 +172,35 @@ function update() {
   }
 }
 
-$("gate").addEventListener("click", () => { ensureAudio(); $("gate").style.display = "none"; });
+// ---------- Background music (hidden YouTube player, audio only) ----------
+let yt = null, musicOn = true;
+function startMusic() {
+  if (!MUSIC_ID || yt) return;
+  window.onYouTubeIframeAPIReady = () => {
+    yt = new YT.Player("yt", {
+      width: "200", height: "200", videoId: MUSIC_ID,
+      playerVars: { autoplay: 1, controls: 0, playsinline: 1, rel: 0, origin: location.origin },
+      events: {
+        onReady: e => { e.target.setVolume(+$("vol").value); if (musicOn) e.target.playVideo(); },
+        onStateChange: e => { if (e.data === YT.PlayerState.ENDED) e.target.seekTo(0).playVideo(); }
+      }
+    });
+  };
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+}
+$("vol").addEventListener("input", () => { if (yt && yt.setVolume) yt.setVolume(+$("vol").value); });
+$("mmute").addEventListener("click", () => {
+  musicOn = !musicOn;
+  $("mmute").textContent = musicOn ? "🎵 Music on" : "🔇 Music off";
+  if (yt && yt.playVideo) musicOn ? yt.playVideo() : yt.pauseVideo();
+});
+
+$("gate").addEventListener("click", () => { ensureAudio(); startMusic(); $("gate").style.display = "none"; });
 $("mute").addEventListener("click", () => {
   muted = !muted; ensureAudio();
-  $("mute").textContent = muted ? "🔇 Sound off" : "🔊 Sound on";
+  $("mute").textContent = muted ? "🔇 Ticks off" : "🔊 Ticks on";
 });
 if (Date.now() >= LAUNCH) { $("gate").style.display = "none"; }
 update();

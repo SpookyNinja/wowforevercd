@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WoW Forever Countdown</title>
+<style>
+  :root { --gold:#f5c542; --red:#d11a1a; --bg:#050505; }
+  * { box-sizing:border-box; margin:0; }
+  html,body { height:100%; background:var(--bg); color:#fff; font-family:"Courier New",monospace; overflow:hidden; }
+  body { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
+         background:radial-gradient(ellipse at center,#1a1206 0%,#050505 70%); }
+  h1 { font-size:clamp(1rem,3vw,2rem); letter-spacing:.4em; color:var(--gold); text-transform:uppercase; margin-bottom:2vh; padding:0 4vw; }
+  #clock { display:flex; gap:clamp(.4rem,2vw,2rem); align-items:flex-start; justify-content:center; }
+  .unit { display:flex; flex-direction:column; align-items:center; }
+  .num { font-size:clamp(3rem,15vw,14rem); font-weight:bold; line-height:1; font-variant-numeric:tabular-nums;
+         color:#fff; text-shadow:0 0 30px rgba(245,197,66,.45); }
+  .lbl { font-size:clamp(.6rem,1.5vw,1.2rem); letter-spacing:.3em; color:#888; margin-top:1vh; text-transform:uppercase; }
+  .sep { font-size:clamp(3rem,15vw,14rem); line-height:1; color:var(--gold); opacity:.6; }
+  #sub { margin-top:4vh; color:#777; font-size:clamp(.7rem,1.6vw,1.1rem); letter-spacing:.15em; padding:0 4vw; }
+  #sec.pulse { animation:pulse .5s ease-out; }
+  @keyframes pulse { 0%{transform:scale(1.12); color:var(--gold);} 100%{transform:scale(1);} }
+  body.final .num#sec { color:var(--red); text-shadow:0 0 40px rgba(209,26,26,.8); }
+  body.final { animation:flash 1s infinite; }
+  @keyframes flash { 0%{background-color:#2a0000;} 100%{background-color:#050505;} }
+  #gate { position:fixed; inset:0; background:rgba(0,0,0,.92); display:flex; flex-direction:column; gap:2rem;
+          align-items:center; justify-content:center; cursor:pointer; z-index:10; }
+  #gate b { color:var(--gold); font-size:clamp(1.2rem,4vw,2.5rem); letter-spacing:.3em; }
+  #gate span { color:#888; letter-spacing:.2em; }
+  #mute { position:fixed; top:1rem; right:1rem; background:none; border:1px solid #444; color:#aaa; padding:.5rem .9rem;
+          font:inherit; cursor:pointer; z-index:5; }
+  #mute:hover { color:#fff; border-color:#fff; }
+  #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
+</style>
+</head>
+<body>
+  <button id="mute" aria-label="Toggle sound">🔊 Sound on</button>
+  <h1>World of Warcraft: Forever</h1>
+  <div id="clock">
+    <div class="unit"><div class="num" id="d">00</div><div class="lbl">Days</div></div><div class="sep">:</div>
+    <div class="unit"><div class="num" id="h">00</div><div class="lbl">Hours</div></div><div class="sep">:</div>
+    <div class="unit"><div class="num" id="m">00</div><div class="lbl">Minutes</div></div><div class="sep">:</div>
+    <div class="unit"><div class="num" id="sec">00</div><div class="lbl">Seconds</div></div>
+  </div>
+  <div id="done">IT HAS BEGUN</div>
+  <p id="sub"></p>
+
+  <div id="gate"><b>ENTER</b><span>click anywhere to start the countdown with sound</span></div>
+
+<script>
+// ===== CONFIG: edit this to change the launch moment (ISO 8601, with timezone) =====
+// Nov 4, 2026, 3 PM Pacific = midnight CET Nov 5 = 23:00 UTC
+const LAUNCH = new Date("2026-11-04T23:00:00Z");
+// ===================================================================================
+
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, "0");
+let ctx = null, muted = false, lastSec = null, finished = false;
+
+$("sub").textContent = "Launch: " + LAUNCH.toLocaleString(undefined, { dateStyle:"full", timeStyle:"long" });
+
+// ---------- Sound (synthesized with Web Audio, no files needed) ----------
+function ensureAudio() {
+  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (ctx.state === "suspended") ctx.resume();
+}
+function tone(freq, type, start, dur, vol) {
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type; o.frequency.setValueAtTime(freq, start);
+  g.gain.setValueAtTime(0.0001, start);
+  g.gain.exponentialRampToValueAtTime(vol, start + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+  o.connect(g).connect(ctx.destination);
+  o.start(start); o.stop(start + dur + 0.05);
+}
+// "24"-style tick: sharp electronic beep + low thud
+function tick(final) {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime;
+  tone(final ? 1600 : 1200, "square", t, 0.09, final ? 0.22 : 0.15);
+  tone(final ? 1604 : 1204, "sine",   t, 0.25, 0.2);
+  // thud
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = "sine"; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.25);
+  g.gain.setValueAtTime(final ? 0.9 : 0.6, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+  o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + 0.35);
+}
+function fanfare() {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime;
+  [261.6, 329.6, 392, 523.3, 659.3, 784].forEach((f, i) => {
+    tone(f, "sawtooth", t + i * 0.12, 1.8, 0.12);
+    tone(f / 2, "triangle", t + i * 0.12, 2.2, 0.15);
+  });
+}
+
+// ---------- UI ----------
+function render(ms) {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const d = Math.floor(total / 86400), h = Math.floor(total % 86400 / 3600),
+        m = Math.floor(total % 3600 / 60), s = total % 60;
+  $("d").textContent = pad(d); $("h").textContent = pad(h);
+  $("m").textContent = pad(m); $("sec").textContent = pad(s);
+  return total;
+}
+function update() {
+  const total = render(LAUNCH - Date.now());
+  if (total !== lastSec) {
+    if (lastSec !== null && !finished) {
+      if (total > 0) tick(total <= 10);
+      const el = $("sec"); el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse");
+    }
+    lastSec = total;
+    document.body.classList.toggle("final", total > 0 && total <= 10);
+    if (total === 0 && !finished) {
+      finished = true;
+      $("clock").style.display = "none"; $("done").style.display = "block";
+      document.body.classList.remove("final");
+      fanfare();
+    }
+  }
+  if (!finished) {
+    // wake up right at the next second boundary to stay in sync
+    const ms = (LAUNCH - Date.now()) % 1000;
+    setTimeout(update, ms > 20 ? ms - 10 : 20);
+  }
+}
+
+$("gate").addEventListener("click", () => { ensureAudio(); $("gate").style.display = "none"; });
+$("mute").addEventListener("click", () => {
+  muted = !muted; ensureAudio();
+  $("mute").textContent = muted ? "🔇 Sound off" : "🔊 Sound on";
+});
+if (Date.now() >= LAUNCH) { $("gate").style.display = "none"; }
+update();
+</script>
+</body>
+</html>

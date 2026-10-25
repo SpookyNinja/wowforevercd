@@ -60,30 +60,57 @@ let ctx = null, muted = false, lastSec = null, finished = false;
 $("sub").textContent = "Launch: " + LAUNCH.toLocaleString(undefined, { dateStyle:"full", timeStyle:"long" });
 
 // ---------- Sound (synthesized with Web Audio, no files needed) ----------
+let master = null, verb = null;
 function ensureAudio() {
-  if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!ctx) {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = 0.9;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -14; comp.ratio.value = 6; comp.attack.value = 0.003; comp.release.value = 0.25;
+    master.connect(comp).connect(ctx.destination);
+    // generated reverb tail for a big, hollow room
+    const len = ctx.sampleRate * 2, ir = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) { const d = ir.getChannelData(c);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+    verb = ctx.createConvolver(); verb.buffer = ir;
+    const vg = ctx.createGain(); vg.gain.value = 0.35;
+    verb.connect(vg).connect(master);
+  }
   if (ctx.state === "suspended") ctx.resume();
 }
+function out(node, wet) { node.connect(master); if (wet) node.connect(verb); }
 function tone(freq, type, start, dur, vol) {
   const o = ctx.createOscillator(), g = ctx.createGain();
   o.type = type; o.frequency.setValueAtTime(freq, start);
   g.gain.setValueAtTime(0.0001, start);
   g.gain.exponentialRampToValueAtTime(vol, start + 0.005);
   g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
-  o.connect(g).connect(ctx.destination);
+  o.connect(g); out(g, true);
   o.start(start); o.stop(start + dur + 0.05);
 }
-// "24"-style tick: sharp electronic beep + low thud
+// Deep cinematic thump: pitch-dropping sub kick + low noise knock + booming tail
 function tick(final) {
   if (!ctx || muted) return;
-  const t = ctx.currentTime;
-  tone(final ? 1600 : 1200, "square", t, 0.09, final ? 0.22 : 0.15);
-  tone(final ? 1604 : 1204, "sine",   t, 0.25, 0.2);
-  // thud
+  const t = ctx.currentTime, k = final ? 1 : 0.8;
+  // sub kick
   const o = ctx.createOscillator(), g = ctx.createGain();
-  o.type = "sine"; o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(45, t + 0.25);
-  g.gain.setValueAtTime(final ? 0.9 : 0.6, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
-  o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + 0.35);
+  o.type = "sine";
+  o.frequency.setValueAtTime(final ? 110 : 85, t);
+  o.frequency.exponentialRampToValueAtTime(final ? 34 : 38, t + 0.35);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(1.2 * k, t + 0.008);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + (final ? 0.9 : 0.7));
+  o.connect(g); out(g, true); o.start(t); o.stop(t + 1);
+  // low knock (filtered noise) for body
+  const nb = ctx.createBuffer(1, ctx.sampleRate * 0.15, ctx.sampleRate), nd = nb.getChannelData(0);
+  for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+  const n = ctx.createBufferSource(), lp = ctx.createBiquadFilter(), ng = ctx.createGain();
+  n.buffer = nb; lp.type = "lowpass"; lp.frequency.value = final ? 400 : 260;
+  ng.gain.setValueAtTime(0.7 * k, t); ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+  n.connect(lp).connect(ng); out(ng, false); n.start(t);
+  // dark rumble tail
+  tone(final ? 49 : 41, "triangle", t, final ? 1.4 : 0.9, 0.35 * k);
+  if (final) tone(98, "sawtooth", t, 0.5, 0.06);
 }
 function fanfare() {
   if (!ctx || muted) return;

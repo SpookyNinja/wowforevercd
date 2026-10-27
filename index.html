@@ -11,6 +11,7 @@
   body { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
          background:radial-gradient(ellipse at center,#1a1206 0%,#050505 70%); }
   h1 { font-size:clamp(1rem,3vw,2rem); letter-spacing:.4em; color:var(--gold); text-transform:uppercase; margin-bottom:2vh; padding:0 4vw; }
+  #egg { user-select:none; cursor:default; }
   #clock { display:flex; gap:clamp(.4rem,2vw,2rem); align-items:flex-start; justify-content:center; }
   .unit { display:flex; flex-direction:column; align-items:center; }
   .num { font-size:clamp(2rem,11vw,14rem); font-weight:bold; line-height:1; font-variant-numeric:tabular-nums;
@@ -43,7 +44,7 @@
     <button id="mute" aria-label="Toggle sound">🔊 Ticks on</button>
   </div>
   <div id="ytbox"><div id="yt"></div></div>
-  <h1>World of Warcraft: Forever</h1>
+  <h1>World of Warcraft: <span id="egg">Forever</span></h1>
   <div id="clock">
     <div class="unit"><div class="num" id="d">00</div><div class="lbl">Days</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="h">00</div><div class="lbl">Hours</div></div><div class="sep">:</div>
@@ -52,7 +53,7 @@
   </div>
   <div id="done">IT HAS BEGUN</div>
   <p id="sub"></p>
-  <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem">v6: + disco final 24h</p>
+  <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem">v7</p>
 
   <div id="gate"><b>ENTER</b><span>click anywhere to start the countdown with sound</span></div>
 
@@ -68,7 +69,7 @@ const DISCO_AT = 24 * 3600;
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
-let ctx = null, muted = false, lastSec = null, finished = false;
+let ctx = null, muted = false, eggOn = false, lastSec = null, finished = false;
 
 $("sub").textContent = "Launch: " + LAUNCH.toLocaleString(undefined, { dateStyle:"full", timeStyle:"long" });
 
@@ -106,7 +107,7 @@ function tone(freq, type, start, dur, vol) {
 }
 // Deep cinematic thump: pitch-dropping sub kick + low noise knock + booming tail
 function tick(final) {
-  if (!ctx || muted) return;
+  if (!ctx || muted || eggOn) return;
   const t = ctx.currentTime, k = final ? 1 : 0.8;
   if (tickBuf) {
     const src = ctx.createBufferSource(), g = ctx.createGain();
@@ -222,6 +223,25 @@ $("mmute").addEventListener("click", () => {
   $("mmute").textContent = musicOn ? "🎵 Music on" : "🔇 Music off";
   if (discoGain) discoGain.gain.value = musicOn ? vol() / 100 : 0;
   else if (yt && yt.playVideo) musicOn ? yt.playVideo() : yt.pauseVideo();
+});
+
+// ---------- Easter egg: click "Forever" 10 times ----------
+const EGG_MS = 16000; // clip length, background audio pauses meanwhile
+let eggClicks = 0, eggTimer = null;
+$("egg").addEventListener("click", () => {
+  clearTimeout(eggTimer);
+  eggTimer = setTimeout(() => { eggClicks = 0; }, 2000);
+  if (++eggClicks < 10) return;
+  eggClicks = 0;
+  const w = window.open("egg.html", "sandstorm", "width=768,height=576");
+  if (!w) return;
+  eggOn = true;
+  if (discoGain) discoGain.gain.value = 0; else if (yt && yt.pauseVideo) yt.pauseVideo();
+  setTimeout(() => {
+    eggOn = false;
+    if (!musicOn) return;
+    if (discoGain) discoGain.gain.value = vol() / 100; else if (yt && yt.playVideo) yt.playVideo();
+  }, EGG_MS);
 });
 
 $("gate").addEventListener("click", () => { ensureAudio(); startMusic(); $("gate").style.display = "none"; });

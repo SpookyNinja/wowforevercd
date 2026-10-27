@@ -71,11 +71,21 @@
   </div>
   <div id="done">IT HAS BEGUN</div>
   <p id="sub"></p>
-  <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem">v8</p>
+  <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem"></p>
 
   <div id="gate"><b>ENTER</b><span>click anywhere to start the countdown with sound</span></div>
 
 <script>
+// GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
+// reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
+const VERSION = "9";
+document.getElementById("ver").textContent = "v" + VERSION;
+fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
+  v = v.trim();
+  if (v && v !== VERSION && new URLSearchParams(location.search).get("v") !== v)
+    location.replace(location.pathname + "?v=" + encodeURIComponent(v));
+}).catch(() => {});
+
 // ===== CONFIG: edit this to change the launch moment (ISO 8601, with timezone) =====
 // Nov 4, 2026, 3 PM Pacific = midnight CET Nov 5 = 23:00 UTC
 const LAUNCH = new Date("2026-11-04T23:00:00Z");

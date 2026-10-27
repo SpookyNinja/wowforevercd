@@ -34,7 +34,7 @@
   #mute, #mmute {  background:none; border:1px solid #444; color:#aaa; padding:.5rem .9rem;
           font:inherit; cursor:pointer; z-index:5; }
   #mute:hover, #mmute:hover { color:#fff; border-color:#fff; }
-  /* disco mode (type "disco") */
+  /* disco mode (type "dt") */
   #undisco { display:none; background:linear-gradient(90deg,#ff3cac,#ffe53b,#2bd2ff,#7cff6b); border:none; color:#000;
              font:inherit; font-weight:bold; padding:.5rem .9rem; cursor:pointer; }
   body.disco #undisco { display:inline-block; }
@@ -78,7 +78,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "9";
+const VERSION = "10";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -201,7 +201,7 @@ function update() {
 }
 
 // ---------- Background music ----------
-// Hidden YouTube player (audio only). Typing "disco" swaps it for Hakkin Disco until "Un-disco" is pressed.
+// Hidden YouTube player (audio only). Typing "dt" swaps it for Hakkin Disco until "Un-disco" is pressed.
 let yt = null, musicOn = true, disco = false, discoGain = null, discoSrc = [], discoBufs = null;
 const vol = () => +$("vol").value;
 function startYouTube() {
@@ -249,8 +249,8 @@ function stopDisco() {
 let typed = "";
 addEventListener("keydown", e => {
   if (!ctx || e.key.length !== 1) return;
-  typed = (typed + e.key.toLowerCase()).slice(-5);
-  if (typed === "disco") startDisco();
+  typed = (typed + e.key.toLowerCase()).slice(-2);
+  if (typed === "dt") startDisco(); // Dirty Tactics
 });
 $("undisco").addEventListener("click", stopDisco);
 $("vol").addEventListener("input", () => {

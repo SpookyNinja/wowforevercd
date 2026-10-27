@@ -108,7 +108,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "15";
+const VERSION = "16";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -281,6 +281,7 @@ addEventListener("keydown", e => {
   if (!ctx || e.key.length !== 1) return;
   typed = (typed + e.key.toLowerCase()).slice(-11);
   if (typed.endsWith("thunderfury")) { typed = ""; thunderfury(); }
+  else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }
   else if (typed.endsWith("dt")) startDisco(); // Dirty Tactics
 });
 
@@ -317,26 +318,62 @@ function thunder() {
   rg.gain.exponentialRampToValueAtTime(0.0001, t + 2.9);
   r.connect(lp).connect(rg); out(rg, true); r.start(t); r.stop(t + 3);
 }
-function tfLine(parts, name) {
+// one chat burst at a time; lines are [text, item link, text after link]
+function chatLine(channel, color, parts, name) {
   const p = document.createElement("p"), nm = document.createElement("span"), lg = document.createElement("span");
+  p.style.color = color;
   nm.textContent = name[0]; nm.style.color = name[1];
-  lg.className = "lg"; lg.textContent = parts[1];
-  p.append("[2. Trade] [", nm, "]: " + parts[0], lg, parts[2]);
+  lg.className = "lg"; lg.textContent = parts[1] || "";
+  p.append(channel + " [", nm, "]: " + parts[0], lg, parts[2] || "");
   $("tfchat").appendChild(p);
 }
-function thunderfury() {
-  if (tfOn) return;
+function chatBurst(channel, color, lines, gap, onLine) {
+  if (tfOn) return false;
   tfOn = true;
-  const chat = $("tfchat"), fl = $("flash");
+  const chat = $("tfchat");
   chat.textContent = "";
+  chat.classList.add("on");
+  const names = TF_NAMES.slice().sort(() => Math.random() - .5), end = 400 + lines.length * gap;
+  lines.forEach((l, i) => setTimeout(() => { chatLine(channel, color, l, names[i % names.length]); if (onLine) onLine(i); }, 400 + i * gap));
+  setTimeout(() => chat.classList.remove("on"), end + 5000);
+  setTimeout(() => { chat.textContent = ""; tfOn = false; }, end + 5600);
+  return true;
+}
+function thunderfury() {
+  const lines = [TF_LINES[0]].concat(TF_LINES.slice(1).sort(() => Math.random() - .5), [TF_LINES[0]]);
+  if (!chatBurst("[2. Trade]", "#ffc0c0", lines, 550)) return;
+  const fl = $("flash");
   fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
   thunder();
-  chat.classList.add("on");
-  const names = TF_NAMES.slice().sort(() => Math.random() - .5);
-  const lines = [TF_LINES[0]].concat(TF_LINES.slice(1).sort(() => Math.random() - .5), [TF_LINES[0]]);
-  lines.forEach((l, i) => setTimeout(() => tfLine(l, names[i % names.length]), 400 + i * 550));
-  setTimeout(() => chat.classList.remove("on"), 400 + lines.length * 550 + 5000);
-  setTimeout(() => { chat.textContent = ""; tfOn = false; }, 400 + lines.length * 550 + 5600);
+}
+
+// ---------- Easter egg: type "murloc" or "mrgl" -> General chat goes full murloc (a Forever beta classic) ----------
+const MURLOC_LINES = [
+  "Finding Murloc", "The Lord of the Murlocs: The Return of the Mrgl", "Harry Potter and the Murloc of Azkaban",
+  "Jurassic Murloc", "The Fast and the Murlocs", "Murlocs of the Caribbean", "The Murloc King", "Breaking Mrgl",
+  "Game of Mrglgl", "The Silence of the Murlocs", "Mrglglgl Wars: A New Mrgl", "The Dark Murloc Rises",
+  "I'll be mrgl back", "May the Mrgl be with you", "You shall not mrgl!", "I see dead murlocs",
+  "Houston, we have a murloc", "Murloc. James Murloc.", "Say hello to my little murloc", "Why so mrgl?",
+  "Here's Mrglglgl!", "Mrgl, I am your father", "To mrgl or not to mrgl", "AAAAUGHIBBRGUBUGBUGRGUBURGLE!"
+].map(t => [t]);
+function gurgle(when) {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime + when, dur = 0.35 + Math.random() * 0.3;
+  const o = ctx.createOscillator(), lfo = ctx.createOscillator(), depth = ctx.createGain(),
+        bp = ctx.createBiquadFilter(), g = ctx.createGain();
+  o.type = "sawtooth"; o.frequency.setValueAtTime(320 + Math.random() * 120, t);
+  o.frequency.exponentialRampToValueAtTime(520 + Math.random() * 200, t + dur);
+  lfo.frequency.value = 22 + Math.random() * 10; depth.gain.value = 140; // the wobbly "rglglgl"
+  lfo.connect(depth).connect(o.frequency);
+  bp.type = "bandpass"; bp.frequency.value = 900; bp.Q.value = 2;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.35, t + 0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(bp).connect(g); out(g, false);
+  o.start(t); lfo.start(t); o.stop(t + dur + 0.05); lfo.stop(t + dur + 0.05);
+}
+function murlocs() {
+  const lines = MURLOC_LINES.slice().sort(() => Math.random() - .5).slice(0, 10);
+  chatBurst("[1. General - Stormwind City]", "#ffc0a0", lines, 650, i => { if (i % 2 === 0) gurgle(0); });
 }
 $("undisco").addEventListener("click", stopDisco);
 $("vol").addEventListener("input", () => {
@@ -408,7 +445,8 @@ $("egg").addEventListener("click", () => {
 const HINTS = [
   "Some say if you call out \"Forever\" ten times, a sandstorm answers.",
   "True Dirty Tactics members know the two-letter password.",
-  "Some legendary blades come running when you type their name."
+  "Some legendary blades come running when you type their name.",
+  "Stormwind General chat never recovered from the beta. Say the M-word and see."
 ];
 const TIPS = [
   "Don't stand in the fire.",

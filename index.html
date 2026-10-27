@@ -51,6 +51,12 @@
   @keyframes rainbow { 0%{background-position:0% 50%;} 100%{background-position:400% 50%;} }
   @keyframes spin { to { transform:rotate(360deg); } }
   @keyframes bounce { to { transform:translateY(-4%) scale(1.04); } }
+  #eggbox { position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.85); }
+  #eggbox.on { display:flex; }
+  #eggstage { position:relative; width:min(90vw, calc((100vh - 7rem) * 4 / 3), 960px); aspect-ratio:4/3; background:#000; box-shadow:0 0 60px rgba(245,197,66,.35); }
+  #eggstage ruffle-player { display:block; width:100%; height:100%; }
+  #eggclose { position:absolute; top:-2.4rem; right:0; background:none; border:1px solid #666; color:#ccc; font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  #eggclose:hover { color:#fff; border-color:#fff; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -73,12 +79,14 @@
   <p id="sub"></p>
   <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem"></p>
 
+  <div id="eggbox"><div id="eggstage"><button id="eggclose" aria-label="Close">✕</button></div></div>
+
   <div id="gate"><b>ENTER</b><span>click anywhere to start the countdown with sound</span></div>
 
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "10";
+const VERSION = "11";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -265,23 +273,52 @@ $("mmute").addEventListener("click", () => {
 });
 
 // ---------- Easter egg: click "Forever" 10 times ----------
-const EGG_MS = 16000; // clip length, background audio pauses meanwhile
-let eggClicks = 0, eggTimer = null;
+// Plays sandstorm.swf once through Ruffle (Flash emulator) in an overlay; background audio pauses meanwhile.
+let eggClicks = 0, eggTimer = null, eggPlayer = null, eggEnd = null;
+function loadRuffle() {
+  if (window.RufflePlayer && RufflePlayer.newest) return Promise.resolve();
+  window.RufflePlayer = { config: { autoplay: "on", unmuteOverlay: "hidden", splashScreen: false, contextMenu: "off" } };
+  return new Promise((ok, fail) => {
+    const s = document.createElement("script");
+    s.src = "https://unpkg.com/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.1/ruffle.js";
+    s.onload = ok; s.onerror = fail;
+    document.head.appendChild(s);
+  });
+}
+function openEgg() {
+  if (eggOn) return;
+  eggOn = true;
+  if (discoGain) discoGain.gain.value = 0; else if (yt && yt.pauseVideo) yt.pauseVideo();
+  $("eggbox").classList.add("on");
+  loadRuffle().then(() => {
+    if (!eggOn) return;
+    eggPlayer = RufflePlayer.newest().createPlayer();
+    $("eggstage").appendChild(eggPlayer);
+    eggPlayer.addEventListener("loadedmetadata", () => {
+      const m = eggPlayer.metadata;
+      eggEnd = setTimeout(closeEgg, m.numFrames / m.frameRate * 1000 - 60);
+    });
+    eggPlayer.load("sandstorm.swf");
+  }).catch(closeEgg);
+}
+function closeEgg() {
+  if (!eggOn) return;
+  clearTimeout(eggEnd);
+  if (eggPlayer) { eggPlayer.remove(); eggPlayer = null; }
+  $("eggbox").classList.remove("on");
+  eggOn = false;
+  if (!musicOn) return;
+  if (discoGain) discoGain.gain.value = vol() / 100; else if (yt && yt.playVideo) yt.playVideo();
+}
 $("egg").addEventListener("click", () => {
   clearTimeout(eggTimer);
   eggTimer = setTimeout(() => { eggClicks = 0; }, 2000);
   if (++eggClicks < 10) return;
   eggClicks = 0;
-  const w = window.open("egg.html", "sandstorm", "width=768,height=576");
-  if (!w) return;
-  eggOn = true;
-  if (discoGain) discoGain.gain.value = 0; else if (yt && yt.pauseVideo) yt.pauseVideo();
-  setTimeout(() => {
-    eggOn = false;
-    if (!musicOn) return;
-    if (discoGain) discoGain.gain.value = vol() / 100; else if (yt && yt.playVideo) yt.playVideo();
-  }, EGG_MS);
+  openEgg();
 });
+$("eggclose").addEventListener("click", closeEgg);
+$("eggbox").addEventListener("click", e => { if (e.target.id === "eggbox") closeEgg(); });
 
 $("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; });
 $("mute").addEventListener("click", () => {

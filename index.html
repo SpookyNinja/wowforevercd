@@ -96,7 +96,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "12";
+const VERSION = "13";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -336,7 +336,11 @@ $("egg").addEventListener("click", () => {
   openEgg();
 });
 
-// ---------- Loading-screen tips (two of them hint at the easter eggs) ----------
+// ---------- Loading-screen tips + guild quotes; every 4th line is an easter-egg hint ----------
+const HINTS = [
+  "Some say if you call out \"Forever\" ten times, a sandstorm answers.",
+  "True Dirty Tactics members know the two-letter password."
+];
 const TIPS = [
   "Don't stand in the fire.",
   "Pull more mobs. What could go wrong?",
@@ -345,19 +349,52 @@ const TIPS = [
   "Need before greed. Unless you're greedy.",
   "Your hearthstone is on cooldown. Of course it is.",
   "Check the auction house before you vendor that green.",
-  "Wipes build character.",
-  "Some say if you call out \"Forever\" ten times, a sandstorm answers.",
-  "True Dirty Tactics members know the two-letter password."
+  "Wipes build character."
 ];
-let tipOrder = [], tipPos = 0;
+// guild chat quotes, rewritten as official-sounding tips
+const QUOTES = [
+  "Feral is great. Especially when there's an item level 158 cloak on the line. (Edge)",
+  "Pikachu is widely regarded as the best dinosaur. Bulbasaur scholars disagree. (Cif)",
+  "Pine = tree. Use this knowledge wisely in Ashenvale. (Souleself)",
+  "When threatened, you may shout \"Eat my cactus!\". Results may vary. (Ima)",
+  "Want to hear a joke? Ask Frede what a butterfly is called in Danish.",
+  "Danish players may refer to bags as \"your holes with pockets in them\". This is normal. (Ima)",
+  "There are no other priests than shamans. Please update your class guides accordingly. (Noah)",
+  "Your eyebrows are resting while you sleep. Respect their downtime. (Amy)",
+  "Announcing \"I really like monk\" in combat may cause sudden death. (Amy)",
+  "Paladeeeeeeeeen. (Amy)",
+  "Yellow is a good number. Choose your gems accordingly. (Avemae)",
+  "Bears can become annoyed. Local bears especially. (Dario)",
+  "A pissoir is just a reverse drinking fountain. Hydrate responsibly. (Larry)",
+  "It is possible to die in LFR. Nobody knows how. (Fred)",
+  "With 13 accounts, you can technically have 13 mains. Mykuru is working on it. (Ave)",
+  "\"I got you, Noah!\" is usually followed by \"I'm dead, Noah\". Plan accordingly. (Zarnox)",
+  "Up is up and down is down. Don't let anyone tell you otherwise. (Ave or Ima)",
+  "In Mythic+, the key holder makes the rules. My key, my rule. (Random pug)",
+  "Undefeated means he wasn't defeated. Yes, that's what undefeated means. (Amy and Brydon)",
+  "Sometimes you just brick the key. It happens to the best of us. (Zarnox)",
+  "Some people fart better than they eat Kaj cakes. Find your strength. (Cami)",
+  "White line good. (Farrenor)",
+  "Missing a guildmate? You are not alone. Everyone misses Gøj. (Edge)",
+  "Intellect is temporarily reduced while grouped with Gøj. (Omnibob/Ulaw)"
+];
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+let tipOrder = [], tipPos = 0, tipCount = 0, hintPos = 0;
 function nextTip() {
-  if (tipPos >= tipOrder.length) { tipOrder = TIPS.slice().sort(() => Math.random() - .5); tipPos = 0; }
+  let html;
+  if (++tipCount % 4 === 0) html = "<b>Tip:</b> " + esc(HINTS[hintPos++ % HINTS.length]);
+  else {
+    if (tipPos >= tipOrder.length) {
+      tipOrder = TIPS.map(t => "<b>Tip:</b> " + esc(t))
+        .concat(QUOTES.map(q => "<b>Tip:</b> " + esc(q)))
+        .sort(() => Math.random() - .5);
+      tipPos = 0;
+    }
+    html = tipOrder[tipPos++];
+  }
   const el = $("tip");
   el.classList.add("hide");
-  setTimeout(() => {
-    el.innerHTML = "<b>Tip:</b> " + tipOrder[tipPos++].replace(/</g, "&lt;");
-    el.classList.remove("hide");
-  }, 600);
+  setTimeout(() => { el.innerHTML = html; el.classList.remove("hide"); }, 600);
 }
 nextTip();
 setInterval(nextTip, 9000);

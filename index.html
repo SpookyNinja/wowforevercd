@@ -11,7 +11,16 @@
   body { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;
          background:radial-gradient(ellipse at center,#1a1206 0%,#050505 70%); }
   h1 { font-size:clamp(1rem,3vw,2rem); letter-spacing:.4em; color:var(--gold); text-transform:uppercase; margin-bottom:2vh; padding:0 4vw; }
-  #egg { user-select:none; cursor:default; }
+  #egg { user-select:none; cursor:default; display:inline-block; --heat:0;
+         text-shadow:0 0 calc(var(--heat) * 28px) rgba(255,220,120,calc(var(--heat) * 1.2));
+         color:color-mix(in srgb, var(--gold), #fff calc(var(--heat) * 70%)); transition:text-shadow .3s, color .3s; }
+  #egg.shake { animation:shake .25s; }
+  @keyframes shake { 25%{transform:translateX(calc(var(--heat) * -6px)) rotate(calc(var(--heat) * -3deg));}
+                     75%{transform:translateX(calc(var(--heat) * 6px)) rotate(calc(var(--heat) * 3deg));} }
+  #tip { margin-top:2vh; color:#c9a85a; font-size:clamp(.7rem,1.5vw,1rem); letter-spacing:.08em; padding:0 6vw;
+         min-height:1.5em; transition:opacity .6s; }
+  #tip b { color:var(--gold); }
+  #tip.hide { opacity:0; }
   #clock { display:flex; gap:clamp(.4rem,2vw,2rem); align-items:flex-start; justify-content:center; }
   .unit { display:flex; flex-direction:column; align-items:center; }
   .num { font-size:clamp(2rem,11vw,14rem); font-weight:bold; line-height:1; font-variant-numeric:tabular-nums;
@@ -45,7 +54,7 @@
   body.disco::after { content:""; position:fixed; inset:-50%; pointer-events:none; z-index:1; mix-blend-mode:soft-light;
     background:repeating-conic-gradient(from 0deg, rgba(255,255,255,.55) 0 8deg, transparent 8deg 30deg);
     animation:spin 6s linear infinite; }
-  body.disco .num, body.disco .sep, body.disco h1, body.disco .lbl, body.disco #sub
+  body.disco .num, body.disco .sep, body.disco h1, body.disco .lbl, body.disco #sub, body.disco #tip, body.disco #tip b
     { color:#fff; text-shadow:0 0 12px #000, 0 0 30px rgba(0,0,0,.6); opacity:1; }
   body.disco .num { animation:bounce .5s ease-in-out infinite alternate; }
   @keyframes rainbow { 0%{background-position:0% 50%;} 100%{background-position:400% 50%;} }
@@ -77,6 +86,7 @@
   </div>
   <div id="done">IT HAS BEGUN</div>
   <p id="sub"></p>
+  <p id="tip"></p>
   <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem"></p>
 
   <div id="eggbox"><div id="eggstage"><button id="eggclose" aria-label="Close">✕</button></div></div>
@@ -86,7 +96,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "11";
+const VERSION = "12";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -310,13 +320,47 @@ function closeEgg() {
   if (!musicOn) return;
   if (discoGain) discoGain.gain.value = vol() / 100; else if (yt && yt.playVideo) yt.playVideo();
 }
+// each click makes "Forever" glow brighter and shake harder, so people keep going
+function eggHeat(n) {
+  const el = $("egg");
+  el.style.setProperty("--heat", n / 10);
+  el.classList.remove("shake"); void el.offsetWidth; if (n) el.classList.add("shake");
+}
 $("egg").addEventListener("click", () => {
   clearTimeout(eggTimer);
-  eggTimer = setTimeout(() => { eggClicks = 0; }, 2000);
-  if (++eggClicks < 10) return;
+  eggTimer = setTimeout(() => { eggClicks = 0; eggHeat(0); }, 2000);
+  eggHeat(++eggClicks);
+  if (eggClicks < 10) return;
   eggClicks = 0;
+  setTimeout(() => eggHeat(0), 300);
   openEgg();
 });
+
+// ---------- Loading-screen tips (two of them hint at the easter eggs) ----------
+const TIPS = [
+  "Don't stand in the fire.",
+  "Pull more mobs. What could go wrong?",
+  "The tank is always right. Except when they're not.",
+  "Remember to repair before the raid.",
+  "Need before greed. Unless you're greedy.",
+  "Your hearthstone is on cooldown. Of course it is.",
+  "Check the auction house before you vendor that green.",
+  "Wipes build character.",
+  "Some say if you call out \"Forever\" ten times, a sandstorm answers.",
+  "True Dirty Tactics members know the two-letter password."
+];
+let tipOrder = [], tipPos = 0;
+function nextTip() {
+  if (tipPos >= tipOrder.length) { tipOrder = TIPS.slice().sort(() => Math.random() - .5); tipPos = 0; }
+  const el = $("tip");
+  el.classList.add("hide");
+  setTimeout(() => {
+    el.innerHTML = "<b>Tip:</b> " + tipOrder[tipPos++].replace(/</g, "&lt;");
+    el.classList.remove("hide");
+  }, 600);
+}
+nextTip();
+setInterval(nextTip, 9000);
 $("eggclose").addEventListener("click", closeEgg);
 $("eggbox").addEventListener("click", e => { if (e.target.id === "eggbox") closeEgg(); });
 

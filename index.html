@@ -20,6 +20,9 @@
   #tip { margin-top:2vh; color:#c9a85a; font-size:clamp(.7rem,1.5vw,1rem); letter-spacing:.08em; padding:0 6vw;
          min-height:1.5em; transition:opacity .6s; }
   #tip b { color:var(--gold); }
+  /* hidden raid sign-up: the "Days" label (WoW raid sign-ups live in the calendar) */
+  #signup { user-select:none; transition:color .4s, text-shadow .4s; }
+  #signup:hover { color:#c9a85a; text-shadow:0 0 8px rgba(245,197,66,.5); }
   #tip.hide { opacity:0; }
   #clock { display:flex; gap:clamp(.4rem,2vw,2rem); align-items:flex-start; justify-content:center; }
   .unit { display:flex; flex-direction:column; align-items:center; }
@@ -76,6 +79,43 @@
   #flash { position:fixed; inset:0; background:#d8e8ff; opacity:0; pointer-events:none; z-index:14; }
   #flash.on { animation:bolt 1.4s; }
   @keyframes bolt { 0%{opacity:0;} 4%{opacity:.9;} 9%{opacity:0;} 14%{opacity:.7;} 22%{opacity:0;} 40%{opacity:.35;} 48%{opacity:0;} 100%{opacity:0;} }
+  /* DT Raid Manager (type "raid") */
+  #raidbox { position:fixed; inset:0; z-index:20; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.8); }
+  #raidbox.on { display:flex; }
+  #raid { position:relative; width:min(860px, 94vw); max-height:92vh; overflow:auto; background:#140f08; border:2px solid #7a5a1c;
+          box-shadow:0 0 50px rgba(245,197,66,.25); padding:1rem 1.2rem; text-align:left; font-family:Arial,Helvetica,sans-serif; color:#ddd; }
+  #raid h2 { color:var(--gold); letter-spacing:.2em; text-transform:uppercase; font-size:1.2rem; margin-bottom:.6rem; }
+  #raid h3 { color:#aaa; font-size:.8rem; letter-spacing:.15em; text-transform:uppercase; margin:.8rem 0 .4rem; }
+  #raidboss { background:#0007; border-left:3px solid #ff8000; padding:.5rem .7rem; }
+  #raidboss b { display:block; color:#ff8000; font-size:1.1rem; margin-bottom:.2rem; }
+  #arena { position:relative; width:min(100%, calc((92vh - 17rem) * 1.6)); min-width:min(100%, 280px); margin:0 auto; aspect-ratio:16/10; overflow:hidden; touch-action:none; border:1px solid #7a5a1c;
+           background:radial-gradient(ellipse at center, #3a2e1e 0%, #1c150c 60%, #0b0805 100%); }
+  #arena > * { position:absolute; transform:translate(-50%,-50%); }
+  #arena .hz { display:flex; align-items:center; justify-content:center; font-size:.6rem; color:#fff8; text-align:center; }
+  #arena .hz.pool { border-radius:50%; aspect-ratio:1; }
+  #arena .hz.rect { transform:none; border:1px dashed currentColor; }
+  #arena .boss, #arena .add { border-radius:50%; display:flex; align-items:center; justify-content:center; text-align:center; color:#fff;
+           font-weight:bold; line-height:1.05; z-index:1; pointer-events:none; }
+  #arena .boss { aspect-ratio:1; background:radial-gradient(circle at 35% 35%, #c0392b, #4a0d08); border:2px solid #ff8000; font-size:.7rem;
+           box-shadow:0 0 18px rgba(255,90,0,.55); }
+  #arena .add { width:3.4%; aspect-ratio:1; background:radial-gradient(circle at 35% 35%, #b5651d, #3d1e05); border:1px solid #e67e22; }
+  #arena .add span { position:absolute; top:105%; white-space:nowrap; font-size:.55rem; font-weight:normal; color:#e9b17a; }
+  .tok { padding:.2rem .5rem; background:#1d2633; border:1px solid #9ab; border-radius:10px; color:#eee; font-size:.75rem; font-weight:bold;
+         cursor:grab; touch-action:none; user-select:none; white-space:nowrap; z-index:2; }
+  #bench { display:flex; flex-wrap:wrap; gap:.4rem; min-height:2.6rem; margin-top:.6rem; padding:.45rem; border:1px dashed #555; background:#0008; }
+  #bench .tok { position:static; transform:none; }
+  .tok.drag { position:fixed !important; transform:translate(-50%,-50%) !important; z-index:40; cursor:grabbing; box-shadow:0 0 12px var(--gold); }
+  #raidlog { margin-top:.8rem; font-family:"Courier New",monospace; font-size:.9rem; }
+  #raidlog p { margin:.2rem 0; }
+  #raidlog .bad { color:#ff9a9a; }
+  #raidscore { color:#ffd76b; }
+  #raidlog .score { color:#ffd76b; }
+  #raidlog .wipe { color:#ff4040; font-weight:bold; font-size:1.15rem; margin-top:.5rem; }
+  #raidbtns { display:flex; gap:.6rem; margin-top:.9rem; }
+  #raidbtns button, #raidclose { background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1rem; cursor:pointer; }
+  #raidbtns button:hover, #raidclose:hover { background:#3a2b10; }
+  #raidbtns button:disabled { opacity:.4; cursor:default; }
+  #raidclose { position:absolute; top:.6rem; right:.6rem; padding:.2rem .6rem; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -89,7 +129,7 @@
   <div id="ytbox"><div id="yt"></div></div>
   <h1>World of Warcraft: <span id="egg">Forever</span></h1>
   <div id="clock">
-    <div class="unit"><div class="num" id="d">00</div><div class="lbl">Days</div></div><div class="sep">:</div>
+    <div class="unit"><div class="num" id="d">00</div><div class="lbl" id="signup">Days</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="h">00</div><div class="lbl">Hours</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="m">00</div><div class="lbl">Minutes</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="sec">00</div><div class="lbl">Seconds</div></div>
@@ -101,6 +141,16 @@
 
   <div id="flash"></div>
   <div id="tfchat"></div>
+  <div id="raidbox"><div id="raid">
+    <button id="raidclose" aria-label="Close">✕</button>
+    <h2>DT Raid Manager</h2>
+    <div id="raidboss"></div>
+    <h3>Drag your raiders into the arena · <span id="raidcount">0/10</span> · Score: <span id="raidscore">0</span></h3>
+    <div id="arena"></div>
+    <div id="bench"></div>
+    <div id="raidlog"></div>
+    <div id="raidbtns"><button id="raidready">✔ Ready check</button><button id="raidagain">↻ New attempt</button></div>
+  </div></div>
   <div id="eggbox"><div id="eggstage"><button id="eggclose" aria-label="Close">✕</button></div></div>
 
   <div id="gate"><b>ENTER</b><span>click anywhere to start the countdown with sound</span></div>
@@ -108,7 +158,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "16";
+const VERSION = "17";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -281,15 +331,14 @@ addEventListener("keydown", e => {
   if (!ctx || e.key.length !== 1) return;
   typed = (typed + e.key.toLowerCase()).slice(-11);
   if (typed.endsWith("thunderfury")) { typed = ""; thunderfury(); }
-  else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }
-  else if (typed.endsWith("dt")) startDisco(); // Dirty Tactics
+  else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }  else if (typed.endsWith("dt")) startDisco(); // Dirty Tactics
 });
 
 // ---------- Easter egg: type "thunderfury" -> lightning + Trade chat spam ----------
 const TF_LINK = "[Thunderfury, Blessed Blade of the Windseeker]";
 const TF_NAMES = [["Edge","#ff7c0a"],["Ima","#f48cba"],["Noah","#ffffff"],["Amy","#00ff98"],["Zarnox","#8788ee"],
   ["Gøj","#c69b6d"],["Maiken","#3fc7eb"],["Sabre","#fff468"],["Fred","#0070dd"],["Ave","#aad372"],
-  ["Larry","#c41e3a"],["Mykuru","#3fc7eb"],["Farrenor","#33937f"],["Brydon","#a330c9"]];
+  ["Larry","#c41e3a"],["Mykuru","#3fc7eb"],["Farrenor","#33937f"],["Cif","#a330c9"]];
 const TF_LINES = [
   ["Did someone say ", TF_LINK, "?"],
   ["Did someone say ", TF_LINK, "?"],
@@ -375,6 +424,443 @@ function murlocs() {
   const lines = MURLOC_LINES.slice().sort(() => Math.random() - .5).slice(0, 10);
   chatBurst("[1. General - Stormwind City]", "#ffc0a0", lines, 650, i => { if (i % 2 === 0) gurgle(0); });
 }
+
+// ---------- Easter egg: type "raid" -> DT Raid Manager. Every ready check is rigged; you always wipe. ----------
+// Arena coordinates are % of the arena (x of width, y of height); the arena is about 48 x 30 yards.
+// Hazards: pool {x,y,r (r in % of width)} or rect {x,y,w,h}; c = colour key from HZ_COLORS.
+const HZ_COLORS = { fire: "255,90,0", poison: "80,220,60", shadow: "150,60,220", frost: "80,170,255", holy: "255,220,80", water: "60,140,255" };
+const ENCOUNTERS = [
+  { name: "Ragnaros", tactic: "Melee behind him, ranged spread at max range, tanks swap on Wrath. Do NOT stand in the lava.",
+    bosses: [{ n: "Ragnaros", x: 50, y: 22, r: 9 }], adds: [{ n: "Son of Flame", x: 18, y: 28 }, { n: "Son of Flame", x: 82, y: 28 }],
+    hz: [{ t: "pool", x: 24, y: 68, r: 7, c: "fire", l: "the lava" }, { t: "pool", x: 74, y: 72, r: 6, c: "fire", l: "the lava" }, { t: "pool", x: 50, y: 55, r: 4, c: "fire", l: "the lava" }],
+    fails: ["{n} went for a swim in the lava. On purpose, apparently.", "{n} got knocked back by Wrath of Ragnaros straight into the lava.",
+            "{n} tried to tank a Son of Flame. They were a priest.", "{n} said \"BY FIRE BE PURGED\" in voice chat. Ragnaros took it personally."] },
+  { name: "Onyxia", tactic: "Tanks on the head, everyone else on the flanks. Never stand in front of or behind her. Watch out for Deep Breath.",
+    bosses: [{ n: "Onyxia", x: 50, y: 24, r: 9 }], adds: [{ n: "Whelp", x: 10, y: 18 }, { n: "Whelp", x: 90, y: 18 }, { n: "Whelp", x: 10, y: 82 }, { n: "Whelp", x: 90, y: 82 }],
+    hz: [{ t: "rect", x: 40, y: 38, w: 20, h: 62, c: "fire", l: "the Deep Breath zone" }],
+    fails: ["{n} stood right in front of Onyxia during Deep Breath to \"get a better look\".", "{n} stood behind Onyxia and got tail-swiped into the whelp cave.",
+            "{n} pulled every whelp in the cave. MORE DOTS!", "{n} stood on the eruption cracks and danced. Not the good kind of dance."] },
+  { name: "Patchwerk", tactic: "Both tanks soak Hateful Strike, healers on the tanks, DPS go brrr. Don't fall into the slime.",
+    bosses: [{ n: "Patchwerk", x: 50, y: 40, r: 10 }], adds: [],
+    hz: [{ t: "rect", x: 0, y: 0, w: 8, h: 100, c: "poison", l: "the slime" }, { t: "rect", x: 92, y: 0, w: 8, h: 100, c: "poison", l: "the slime" }],
+    fails: ["{n} was the only one in melee range for Hateful Strike. Somehow.", "{n} fell into the slime and blamed lag.",
+            "{n} pulled early because \"he's just a big guy\".", "{n} wanted to play with Patchwerk. Patchwerk wanted to play too."] },
+  { name: "C'Thun", tactic: "Spread out in a circle around the room. Kill the tentacles. Whatever you do, do not look at the Eye.",
+    bosses: [{ n: "Eye of C'Thun", x: 50, y: 48, r: 8 }], adds: [{ n: "Eye Tentacle", x: 22, y: 25 }, { n: "Eye Tentacle", x: 78, y: 25 }, { n: "Eye Tentacle", x: 28, y: 80 }, { n: "Eye Tentacle", x: 74, y: 78 }, { n: "Claw Tentacle", x: 50, y: 12 }],
+    hz: [{ t: "rect", x: 43, y: 60, w: 14, h: 40, c: "shadow", l: "the Eye Beam" }],
+    fails: ["{n} looked at the Eye. Everyone saw them look at the Eye.", "{n} stacked with three people. The Eye Beam chained through all of them.",
+            "{n} got eaten and spent the fight in C'Thun's stomach, waving.", "{n} heard whispers and replied to them."] },
+  { name: "Vaelastrasz the Corrupt", tactic: "Infinite mana for everyone. Burn him fast, and run AWAY from the raid with Burning Adrenaline.",
+    bosses: [{ n: "Vaelastrasz", x: 50, y: 24, r: 9 }], adds: [],
+    hz: [{ t: "rect", x: 38, y: 37, w: 24, h: 28, c: "fire", l: "the cleave zone" }],
+    fails: ["{n} got Burning Adrenaline and ran straight into the middle of the raid.", "{n} got Burning Adrenaline and panic-hearthed. It didn't help.",
+            "{n} spent the infinite mana buffing people outside the raid.", "{n} said \"easy boss\" before the pull. Vael heard."] },
+  { name: "Hogger", tactic: "It's Hogger. How hard can it be?",
+    bosses: [{ n: "Hogger", x: 50, y: 42, r: 7 }], adds: [{ n: "Riverpaw Gnoll", x: 30, y: 38 }, { n: "Riverpaw Gnoll", x: 70, y: 38 }],
+    hz: [{ t: "pool", x: 20, y: 75, r: 5, c: "water", l: "the river" }],
+    fails: ["{n} got killed by Hogger. By HOGGER.", "{n} asked the raid for a summon to Elwynn Forest. Mid-fight.",
+            "{n} said \"it's just Hogger\" and pulled without the tank.", "{n} tried to tame Hogger."] },
+  { name: "Lucifron", tactic: "Tanks on Lucifron and both Flamewaker Protectors. Decurse Impending Doom immediately. Dispel Mind Control.",
+    bosses: [{ n: "Lucifron", x: 50, y: 28, r: 8 }], adds: [{ n: "Flamewaker Protector", x: 28, y: 34 }, { n: "Flamewaker Protector", x: 72, y: 34 }],
+    hz: [{ t: "pool", x: 50, y: 75, r: 6, c: "shadow", l: "the shadow pool" }],
+    fails: ["{n} got Mind Controlled and started fireballing the healers.", "{n} didn't decurse because \"curses are a mage problem\".",
+            "{n} let Impending Doom tick because they wanted to see what it does.", "{n} thought Lucifron was the trash pack."] },
+  { name: "Golemagg the Incinerator", tactic: "One tank on Golemagg, one on the two Core Ragers. Keep the dogs away from him. Ranged in the back.",
+    bosses: [{ n: "Golemagg", x: 50, y: 30, r: 9 }], adds: [{ n: "Core Rager", x: 34, y: 50 }, { n: "Core Rager", x: 66, y: 50 }],
+    hz: [{ t: "pool", x: 50, y: 30, r: 15, c: "fire", l: "the Magma Splash range" }],
+    fails: ["{n} tried to pet a Core Rager.", "{n} dragged the dogs into the raid to \"share\".",
+            "{n} stood in Magma Splash and stacked it to 47.", "{n} asked if the dogs are tameable. Asked again. And again."] },
+  { name: "Nefarian", tactic: "Tank him facing away from the raid. Handle your class call. Do not stand in Shadow Flame.",
+    bosses: [{ n: "Nefarian", x: 50, y: 22, r: 9 }], adds: [{ n: "Drakonid", x: 14, y: 52 }, { n: "Drakonid", x: 86, y: 52 }, { n: "Bone Construct", x: 50, y: 86 }],
+    hz: [{ t: "rect", x: 38, y: 33, w: 24, h: 40, c: "shadow", l: "the Shadow Flame" }],
+    fails: ["{n} got their class call and blamed the class designers.", "{n} stood in Shadow Flame without the Onyxia Scale Cloak.",
+            "{n} was the hunter whose bow broke. They weren't even a hunter.", "{n} got turned into a skeleton and kept DPSing the raid."] },
+  { name: "Thaddius", tactic: "Positive charges on the left, negative charges on the right. Swap sides when your charge changes.",
+    bosses: [{ n: "Thaddius", x: 50, y: 20, r: 9 }], adds: [],
+    hz: [{ t: "rect", x: 0, y: 42, w: 47, h: 58, c: "holy", l: "the + side" }, { t: "rect", x: 53, y: 42, w: 47, h: 58, c: "frost", l: "the − side" }],
+    fails: ["{n} got a positive charge and stood with the negatives. Everyone exploded.", "{n} missed the jump to the platform. Twice.",
+            "{n} asked whether + is left or right. During Polarity Shift.", "{n} stood exactly in the middle to be \"neutral\"."] },
+  { name: "Kel'Thuzad", tactic: "Spread out against the walls. Interrupt Frostbolt. Move out of the void zones. Dispel Mind Control.",
+    bosses: [{ n: "Kel'Thuzad", x: 50, y: 48, r: 8 }], adds: [{ n: "Guardian of Icecrown", x: 13, y: 14 }, { n: "Guardian of Icecrown", x: 87, y: 86 }],
+    hz: [{ t: "pool", x: 28, y: 30, r: 5, c: "shadow", l: "a void zone" }, { t: "pool", x: 72, y: 66, r: 5, c: "shadow", l: "a void zone" }, { t: "pool", x: 64, y: 20, r: 4, c: "frost", l: "the Frost Blast" }],
+    fails: ["{n} stood in a void zone and said it was \"only a little void\".", "{n} forgot to interrupt Frostbolt. Their one job.",
+            "{n} got Mind Controlled and taunted the boss.", "{n} got Frost Blasted while saying \"I'm fine, I'm fine\"."] },
+  { name: "The Twin Emperors", tactic: "Keep the twins apart. Warlocks tank Vek'lor, warriors tank Vek'nilash. Don't let them heal each other.",
+    bosses: [{ n: "Vek'lor", x: 30, y: 28, r: 7 }, { n: "Vek'nilash", x: 70, y: 28, r: 7 }], adds: [{ n: "Bug", x: 14, y: 76 }, { n: "Bug", x: 86, y: 76 }],
+    hz: [{ t: "rect", x: 41, y: 14, w: 18, h: 30, c: "holy", l: "the Heal Brother zone" }],
+    fails: ["{n} pulled the twins into each other. They healed each other to full.", "{n} attacked the wrong emperor. They look the same, okay?",
+            "{n} killed a bug and it exploded on the healers.", "{n} got teleported and kept attacking the wall."] },
+  { name: "Lord Mrglglgl, King of the Murlocs", tactic: "Kill the murlocs before they gurgle for help. Stay out of the puddles. Mrgl.",
+    bosses: [{ n: "Lord Mrglglgl", x: 50, y: 28, r: 8 }], adds: [{ n: "Murloc", x: 18, y: 18 }, { n: "Murloc", x: 82, y: 20 }, { n: "Murloc", x: 22, y: 72 }, { n: "Murloc", x: 78, y: 74 }, { n: "Murloc", x: 50, y: 88 }],
+    hz: [{ t: "pool", x: 30, y: 48, r: 6, c: "water", l: "a puddle" }, { t: "pool", x: 69, y: 52, r: 6, c: "water", l: "a puddle" }],
+    fails: ["{n} answered the murlocs in fluent Mrgl and switched sides.", "{n} pulled one murloc. It brought 14 friends. As murlocs do.",
+            "{n} was too busy laughing about \"Finding Murloc\" to press buttons.", "{n} went AAAAUGHIBBRGUBUGBUGRGUBURGLE and ran into a puddle."] },
+  { name: "The Whelp Rookery", tactic: "We have a plan: stay together, clear the eggs carefully, and absolutely nobody runs in early.",
+    bosses: [{ n: "Brood Mother", x: 50, y: 18, r: 7 }], adds: [{ n: "Egg", x: 30, y: 45 }, { n: "Egg", x: 42, y: 60 }, { n: "Egg", x: 58, y: 58 }, { n: "Egg", x: 70, y: 46 }, { n: "Egg", x: 50, y: 72 }],
+    hz: [{ t: "pool", x: 50, y: 56, r: 13, c: "fire", l: "the egg field" }],
+    fails: ["{n} ran in shouting their own name. At least they have chicken.", "{n} calculated a 32.33% chance of survival. Repeating, of course.",
+            "{n} stepped on an egg. Then on all of the eggs.", "{n} asked \"do we have a plan?\" after the plan was explained."] },
+  { name: "Gruul's Lair (wrong expansion)", tactic: "Nobody knows how we got here. Spread for Shatter, and don't stand near anyone when you're turned to stone.",
+    bosses: [{ n: "Gruul", x: 50, y: 30, r: 10 }], adds: [],
+    hz: [{ t: "pool", x: 30, y: 70, r: 6, c: "poison", l: "the Cave In" }, { t: "pool", x: 72, y: 62, r: 5, c: "poison", l: "the Cave In" }],
+    fails: ["{n} was turned to stone right next to five people. Shatter did the rest.", "{n} said \"this is Classic, Gruul isn't even out\". Gruul disagreed.",
+            "{n} stood in Cave In and called it \"cozy\".", "{n} grew bored and left for Karazhan."] }
+];
+const FAILS = [
+  "{n} pulled the next boss too. Why? Nobody knows.",
+  "{n} was AFK getting a Kaj cake.",
+  "{n} stood in the fire. Then found more fire to stand in.",
+  "{n} popped Bloodlust on the trash pack ten minutes ago.",
+  "{n} spent the whole fight healing the boss.",
+  "{n} turned the boss towards the raid. Everyone got cleaved.",
+  "{n} brought the wrong spec. Again.",
+  "{n} shouted \"I got you, Noah!\". Noah died.",
+  "{n} disconnected. Their internet is \"fine\".",
+  "{n} was linking [Thunderfury, Blessed Blade of the Windseeker] in Trade instead of playing.",
+  "{n} was in Stormwind typing mrgl in General chat.",
+  "{n} forgot their flask, their food, and how to play.",
+  "{n} said \"you know, I really like monk\" and instantly died.",
+  "{n} was busy logging into alt number 637.",
+  "{n} insisted pine = tree and ran into one.",
+  "{n} was looking for their fishing stick.",
+  "{n} had their keybinds reset by the latest patch.",
+  "{n} was still in the LFR queue. Somehow died there too.",
+  "{n} rolled Need on the boss before the pull.",
+  "{n} was on autorun into a wall the entire fight.",
+  "{n} used their hearthstone instead of their healthstone.",
+  "{n} was watching the boss guide on YouTube. During the fight.",
+  "{n} was out of mana. And arrows. And ideas.",
+  "{n} wanted to know what the big red button does.",
+  "{n} sneezed and hit Shift+Space+Mouse4 at the same time.",
+  "{n} was still repairing in Ironforge.",
+  "{n} tabbed out to check the auction house.",
+  "{n} rage-quit because the ready check said \"allegedly\".",
+  "{n} pulled aggro by breathing too loud on Discord.",
+  "{n}'s cat walked over the keyboard. The cat pulled.",
+  "{n} forgot to turn off Growl. The pet tanked the boss for 4 glorious seconds.",
+  "{n} was in the wrong instance and kept saying \"almost there\".",
+  "{n} tried to solo the adds for a screenshot.",
+  "{n} decided the pull was a good time to respec.",
+  "{n} bricked the pull. Sometimes you just brick the pull.",
+  "{n} kept asking \"is this the real fight or a test?\".",
+  "{n} hid their raid frames to \"see the boss better\".",
+  "{n} interrupted... the raid leader.",
+  "{n} ate a Kaj cake mid-fight and got Well Fed 0.5 seconds before dying.",
+  "{n} said \"I trust you, Andre\". Big mistake.",
+  "{n} misread the tactic as \"stack IN the fire\".",
+  "{n} only healed themselves. Self-care.",
+  "{n} brought a fishing pole as their main weapon.",
+  "{n} asked \"what does this boss do?\" at the pull.",
+  "{n} was eating a danish and could not answer in voice.",
+  "{n} was defeated. They insist they were undefeated.",
+  "{n} said \"I can explain\". They could not explain.",
+  "{n} went to check if up is still up and down is still down.",
+  "{n} brought their 13th account instead of their main.",
+  "{n} yelled \"Paladeeeeeeeeen\" and charged in alone.",
+  "{n} stood on the white line. White line was not good.",
+  "{n} lost their intellect because they grouped with Gøj.",
+  "{n} pressed every cooldown on the first trash pack to \"warm up\".",
+  "{n} logged out to fix their UI. Their UI is now 400 addons.",
+  "{n} was busy telling everyone that Feral is great.",
+  "{n} claimed it's not their problem, it's an orphan.",
+  "{n} mounted up mid-fight to \"reposition\"."
+];
+const WIPES = [
+  "☠ WIPE. Repair bill: {g}g. Same time next week?",
+  "☠ WIPE. Raid leader is typing...",
+  "☠ WIPE. Someone in Discord is \"just saying\".",
+  "☠ WIPE. The boss reset. So did your dignity. Repair bill: {g}g.",
+  "☠ WIPE. \"That was a good learning pull\" — nobody believes it.",
+  "☠ WIPE. Run back, rebuff, repeat. Repair bill: {g}g."
+];
+// Guild members playing Forever
+const RAID_NAMES = ["Chi", "Amy", "Jacob", "Gøj", "Ulaw", "Alisha", "Johny", "Kat", "Andy", "Esports",
+  "Avemae", "Dre", "Yil", "Kybris", "Andre", "Levi", "Joe", "Kaelisra", "Sab", "Noah"];
+const RAID_SIZE = 10;
+// "didn't bring X, so Y happened"
+const BROUGHT = [
+  "Nobody brought Fire Resistance gear, so everyone came out medium-rare.",
+  "{n} didn't bring reagents, so there was no battle res. Or buffs. Or hope.",
+  "Nobody brought a warlock, so {n} had to walk to the raid. They're still walking.",
+  "{n} forgot their flask, so they flasked a Kaj cake instead.",
+  "Nobody brought a rogue, so the boss's pockets remain unpicked. A tragedy.",
+  "{n} didn't bring their brain today. They brought vibes. Vibes don't heal.",
+  "Nobody brought a healer, so {n} volunteered with bandages and optimism.",
+  "Nobody brought a tank, so {n} tanked with their face.",
+  "{n} didn't bring a repair bot, so the raid repaired with duct tape.",
+  "Nobody brought snacks for the stream, so Esports went on strike mid-pull.",
+  "Nobody brought a mage, so there was no water. {n} drank from the nearest puddle.",
+  "{n} didn't bring Free Action Potions, so they stood perfectly still. Forever.",
+  "Nobody brought a shaman, so {n} put down a fishing bobber and called it Windfury Totem.",
+  "{n} didn't bring their headset, so they missed every callout. And the pull. And the wipe.",
+  "Nobody brought a raid leader, so {n} read the tactic out loud. Very slowly.",
+  "{n} didn't bring Greater Stoneshield Potions, so they brought a stone. Just a regular stone.",
+  "Nobody brought a druid, so there was no battle res. {n} tried CPR.",
+  "{n} forgot to bring arrows, so they threw the bow.",
+  "Nobody brought a priest, so {n} tried to dispel with positive thinking.",
+  "{n} didn't bring a hunter, so nobody could pull. {n} pulled by throwing a boot.",
+  "Nobody brought consumables, so {n} drank a Mana Potion they found on the floor. It wasn't a Mana Potion.",
+  "{n} didn't bring enough bag space, so they deleted their weapon to make room for loot.",
+  "Nobody brought a paladin, so there was no Blessing of Kings. {n} blessed everyone personally. It didn't help."
+];
+// things that just happen
+const CHAOS = [
+  "Mid-pull, {n} started a ready check. Everyone clicked \"not ready\" out of reflex.",
+  "{n}'s mic was open. The raid now knows everything about their sandwich.",
+  "{n} pressed Bloodlust. Then Heroism. Then Time Warp. None of them exist on their class.",
+  "{n} got Mind Controlled by their own pet.",
+  "Discord crashed. {n} kept going: alone, fearless, wrong.",
+  "{n} won a roll for loot that hadn't dropped yet.",
+  "{n} rebound all their abilities mid-fight \"for efficiency\".",
+  "{n} started a DPS meter argument at 80% boss health.",
+  "The boss took one look at {n}'s gear and enraged out of pity.",
+  "{n} went AFK to \"get a drink\". The drink was apparently in Denmark.",
+  "Server restart in 15 minutes. {n} said \"we have time\".",
+  "{n} cast Fear. In a room full of adds.",
+  "{n} died, released, and ran back into the wrong instance.",
+  "{n} and {n} argued about whether a hotdog is a sandwich. During the pull.",
+  "{n} fell asleep on the keyboard and spammed the Charge macro.",
+  "{n} clicked \"Leave Party\" instead of \"Loot\". Twice.",
+  "{n} lagged so hard they arrived at the fight after the wipe.",
+  "{n} challenged the boss to a duel. The boss accepted.",
+  "{n} tried to trade the boss for its loot.",
+  "{n} opened the map to find the boss. The boss found {n} first.",
+  "{n} typed /dance and the macro also cast Hellfire.",
+  "{n} switched to their tank alt mid-fight. It's level 12.",
+  "{n} asked \"wait, which one is the boss?\". It was the big one.",
+  "Andre called the wrong boss in voice. {n} followed the call perfectly."
+];
+// raid-size reactions (k = number of raiders in the arena)
+const SIZE_LINES = {
+  one: ["{n} decided to solo {boss}. Narrator: they did not.", "{n} went in alone \"to scout\". The boss scouted {n}."],
+  few: ["{k} people? That's a dungeon group, not a raid. {n} asked where the healer was.", "With only {k} raiders, {n} had to tank, heal and DPS. They chose \"none of the above\"."],
+  short: ["The raid was {missing} short. {n} tried to multibox the missing ones.", "{missing} empty raid spots. {n} filled one with their pet. It still did more damage than {n}."],
+  over: [
+    "You brought {k} people to a 10-man raid. The extra {extra} founded their own guild mid-pull and declared war on yours.",
+    "{extra} too many people. The instance portal choked like a murloc on a fishbone. {n} is still stuck in it.",
+    "With {k} people in the room, the boss couldn't decide who to hit first, panicked, and killed everyone anyway.",
+    "{n} was raider number 11. Raider number 11 doesn't get healed. Those are the rules.",
+    "The healers saw {k} health bars, said \"nope\", and logged off.",
+    "{extra} extra raiders means {extra} extra people standing in fire. {n} took one for the team. Then took another.",
+    "Loot council called an emergency meeting about how to split loot between {k} people. The meeting is still going.",
+    "Blizzard counted {k} raiders, refunded {extra} of them, and charged {n} for shipping.",
+    "{n} got kicked to make room. Then re-invited. Then kicked again. The boss enjoyed the show.",
+    "The raid frames only fit 10, so {n} existed purely as a rumor.",
+    "{k} people tried to fit through one door at the same time. {n} is now a door.",
+    "{n} snuck in as the 11th raider wearing a fake moustache. The boss saw through it immediately."
+  ]
+};
+const BENCH_LINES = [
+  "{n} wasn't even in the raid and still pulled from Discord.",
+  "{n} backseat raid-led from the bench so loudly that the boss heard it.",
+  "{n} was on the bench and streamed the wipe in 4K.",
+  "{n} sat on the bench, said \"I could've done that\", and was right."
+];
+let raidEnc = null, raidBusy = false;
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => a.slice().sort(() => Math.random() - .5);
+const yd = (a, b) => Math.hypot((a.x - b.x) * 0.48, (a.y - b.y) * 0.30); // arena % -> yards
+function hzDist(p, h) {
+  if (h.t === "pool") return yd(p, h) - h.r * 0.48;
+  const dx = Math.max(h.x - p.x, 0, p.x - (h.x + h.w)), dy = Math.max(h.y - p.y, 0, p.y - (h.y + h.h));
+  return dx || dy ? Math.hypot(dx * 0.48, dy * 0.30) : -1;
+}
+function el(cls, css, text) {
+  const d = document.createElement("div");
+  d.className = cls; Object.assign(d.style, css);
+  if (text) d.textContent = text;
+  return d;
+}
+
+// raiders are plain tokens (no class colours) dragged freely with pointer events, so touch works too
+function raidTok(name) {
+  const t = el("tok", {}, name);
+  t.addEventListener("pointerdown", e => {
+    if (raidBusy) return;
+    e.preventDefault();
+    try { t.setPointerCapture(e.pointerId); } catch (err) {}
+    const follow = ev => { t.style.left = ev.clientX + "px"; t.style.top = ev.clientY + "px"; };
+    t.classList.add("drag"); follow(e);
+    t.onpointermove = follow;
+    t.onpointerup = t.onpointercancel = ev => {
+      t.onpointermove = t.onpointerup = t.onpointercancel = null;
+      t.classList.remove("drag");
+      const a = $("arena").getBoundingClientRect();
+      if (ev.clientX > a.left && ev.clientX < a.right && ev.clientY > a.top && ev.clientY < a.bottom) {
+        $("arena").appendChild(t);
+        t.style.left = ((ev.clientX - a.left) / a.width * 100).toFixed(1) + "%";
+        t.style.top = ((ev.clientY - a.top) / a.height * 100).toFixed(1) + "%";
+      } else { $("bench").appendChild(t); t.style.left = t.style.top = ""; }
+      raidCount();
+    };
+  });
+  return t;
+}
+function buildRaid() {
+  raidBusy = false;
+  raidEnc = pick(ENCOUNTERS);
+  const head = $("raidboss"), b = document.createElement("b");
+  b.textContent = raidEnc.name;
+  head.textContent = ""; head.append(b, raidEnc.tactic);
+  const arena = $("arena"), bench = $("bench");
+  arena.textContent = ""; bench.textContent = ""; $("raidlog").textContent = "";
+  raidEnc.hz.forEach(h => {
+    const c = HZ_COLORS[h.c];
+    arena.appendChild(h.t === "pool"
+      ? el("hz pool", { left: h.x + "%", top: h.y + "%", width: h.r * 2 + "%",
+          background: "radial-gradient(circle, rgba(" + c + ",.55), rgba(" + c + ",.12))" }, h.l)
+      : el("hz rect", { left: h.x + "%", top: h.y + "%", width: h.w + "%", height: h.h + "%",
+          background: "rgba(" + c + ",.16)", color: "rgba(" + c + ",.85)" }, h.l));
+  });
+  raidEnc.adds.forEach(a => {
+    const d = el("add", { left: a.x + "%", top: a.y + "%" }), s = document.createElement("span");
+    s.textContent = a.n; d.appendChild(s); arena.appendChild(d);
+  });
+  raidEnc.bosses.forEach(o => arena.appendChild(el("boss", { left: o.x + "%", top: o.y + "%", width: o.r * 2 + "%" }, o.n)));
+  shuffle(RAID_NAMES).forEach(n => bench.appendChild(raidTok(n)));
+  raidScore = 0; $("raidscore").textContent = 0;
+  raidCount();
+  $("raidready").disabled = false;
+}
+// The score looks like it rates every screw-up in the wipe log. It is completely random.
+const PTS_BONUS = ["for effort", "for style", "for commitment", "for confidence", "creativity bonus", "for the content", "entertainment value"];
+const SCORE_CATS = ["Raid composition", "Mechanics awareness", "Consumables", "Vibes", "Discord etiquette", "Kaj cake bonus",
+  "Andre's trust level", "Murloc resistance", "Repair bill penalty", "Alt-account synergy", "Hogger experience",
+  "White line bonus", "Feral greatness", "Thunderfury mentions"];
+let raidScore = 0;
+function raidReport(fight) {
+  const lines = [["— Raid report —", "score"], ["Fight score: " + fight, "score"]];
+  let total = fight;
+  shuffle(SCORE_CATS).slice(0, 3).forEach(c => {
+    const v = Math.floor(Math.random() * 600) - 250;
+    total += v;
+    lines.push([c + ": " + (v > 0 ? "+" : "") + v, "score", null, v]);
+  });
+  const rank = total < -900 ? "Hogger-tier" : total < -550 ? "LFR Hero" : total < -250 ? "Heroic Wiper"
+             : total < 50 ? "Mythic Raider (allegedly)" : "World First (still wiped)";
+  lines.push(["Total score: " + total + " · Rank: " + rank, "score"]);
+  return lines;
+}
+function raidCount() {
+  const k = $("arena").querySelectorAll(".tok").length, c = $("raidcount");
+  c.textContent = k + "/" + RAID_SIZE;
+  c.style.color = k === RAID_SIZE ? "#7cff6b" : k > RAID_SIZE ? "#ff6b6b" : "";
+}
+function raidLog(text, cls, names, pts) {
+  const p = document.createElement("p");
+  if (cls) p.className = cls;
+  const parts = text.split("{n}");
+  parts.forEach((part, i) => {
+    p.append(part);
+    if (i < parts.length - 1) {
+      const s = document.createElement("span");
+      s.textContent = names[Math.min(i, names.length - 1)]; s.style.color = "#fff"; s.style.fontWeight = "bold";
+      p.append(s);
+    }
+  });
+  if (pts && cls === "bad") {
+    const s = document.createElement("span");
+    s.textContent = "  " + (pts > 0 ? "+" + pts + " " + pick(PTS_BONUS) : pts);
+    s.style.color = pts > 0 ? "#7cff6b" : "#ff6b6b"; s.style.fontWeight = "bold";
+    p.append(s);
+  }
+  $("raidlog").appendChild(p);
+  $("raid").scrollTop = $("raid").scrollHeight;
+}
+function sadTrombone() {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime;
+  [[392, 0], [370, 0.45], [349, 0.9], [330, 1.35]].forEach(([f, d], i) => tone(f, "sawtooth", t + d, i === 3 ? 1.4 : 0.45, 0.08));
+}
+function raidReady() {
+  if (raidBusy) return;
+  raidBusy = true; $("raidready").disabled = true; $("raidlog").textContent = "";
+  const E = raidEnc;
+  const placed = [...$("arena").querySelectorAll(".tok")].map(t => ({ n: t.textContent, x: parseFloat(t.style.left), y: parseFloat(t.style.top) }));
+  const bench = [...$("bench").children].map(t => t.textContent);
+  const S = []; // [text, css class, names for {n}]
+  const k = placed.length, boss = E.bosses.map(o => o.n).join(" and ");
+  const who = (c = 1) => shuffle(placed.map(p => p.n)).slice(0, c);
+  S.push([k === RAID_SIZE ? "Ready check: everyone is ready ✔ (allegedly)"
+        : k > RAID_SIZE ? "Ready check: " + k + " people ready. The raid only has room for " + RAID_SIZE + ". Nobody cares."
+        : k ? "Ready check: " + k + "/" + RAID_SIZE + " ready. Bold strategy."
+        : "Ready check: nobody is in the arena. The boss looks confused."]);
+  S.push(["Pulling in 3..."], ["2..."], ["1..."], [boss + " engaged!"]);
+  if (!k) S.push(["The boss soloed an empty room. Impressive, in a sad way.", "bad"]);
+  else {
+    // wrong raid size always gets a comment (exactly right gets none)
+    if (k !== RAID_SIZE) {
+      const sz = k === 1 ? "one" : k < 5 ? "few" : k < RAID_SIZE ? "short" : "over";
+      S.push([pick(SIZE_LINES[sz]).replace(/\{k\}/g, k).replace("{boss}", boss)
+        .replace(/\{missing\}/g, RAID_SIZE - k).replace(/\{extra\}/g, k - RAID_SIZE), "bad", who()]);
+    }
+    // a big mixed pool of things that went wrong; each wipe draws a few at random
+    const pool = [];
+    if (k >= 2) {
+      const [a, b] = who(2);
+      pool.push(["Raid leader review: {n} should obviously have stood where {n} was. Everyone knows that.", [a, b]]);
+    }
+    if (E.hz.length) {
+      let w = null;
+      placed.forEach(p => E.hz.forEach(h => { const d = hzDist(p, h); if (!w || d < w.d) w = { p, h, d }; }));
+      pool.push([w.d < 0 ? pick(["{n} was standing in " + w.h.l + ".", "{n} parked in " + w.h.l + " and called it \"a strategic position\".",
+                                  "{n} stood in " + w.h.l + " because it looked warm."])
+                         : "{n} stood " + Math.max(1, Math.round(w.d)) + " yards from " + w.h.l + ". Way too close.", [w.p.n]]);
+    }
+    let hug = null;
+    placed.forEach(p => E.bosses.forEach(o => { const d = yd(p, o) - o.r * 0.48; if (!hug || d < hug.d) hug = { p, o, d }; }));
+    pool.push([hug.d < 3 ? "{n} was hugging " + hug.o.n + " so hard it got awkward."
+                         : "{n} was the closest to " + hug.o.n + ", which made them the tank. Surprise!", [hug.p.n]]);
+    if (k >= 2) {
+      const mid = { x: placed.reduce((s, p) => s + p.x, 0) / k, y: placed.reduce((s, p) => s + p.y, 0) / k };
+      const far = placed.reduce((f, p) => yd(p, mid) > yd(f, mid) ? p : f);
+      pool.push([pick(["{n} stood so far away they were technically in another zone.", "{n} was so far out of range they got a different loading screen."]), [far.n]]);
+      let pair = null;
+      placed.forEach((a, i) => placed.slice(i + 1).forEach(b => { const d = yd(a, b); if (!pair || d < pair.d) pair = { a, b, d }; }));
+      pool.push([pair.d < 3 ? "{n} and {n} stood so close they shared a hitbox."
+                            : "{n} and {n} were " + Math.round(pair.d) + " yards apart. The tactic clearly said " + (Math.round(pair.d) + 3) + ".", [pair.a.n, pair.b.n]]);
+    }
+    if (E.adds.length) {
+      let near = null;
+      placed.forEach(p => E.adds.forEach(a => { const d = yd(p, a); if (!near || d < near.d) near = { p, a, d }; }));
+      pool.push([near.d < 5 ? "{n} stood next to a " + near.a.n + " and pulled it into the raid."
+                            : "Nobody picked up the " + near.a.n + ". It was assigned to {n}. Apparently.", [near.p.n]]);
+    }
+    shuffle(E.fails).slice(0, 2).forEach(t => pool.push([t, who()]));
+    shuffle(FAILS).slice(0, 3).forEach(t => pool.push([t, who(2)]));
+    shuffle(BROUGHT).slice(0, 3).forEach(t => pool.push([t, who(2)]));
+    shuffle(CHAOS).slice(0, 3).forEach(t => pool.push([t, who(2)]));
+    if (bench.length) pool.push([pick(BENCH_LINES), [pick(bench)]]);
+    shuffle(pool).slice(0, 4 + Math.floor(Math.random() * 2)).forEach(([t, ns]) => S.push([t, "bad", ns]));
+  }
+  S.push([pick(WIPES).replace("{g}", 50 + Math.floor(Math.random() * 250)), "wipe"]);
+  // every screw-up gets "rated": mostly penalties, sometimes a bonus for style
+  let fight = 0;
+  S.forEach(s => {
+    if (s[1] !== "bad") return;
+    s[3] = Math.random() < .25 ? 20 + Math.floor(Math.random() * 180) : -(30 + Math.floor(Math.random() * 270));
+    fight += s[3];
+  });
+  S.push(...raidReport(fight));
+  raidScore = 0; $("raidscore").textContent = 0;
+  let at = 300;
+  S.forEach(([text, cls, names, pts], i) => {
+    setTimeout(() => {
+      raidLog(text, cls, names || [], pts);
+      if (pts) { raidScore += pts; $("raidscore").textContent = raidScore; }
+      if (cls === "wipe") sadTrombone();
+      if (i === S.length - 1) { raidBusy = false; $("raidready").disabled = false; }
+    }, at);
+    at += cls === "score" ? 450 : 800;
+  });
+}
+function openRaid() { buildRaid(); $("raidbox").classList.add("on"); }
+function closeRaid() { $("raidbox").classList.remove("on"); }
+$("signup").addEventListener("click", openRaid);
+$("raidready").addEventListener("click", raidReady);
+$("raidagain").addEventListener("click", () => { if (!raidBusy) buildRaid(); });
+$("raidclose").addEventListener("click", closeRaid);
+$("raidbox").addEventListener("click", e => { if (e.target.id === "raidbox") closeRaid(); });
 $("undisco").addEventListener("click", stopDisco);
 $("vol").addEventListener("input", () => {
   if (yt && yt.setVolume) yt.setVolume(vol());
@@ -446,7 +932,8 @@ const HINTS = [
   "Some say if you call out \"Forever\" ten times, a sandstorm answers.",
   "True Dirty Tactics members know the two-letter password.",
   "Some legendary blades come running when you type their name.",
-  "Stormwind General chat never recovered from the beta. Say the M-word and see."
+  "Stormwind General chat never recovered from the beta. Say the M-word and see.",
+  "Raid sign-ups are always in the calendar. Count the days."
 ];
 const TIPS = [
   "Don't stand in the fire.",
@@ -489,7 +976,7 @@ const QUOTES = [
   "\"I got you, Noah!\" is usually followed by \"I'm dead, Noah\". Plan accordingly. (Zarnox)",
   "Up is up and down is down. Don't let anyone tell you otherwise. (Ave or Ima)",
   "In Mythic+, the key holder makes the rules. My key, my rule. (Random pug)",
-  "Undefeated means he wasn't defeated. Yes, that's what undefeated means. (Amy and Brydon)",
+  "Undefeated means he wasn't defeated. Yes, that's what undefeated means. (Amy)",
   "Sometimes you just brick the key. It happens to the best of us. (Zarnox)",
   "Some people fart better than they eat Kaj cakes. Find your strength. (Cami)",
   "White line good. (Farrenor)",

@@ -96,7 +96,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "13";
+const VERSION = "14";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -356,7 +356,18 @@ const QUOTES = [
   "Feral is great. Especially when there's an item level 158 cloak on the line. (Edge)",
   "Pikachu is widely regarded as the best dinosaur. Bulbasaur scholars disagree. (Cif)",
   "Pine = tree. Use this knowledge wisely in Ashenvale. (Souleself)",
-  "When threatened, you may shout \"Eat my cactus!\". Results may vary. (Ima)",
+  "When threatened, you may shout \"Eat my fucking cactus!\". Results may vary. (Ima)",
+  "Responding \"Kinky\" to any guild quote is always an option. (Edge)",
+  "Not everyone cares about the small kids with cancer. Maiken's brother, for example.",
+  "Whatever just happened, Lyra can explain.",
+  "Not sure how to take out your fishing stick? Neither is Noah.",
+  "Calling someone a raw chicken boob is considered a compliment in some guilds. (Maiken)",
+  "If it's an orphan, it's not your problem. (Maiken)",
+  "When a quote gets out of hand, you may tell the guild: fuck all of you. (Sabre)",
+  "A fully erected eye grants increased perception. (Ave)",
+  "Jacob is not into feet. He swears.",
+  "Having a danish in your mouth is a valid excuse for not answering in voice. (Kat)",
+  "A- - ment. (Larry)",
   "Want to hear a joke? Ask Frede what a butterfly is called in Danish.",
   "Danish players may refer to bags as \"your holes with pockets in them\". This is normal. (Ima)",
   "There are no other priests than shamans. Please update your class guides accordingly. (Noah)",

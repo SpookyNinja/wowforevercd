@@ -355,10 +355,30 @@
   #hogger.attack { transform-origin:50% 100%; }
   #redflash { position:fixed; inset:0; z-index:58; pointer-events:none; background:radial-gradient(circle, rgba(200,0,0,.2), rgba(140,0,0,.75)); opacity:0; }
   #redflash.on { animation:fflash 1s ease-out; }
-  body.dead > *:not(#deathbox):not(#redflash):not(#corpse):not(#ghostmsg):not(#achtoast) { filter:grayscale(1) brightness(.6); transition:filter 1s; }
-  body.ghost > *:not(#deathbox):not(#corpse):not(#ghostmsg):not(#achtoast) { filter:grayscale(1) brightness(.9) sepia(.3) hue-rotate(170deg) saturate(2); transition:filter 1s; }
-  #deathbox { position:fixed; left:50%; top:22%; transform:translateX(-50%); z-index:60; display:none; }
+  body.dead > *:not(#deathbox):not(#recap):not(#redflash):not(#corpse):not(#ghostmsg):not(#achtoast) { filter:grayscale(1) brightness(.6); transition:filter 1s; }
+  body.ghost > *:not(#deathbox):not(#recap):not(#corpse):not(#ghostmsg):not(#achtoast) { filter:grayscale(1) brightness(.9) sepia(.3) hue-rotate(170deg) saturate(2); transition:filter 1s; }
+  body.dead { background:#0e0e0e; }
+  body.ghost { background:radial-gradient(ellipse at center, #16323f 0%, #050d12 70%); }
+  #deathbox { position:fixed; left:50%; top:13%; transform:translateX(-50%); z-index:60; display:none; width:min(330px, 92vw);
+              padding:.7rem 1rem .8rem; text-align:center; font-family:Arial,sans-serif; color:#fff; font-size:.95rem; line-height:1.3;
+              background:rgba(8,8,10,.92); border:3px solid #6e6e6e; outline:1px solid #000; box-shadow:0 0 20px #000; }
   #deathbox.on { display:block; }
+  #deathbox .dbtns { display:flex; gap:.8rem; justify-content:center; margin-top:.6rem; }
+  #deathbox .mbtn { min-width:7.5rem; }
+  #recap { position:fixed; left:50%; top:36%; text-align:left; transform:translateX(-50%); z-index:61; display:none; width:min(330px, 92vw);
+           background:#1a1414; border:3px solid #6e6e6e; outline:1px solid #000; box-shadow:0 0 25px #000; font-family:Arial,sans-serif; }
+  #recap.on { display:block; }
+  #recap .mhead { text-align:left; padding-left:.6rem; }
+  #recaprows { padding:.5rem .4rem; background:radial-gradient(ellipse at 50% 30%, #2a1a1a, #120c0c); }
+  .rrow { display:grid; grid-template-columns:4.6rem 2.4rem 1fr; align-items:center; gap:.5rem; padding:.3rem 0; }
+  .rrow .amt { text-align:right; color:#ff2e2e; font-size:.9rem; }
+  .rrow .ico { width:2.2rem; height:2.2rem; display:flex; align-items:center; justify-content:center; font-size:1.2rem;
+               background:radial-gradient(#4a3a2a, #120c06); border:1px solid #a88a4a; }
+  .rrow b { display:block; color:#ffd100; font-size:.85rem; font-weight:normal; }
+  .rrow small { color:#aaa; font-size:.72rem; }
+  .rrow.kill .amt { font-size:1.35rem; }
+  .rrow.kill .amt::before { content:"🪦"; font-size:1rem; margin-right:.4rem; }
+  #recap .mbar { background:#1a1414; }
   #corpse { position:fixed; z-index:60; display:none; font-size:2.4rem; transform:translate(-50%,-50%); cursor:pointer;
             filter:drop-shadow(0 0 10px #9fe7ff); animation:corpse 1.2s ease-in-out infinite alternate; }
   #corpse.on { display:block; }
@@ -464,7 +484,10 @@
     <div id="onyemote">Onyxia takes in a deep breath...</div></div>
   <img id="hogger" src="img/hogger_walk1.webp" alt="Hogger">
   <div id="redflash"></div>
-  <div id="deathbox"><div class="qbox"><h4 id="deathtitle">You died.</h4><p id="deathtext"></p><button id="deathbtn">Release Spirit</button></div></div>
+  <div id="deathbox"><div id="deathtitle"></div>
+    <div class="dbtns"><button class="mbtn" id="deathbtn">Release Spirit</button><button class="mbtn" id="recapbtn">Recap</button></div></div>
+  <div id="recap"><div class="mhead">Death Recap <button class="mx" id="recapx" aria-label="Close">✕</button></div>
+    <div id="recaprows"></div><div class="mbar"><button class="mbtn" id="recapclose">Close</button></div></div>
   <div id="corpse" title="Your corpse">💀</div>
   <div id="ghostmsg">You are a ghost. Return to your corpse to resurrect.</div>
   <div id="mailicon" aria-hidden="true">📫</div>
@@ -635,7 +658,10 @@ function ensureAudio() {
 const SFX = { breath: "sfx/flamebreath.ogg", gnollAggro: "sfx/gnoll_aggro.ogg", gnollAttack: "sfx/gnoll_attack.ogg",
   achievement: "sfx/achievement.ogg", gnomeKick: "sfx/gnome_kick.ogg", gnomeDeath: "sfx/gnome_death.ogg",
   gnomePissed1: "sfx/gnome_pissed1.ogg", gnomePissed2: "sfx/gnome_pissed2.ogg", gnomePissed3: "sfx/gnome_pissed3.ogg",
-  gnomePissed4: "sfx/gnome_pissed4.ogg" };
+  gnomePissed4: "sfx/gnome_pissed4.ogg", readyCheck: "sfx/ready_check.ogg", wipe: "sfx/wipe.ogg", murloc: "sfx/murloc.ogg",
+  whelpFlap: "sfx/whelp_flap.ogg", fishCast: "sfx/fish_cast.ogg", fishBite1: "sfx/fish_bite1.ogg", fishBite2: "sfx/fish_bite2.ogg",
+  fishBite3: "sfx/fish_bite3.ogg", menuOpen: "sfx/menu_open.ogg", menuButton: "sfx/menu_button.ogg", coin: "sfx/coin.ogg",
+  countdown: "sfx/countdown.ogg", legendary: "sfx/legendary.ogg" };
 const sfxBuf = {};
 function loadSfx() {
   Object.entries(SFX).forEach(([k, url]) => fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject())
@@ -894,7 +920,7 @@ function gurgle(when) {
 }
 function murlocs() {
   const lines = MURLOC_LINES.slice().sort(() => Math.random() - .5).slice(0, 10);
-  if (chatBurst("[1. General - Stormwind City]", "#ffc0a0", lines, 650, i => { if (i % 2 === 0) gurgle(0); })) foundEgg("murloc");
+  if (chatBurst("[1. General - Stormwind City]", "#ffc0a0", lines, 650, i => { if (i % 2 === 0 && !playSfx("murloc", .55)) gurgle(0); })) foundEgg("murloc");
 }
 
 // ---------- Easter egg: type "raid" -> DT Raid Manager. Every ready check is rigged; you always wipe. ----------
@@ -1318,7 +1344,8 @@ function raidReady() {
     setTimeout(() => {
       raidLog(text, cls, names || [], pts);
       if (pts) { raidScore += pts; $("raidscore").textContent = raidScore; }
-      if (cls === "wipe") sadTrombone();
+      if (i === 0) playSfx("readyCheck", .6);
+      if (cls === "wipe" && !playSfx("wipe", .7)) sadTrombone();
       if (i === S.length - 1) { raidBusy = false; $("raidready").disabled = false; }
     }, at);
     at += cls === "score" ? 450 : 800;
@@ -1477,6 +1504,7 @@ function openQueue() {
   const draw = () => { $("qpos").textContent = fmt(qPos); $("qtime").textContent = qMin + " min"; };
   draw();
   $("queue").classList.add("on");
+  playSfx("menuOpen", .6);
   clearInterval(qTimer);
   qTimer = setInterval(() => {
     qPos += 3 + Math.floor(Math.random() * 60);
@@ -1485,8 +1513,9 @@ function openQueue() {
   }, 1000);
 }
 function closeQueue() { clearInterval(qTimer); $("queue").classList.remove("on"); }
-$("qcancel").addEventListener("click", closeQueue);
+$("qcancel").addEventListener("click", () => { playSfx("menuButton", .6); closeQueue(); });
 $("qrealm").addEventListener("click", () => {
+  playSfx("menuButton", .6);
   qPos += 500 + Math.floor(Math.random() * 1500); qMin += 5 + Math.floor(Math.random() * 10);
   $("qpos").textContent = fmt(qPos); $("qtime").textContent = qMin + " min";
   $("qnote").textContent = pick(Q_NOTES);
@@ -1530,6 +1559,8 @@ function leeroy() {
       { duration: 2500 + Math.random() * 3500, delay: Math.random() * Math.max(2500, total - 6500), easing: "ease-in-out", fill: "both" });
   }
   if (!withClip) for (let i = 0; i < 24; i++) chirp(i * 0.22 + Math.random() * 0.15);
+  const flaps = setInterval(() => playSfx("whelpFlap", .35 + Math.random() * .25), 280);
+  setTimeout(() => clearInterval(flaps), total - 2500);
   setTimeout(() => { txt.className = "calm"; txt.textContent = "At least I have chicken."; }, total - 3000);
   setTimeout(() => {
     box.classList.remove("on"); box.querySelectorAll(".whelp").forEach(w => w.remove()); leeroyOn = false;
@@ -1608,11 +1639,11 @@ function renderJournal() {
   }
 }
 function fishMsg(html) { $("fishmsg").innerHTML = html; }
-function splashAt(x, y) {
+function splashAt(x, y, quiet) {
   const p = $("pond"), sp = document.createElement("div");
   sp.className = "splash"; sp.style.left = x + "%"; sp.style.top = y + "%"; p.appendChild(sp);
   setTimeout(() => sp.remove(), 800);
-  if (!ctx || muted) return;
+  if (quiet || !ctx || muted) return;
   const t = ctx.currentTime, len = Math.floor(ctx.sampleRate * .35), nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
   for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
   const n = ctx.createBufferSource(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
@@ -1626,10 +1657,11 @@ function fishCast() {
   clearTimeout(fishMissT);
   bobX = 20 + Math.random() * 60; bobY = 25 + Math.random() * 50;
   const b = $("bob"); b.style.left = bobX + "%"; b.style.top = bobY + "%"; b.className = "on";
-  splashAt(bobX, bobY);
+  splashAt(bobX, bobY, playSfx("fishCast", .7));
   fishState = "waiting"; fishMsg("Waiting for a bite...");
   fishBiteT = setTimeout(() => {
-    fishState = "bite"; $("bob").className = "on bite"; splashAt(bobX, bobY); fishMsg("<b>!!!</b>");
+    fishState = "bite"; $("bob").className = "on bite";
+    splashAt(bobX, bobY, playSfx("fishBite" + (1 + Math.floor(Math.random() * 3)), .8)); fishMsg("<b>!!!</b>");
     fishMissT = setTimeout(() => { fishState = "idle"; $("bob").className = ""; fishMsg(pick(TOO_LATE)); }, 1100);
   }, 2000 + Math.random() * 7000);
 }
@@ -1656,8 +1688,11 @@ function fishCatch() {
   $("fishlog").prepend(li);
   fishStats(); renderJournal();
   const ladder = { poor: 1, common: 2, uncommon: 3, rare: 4, epic: 5, legendary: 6 }[rar];
+  if (rar === "legendary") {
+    const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
+    if (playSfx("legendary", .6)) return;
+  }
   if (ctx && !muted) [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", ctx.currentTime + i * .08, .5, .07));
-  if (rar === "legendary") { const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on"); }
 }
 $("pond").addEventListener("click", () => {
   if (fishState === "idle") fishCast();
@@ -1808,7 +1843,7 @@ function duelText(text, small, ms) {
 }
 $("dueln").addEventListener("click", () => {
   clearTimeout(duelHide); $("duel").classList.remove("on"); foundEgg("duel");
-  ["3", "2", "1"].forEach((n, i) => setTimeout(() => duelText(n, false, 900), i * 1000));
+  ["3", "2", "1"].forEach((n, i) => setTimeout(() => { duelText(n, false, 900); playSfx("countdown", .7); }, i * 1000));
   setTimeout(() => duelText("DUEL!", false, 900), 3000);
   setTimeout(() => {
     duelText(dueler + " has defeated you in a duel.", true, 4000);
@@ -1894,15 +1929,37 @@ $("hogger").addEventListener("click", () => {
     h.classList.remove("on");
     foundEgg("hogger");
     document.body.classList.add("dead");
-    $("deathtitle").textContent = "You died.";
-    $("deathtext").textContent = pick(["Killed by Hogger. Again.", "Hogger hits you for 9,999. You die.", "Hogger is undefeated. You are not.",
-      "You were slain by Hogger. Your guild has been notified."]);
-    $("deathbtn").textContent = "Release Spirit";
+    $("deathtitle").textContent = "You have died. Release spirit to enter Ghost Mode.";
+    $("deathbtn").textContent = "Release Spirit"; $("recapbtn").style.display = "";
+    buildRecap();
     $("deathbox").classList.add("on");
-    if (ctx && !muted) sadTrombone();
+    if (!playSfx("wipe", .6) && ctx && !muted) sadTrombone();
   }, 1300);
 });
+// Death Recap: the last 5 hits that killed you (the last one is the killing blow)
+const RECAP_HITS = [
+  ["🗡️", "Melee", "Hogger"], ["🦷", "Bite", "Hogger"], ["🐾", "Melee", "Riverpaw Gnoll"], ["💢", "Hogger Smash", "Hogger"],
+  ["🤗", "Hogger Hug", "Hogger"], ["🍖", "Thrown Ham", "Hogger"], ["😤", "Disrespect", "Hogger"], ["🐕", "Bite", "Riverpaw Mongrel"],
+  ["🥾", "Kick", "Hogger"], ["🌲", "Existential Dread", "Elwynn Forest"], ["📣", "Battle Shout (very loud)", "Hogger"],
+  ["🪵", "Stick", "Riverpaw Gnoll"]
+];
+const RECAP_KILL = [["💀", "HOGGER!", "Hogger"], ["⚔️", "Hogger Takes Your Lunch", "Hogger"], ["🔥", "Ultimate Hogger Combo", "Hogger"],
+  ["👑", "Elwynn Forest Supremacy", "Hogger"]];
+function buildRecap() {
+  const rows = $("recaprows"); rows.textContent = "";
+  shuffle(RECAP_HITS).slice(0, 4).map(h => [h, false]).concat([[pick(RECAP_KILL), true]]).forEach(([[ico, name, src], kill]) => {
+    const r = document.createElement("div"), a = document.createElement("div"), i = document.createElement("div"), t = document.createElement("div"),
+          b = document.createElement("b"), sm = document.createElement("small");
+    r.className = "rrow" + (kill ? " kill" : ""); a.className = "amt"; i.className = "ico";
+    a.textContent = "-" + (kill ? 2400 + Math.floor(Math.random() * 7000) : 900 + Math.floor(Math.random() * 1100));
+    i.textContent = ico; b.textContent = name; sm.textContent = src;
+    t.append(b, sm); r.append(a, i, t); rows.appendChild(r);
+  });
+}
+$("recapbtn").addEventListener("click", () => $("recap").classList.toggle("on"));
+["recapx", "recapclose"].forEach(id => $(id).addEventListener("click", () => $("recap").classList.remove("on")));
 $("deathbtn").addEventListener("click", () => {
+  $("recap").classList.remove("on");
   if (document.body.classList.contains("ghost")) {   // second dialog: resurrect
     $("deathbox").classList.remove("on");
     document.body.classList.remove("ghost", "dead");
@@ -1920,8 +1977,8 @@ $("deathbtn").addEventListener("click", () => {
 function reachCorpse() {
   if (!$("corpse").classList.contains("on") || $("deathbox").classList.contains("on")) return;
   $("corpse").classList.remove("on"); $("ghostmsg").classList.remove("on");
-  $("deathtitle").textContent = "Resurrect now?"; $("deathtext").textContent = "You found your corpse. Hogger is still out there.";
-  $("deathbtn").textContent = "Accept"; $("deathbox").classList.add("on");
+  $("deathtitle").textContent = "Resurrect now? Hogger is still out there.";
+  $("deathbtn").textContent = "Accept"; $("recapbtn").style.display = "none"; $("deathbox").classList.add("on");
 }
 $("corpse").addEventListener("click", reachCorpse);
 addEventListener("pointermove", e => {
@@ -2004,7 +2061,7 @@ function showLetter(i) {
 }
 function takeAttachments() {
   if (!mailSel) return;
-  if (mailSel.seller) { banned(); return; }
+  if (mailSel.seller) { playSfx("coin", .8); setTimeout(banned, 700); return; }
   if (mailSel.cod) { uiError("You can't afford this. You have 3 copper."); return; }
   if (!mailSel.att) { uiError("There's nothing to take."); return; }
   uiError("Inventory is full.");

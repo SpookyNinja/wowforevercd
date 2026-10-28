@@ -822,7 +822,8 @@ const SFX = { breath: "sfx/flamebreath.ogg", gnollAggro: "sfx/gnoll_aggro.ogg", 
   whelpFlap: "sfx/whelp_flap.ogg", fishCast: "sfx/fish_cast.ogg", fishBite1: "sfx/fish_bite1.ogg", fishBite2: "sfx/fish_bite2.ogg",
   fishBite3: "sfx/fish_bite3.ogg", menuOpen: "sfx/menu_open.ogg", menuButton: "sfx/menu_button.ogg", coin: "sfx/coin.ogg",
   countdown: "sfx/countdown.ogg", legendary: "sfx/legendary.ogg",
-  firebolt: "sfx/firebolt.ogg", frostbolt: "sfx/frostbolt.ogg" };
+  firebolt: "sfx/firebolt.ogg", frostbolt: "sfx/frostbolt.ogg",
+  ragCharge: "sfx/rag_charge.ogg", ragPurge: "sfx/rag_purge.ogg", ragSlay: "sfx/rag_slay.ogg", ragRain: "sfx/rag_rain.ogg" };
 const sfxBuf = {};
 function loadSfx() {
   Object.entries(SFX).forEach(([k, url]) => fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject())
@@ -2675,9 +2676,12 @@ addEventListener("keydown", e => {
 // ---------- Easter egg: click HOURS -> Don't Stand in the Fire, a bullet hell that starts tame and goes completely nuts ----------
 const FW = 800, FH = 560, F_HIT = 3, F_GRAZE = 16;
 // [second, raid warning] - each one also unlocks the next kind of hazard
-const FIRE_PHASES = [[0, "Don't stand in the fire."], [14, "Onyxia takes in a deep breath..."], [26, "BY FIRE BE PURGED!"],
+const FIRE_PHASES = [[0, "Don't stand in the fire."], [14, "Sulfuras is charging..."], [26, "BY FIRE BE PURGED!"],
   [38, "Raid leader: SPREAD OUT!"], [50, "Raid leader: no wait, STACK!"], [64, "It's raining fire. Hallelujah."],
   [80, "Touhou mode enabled. Good luck."], [100, "Seriously, how are you still alive?"]];
+// Ragnaros has something to say at some of the phases (index into FIRE_PHASES)
+const FIRE_VOICE = { 1: "ragCharge", 2: "ragPurge", 4: "ragSlay", 5: "ragRain" };
+const fireBoss = new Image(); fireBoss.src = "img/ragnaros.webp";
 let fireOn = false, fireOver = false, fireRaf = null, fireLast = 0, fireT = 0, fireBest = 0, fireGraze = 0, firePhase = 0;
 let fP = null, fAim = null, fKeys = {}, fHaz = [], fBul = [], fSpawn = {}, fSpin = 0, fDeadBy = "";
 try { fireBest = +localStorage.getItem("fireBest") || 0; } catch (e) {}
@@ -2692,7 +2696,8 @@ function fireReset() {
 }
 function fireWarn(text) {
   const w = $("firewarn"); w.textContent = text; w.classList.remove("on"); void w.offsetWidth; w.classList.add("on");
-  if (firePhase > 0 && !playSfx("readyCheck", .5) && ctx && !muted) tone(880, "square", ctx.currentTime, .15, .03);
+  if (firePhase > 0 && !playSfx(FIRE_VOICE[firePhase] || "readyCheck", FIRE_VOICE[firePhase] ? 1 : .5) && ctx && !muted)
+    tone(880, "square", ctx.currentTime, .15, .03);
 }
 function openFire() {
   if (fireOn) return;
@@ -2815,11 +2820,13 @@ function fireDraw() {
   const g = c.createRadialGradient(FW / 2, 60, 20, FW / 2, 60, FH);
   g.addColorStop(0, "rgba(" + (60 + heat * 60 | 0) + ",18,8,1)"); g.addColorStop(1, "#0a0705");
   c.fillStyle = g; c.fillRect(0, 0, FW, FH);
-  // boss (placeholder until there's a sprite): a burning eye at the top
-  if (t > 20) {
-    const pulse = 1 + Math.sin(performance.now() / 150) * .08, a = Math.min(1, (t - 20) / 4);
-    c.globalAlpha = a; c.font = (54 * pulse | 0) + "px serif"; c.textAlign = "center"; c.textBaseline = "middle";
-    c.shadowColor = "#ff4000"; c.shadowBlur = 30; c.fillText("👹", FW / 2, 70); c.shadowBlur = 0; c.globalAlpha = 1;
+  // Ragnaros rises at the top just before he starts charging Sulfuras
+  if (t > 11 && fireBoss.complete && fireBoss.naturalWidth) {
+    const pulse = 1 + Math.sin(performance.now() / 180) * .04, a = Math.min(1, (t - 11) / 3);
+    const h = 150 * pulse, w = h * fireBoss.naturalWidth / fireBoss.naturalHeight, rise = (1 - a) * 60;
+    c.globalAlpha = a; c.shadowColor = "#ff4000"; c.shadowBlur = 40;
+    c.drawImage(fireBoss, FW / 2 - w / 2, 72 - h * .45 - rise, w, h);
+    c.shadowBlur = 0; c.globalAlpha = 1;
   }
   fHaz.forEach(h => {
     const warn = h.t < h.warn, fade = warn ? .35 + .35 * Math.sin(h.t * 20) : Math.min(1, (h.warn + h.life - h.t) * 3);

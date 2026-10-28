@@ -496,6 +496,53 @@
   .vheart { position:absolute; bottom:-40px; pointer-events:none; animation:vfloat 5s ease-in forwards; }
   @keyframes vfloat { 0% { transform:translateY(0) rotate(0); opacity:0; } 15% { opacity:1; }
                       100% { transform:translateY(-110vh) rotate(40deg); opacity:0; } }
+  /* Firebolt or Frostbolt: click the SECONDS label, counter each elemental with the opposite spell */
+  #boltlbl { user-select:none; transition:color .4s, text-shadow .4s; }
+  #boltlbl:hover { color:#7fc8ff; text-shadow:0 0 8px rgba(255,120,40,.6), 0 0 14px rgba(80,170,255,.6); }
+  #bolt { background:rgba(0,0,0,.82); }
+  #bolt .pbox { width:min(900px, 96vw); user-select:none; }
+  #bolthud { display:flex; justify-content:space-between; color:#bbb; font-size:.9rem; margin:0 .2rem .35rem; }
+  #bolthud b { color:#ffd100; }
+  #bolttime { height:6px; background:#2a1f0c; border:1px solid #3a2b14; margin-bottom:.4rem; }
+  #bolttime i { display:block; height:100%; width:100%; background:linear-gradient(90deg, #ff3d00, #ffd100); }
+  #boltlane { position:relative; height:min(42vh, 300px); overflow:hidden; border:1px solid #3a2b14;
+              background:radial-gradient(ellipse at 50% 120%, #2b2214 0%, #0d0a06 70%); }
+  #boltlane.shake { animation:boltshake .45s; }
+  @keyframes boltshake { 20% { transform:translate(-8px,4px); } 40% { transform:translate(7px,-5px); } 60% { transform:translate(-5px,3px); } 80% { transform:translate(4px,-2px); } }
+  #boltmage { position:absolute; left:3%; bottom:12%; font-size:clamp(3rem,9vw,5.5rem); transform:scaleX(-1); }
+  .belem { position:absolute; bottom:12%; transform:translateX(-50%); transition:left .18s ease-out, opacity .25s, transform .25s;
+           font-size:clamp(2.6rem,7.5vw,4.6rem); line-height:1; }
+  .belem span { display:inline-block; animation:bbob 1.4s ease-in-out infinite alternate; }
+  .belem img { height:clamp(70px, 18vh, 150px); display:block; }
+  .belem.fire span, .belem.fire img { filter:drop-shadow(0 0 14px #ff5a00) drop-shadow(0 0 30px rgba(255,90,0,.5)); }
+  .belem.frost span, .belem.frost img { filter:drop-shadow(0 0 14px #49b6ff) drop-shadow(0 0 30px rgba(73,182,255,.5)); }
+  .belem.front::after { content:""; position:absolute; left:15%; right:15%; bottom:-10px; height:6px; border-radius:50%;
+                        background:rgba(255,209,0,.55); box-shadow:0 0 10px #ffd100; }
+  .belem.die { opacity:0; transform:translateX(-50%) scale(1.6); }
+  .belem.immune { transform:translateX(-50%) scale(1.35); }
+  .belem.smash { transition:left .3s ease-in, transform .3s; transform:translateX(-50%) scale(1.9); }
+  @keyframes bbob { from { transform:translateY(0); } to { transform:translateY(-8px); } }
+  .bproj { position:absolute; bottom:24%; font-size:2rem; transition:left .16s linear; pointer-events:none; z-index:2; }
+  .bfloat { position:absolute; bottom:55%; transform:translateX(-50%); font:bold 1.4rem Arial,sans-serif; color:#ffd100;
+            text-shadow:2px 2px 0 #000; pointer-events:none; animation:bfloat 1s ease-out forwards; z-index:3; }
+  .bfloat.ok { color:#fff; font-size:1.1rem; }
+  @keyframes bfloat { to { transform:translate(-50%,-50px); opacity:0; } }
+  #boltmsg { min-height:1.3em; margin:.5rem 0 .3rem; color:#ccc; font-size:.9rem; }
+  #boltbtns { display:flex; gap:1rem; justify-content:center; }
+  #boltbtns button { font:bold 1.05rem Arial,sans-serif; padding:.6rem 1.4rem; cursor:pointer; border:2px solid; color:#fff; min-width:11rem; }
+  #bfire { background:linear-gradient(#a52a00, #5a1400); border-color:#ff7a2a !important; }
+  #bfrost { background:linear-gradient(#0c5aa5, #062f5a); border-color:#5ab8ff !important; }
+  #boltbtns button:active { transform:scale(.96); }
+  #boltbtns small { opacity:.65; font-weight:normal; }
+  #boltclose { position:absolute; top:.55rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  #boltover { position:absolute; left:50%; top:50%; transform:translate(-50%,-45%); display:none; width:min(380px, 86%); z-index:5;
+              background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #c9a14a; box-shadow:0 0 30px #000; padding:1rem 1.2rem; }
+  #boltover.on { display:block; animation:duelin .35s ease-out; }
+  #boltover h3 { color:#ff4040; font-size:1.2rem; margin-bottom:.3rem; }
+  #boltover .big { font-family:Impact,"Arial Black",sans-serif; font-size:2.6rem; color:#fff; }
+  #boltover .rec { color:#1eff00; font-weight:bold; min-height:1.2em; }
+  #boltover p { margin:.35rem 0; font-size:.9rem; }
+  #boltover button { margin-top:.5rem; background:#2a1f0c; border:1px solid #c9a14a; color:#ffd100; font:bold .95rem Arial,sans-serif; padding:.45rem 1rem; cursor:pointer; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -512,12 +559,23 @@
     <div class="unit"><div class="num" id="d">00</div><div class="lbl" id="signup">Days</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="h">00</div><div class="lbl">Hours</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="m">00</div><div class="lbl">Minutes</div></div><div class="sep">:</div>
-    <div class="unit"><div class="num" id="sec">00</div><div class="lbl">Seconds</div></div>
+    <div class="unit"><div class="num" id="sec">00</div><div class="lbl" id="boltlbl">Seconds</div></div>
   </div>
   <div id="done">IT HAS BEGUN</div>
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="bolt" class="ov"><div class="pbox">
+    <button id="boltclose" aria-label="Close">✕</button>
+    <h2>🔥 Firebolt or Frostbolt ❄️</h2>
+    <div id="bolthud"><span>Score: <b id="boltscore">0</b></span><span>Best: <b id="boltbest">0</b></span></div>
+    <div id="bolttime"><i></i></div>
+    <div id="boltlane"><div id="boltmage">🧙</div>
+      <div id="boltover"><h3 id="boltwhy"></h3><div class="big" id="boltfinal"></div><div class="rec" id="boltrec"></div>
+        <p id="boltcomment"></p><button id="boltagain">Try again</button></div></div>
+    <div id="boltmsg"></div>
+    <div id="boltbtns"><button id="bfire">🔥 Firebolt <small>[A]</small></button><button id="bfrost">❄️ Frostbolt <small>[D]</small></button></div>
+  </div></div>
   <div id="vaultkey" aria-hidden="true">🔐</div>
   <div id="vault" class="ov"><div id="vlight"></div>
     <div id="vstage"><img alt=""><img alt=""></div>
@@ -666,7 +724,7 @@ const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
 const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
-  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer", "vault"];
+  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer", "vault", "bolt"];
 // Bump this when a release should start everyone's egg hunt from 0 again (fishing and gnome records are kept).
 const EGG_SAVE_VERSION = "20";
 let eggsFound = new Set();
@@ -885,7 +943,7 @@ function stopDisco() {
 }
 let typed = "";
 addEventListener("keydown", e => {
-  if (!ctx || e.key.length !== 1) return;
+  if (!ctx || e.key.length !== 1 || boltOn) return;
   typed = (typed + e.key.toLowerCase()).slice(-11);
   if (typed.endsWith("thunderfury")) { typed = ""; thunderfury(); }
   else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }
@@ -1523,7 +1581,7 @@ function interruptCast() {
   setTimeout(() => { if (!castFrom) bar.className = ""; }, 1200);
 }
 $("clock").addEventListener("pointerdown", e => {
-  if (e.target.id === "signup" || castFrom || anyOverlay()) return;
+  if (e.target.id === "signup" || e.target.id === "boltlbl" || castFrom || anyOverlay()) return;
   holdFrom = { x: e.clientX, y: e.clientY };
   holdTimer = setTimeout(() => { holdTimer = null; startCast(holdFrom.x, holdFrom.y); }, 1500);
 });
@@ -1808,7 +1866,7 @@ const ACH_NAMES = {
   login: "Position in Queue: Yes", leeroy: "At Least I Have Chicken", fishing: "Gone Fishin'",
   barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat",
   onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail", gnome: "Gnomeregan Air Force",
-  offer: "Best Value Ever", vault: "Saucy Vault"
+  offer: "Best Value Ever", vault: "Saucy Vault", bolt: "Elementary, My Dear Mage"
 };
 let achTimer = null;
 function achievementToast(id) {
@@ -2429,6 +2487,143 @@ function closeVault() {
 $("vaultkey").addEventListener("click", openVault);
 $("vault").addEventListener("click", closeVault);
 
+// ---------- Easter egg: click SECONDS -> Firebolt or Frostbolt. Frost kills fire, fire kills frost, until you mess up ----------
+// drop sprites in here (e.g. "img/fire_elemental.webp") and they replace the emoji placeholders
+const BOLT_IMG = { fire: null, frost: null };
+const BOLT_EMOJI = { fire: "🔥", frost: "❄️" };
+const BOLT_SLOTS = 6;
+let boltOn = false, boltOver = false, boltQ = [], boltScore = 0, boltBest = 0, boltDeadline = 0, boltLimit = 0, boltTimer = null, boltStarted = false;
+try { boltBest = +localStorage.getItem("boltBest") || 0; } catch (e) {}
+const boltX = i => 30 + i * 12.5;   // % from the left for queue slot i
+function boltMake(type) {
+  const el = document.createElement("div");
+  el.className = "belem " + type;
+  el.innerHTML = BOLT_IMG[type] ? '<img src="' + BOLT_IMG[type] + '" alt="">' : "<span>" + BOLT_EMOJI[type] + "</span>";
+  el.style.left = boltX(BOLT_SLOTS) + "%"; el.style.opacity = "0";
+  $("boltlane").appendChild(el);
+  return { type, el };
+}
+function boltLayout() {
+  boltQ.forEach((b, i) => {
+    b.el.style.left = boltX(i) + "%"; b.el.style.opacity = i === BOLT_SLOTS - 1 ? ".5" : "1";
+    b.el.classList.toggle("front", i === 0);
+  });
+}
+function boltFill() {
+  while (boltQ.length < BOLT_SLOTS) {
+    // mostly random, but never more than 4 of a kind in a row so it doesn't feel broken
+    const last = boltQ.slice(-4), same = last.length === 4 && last.every(b => b.type === last[0].type);
+    boltQ.push(boltMake(same ? (last[0].type === "fire" ? "frost" : "fire") : (Math.random() < .5 ? "fire" : "frost")));
+  }
+  setTimeout(boltLayout, 20);   // a beat later so new ones slide in from the right
+}
+function boltReset() {
+  boltQ.forEach(b => b.el.remove()); boltQ = [];
+  $("boltlane").querySelectorAll(".bproj, .bfloat").forEach(n => n.remove());
+  boltScore = 0; boltOver = false; boltStarted = false; boltLimit = 2000;
+  $("boltscore").textContent = "0"; $("boltbest").textContent = boltBest;
+  $("boltover").classList.remove("on");
+  $("bolttime").firstElementChild.style.width = "100%";
+  $("boltmsg").textContent = "Frost puts out fire elementals, fire melts frost elementals. Cast to start.";
+  boltFill();
+}
+function openBolt() {
+  if (boltOn) return;
+  boltOn = true; foundEgg("bolt");
+  $("bolt").classList.add("on"); playSfx("menuOpen", .6);
+  boltReset();
+  clearInterval(boltTimer);
+  boltTimer = setInterval(() => {
+    if (!boltStarted || boltOver) return;
+    const left = boltDeadline - performance.now();
+    $("bolttime").firstElementChild.style.width = Math.max(0, left / boltLimit * 100) + "%";
+    if (left <= 0) boltLose("slow");
+  }, 30);
+}
+function closeBolt() { boltOn = false; clearInterval(boltTimer); $("bolt").classList.remove("on"); }
+function boltSound(spell) {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime;
+  if (spell === "fire") { whoosh(500, 2200, .25); tone(98, "sawtooth", t, .25, .05); }
+  else { tone(1760, "sine", t, .25, .04); tone(2637, "sine", t + .04, .22, .03); whoosh(5000, 1800, .22); }
+}
+function boltPop(text, x, ok) {
+  const f = document.createElement("div"); f.className = "bfloat" + (ok ? " ok" : ""); f.textContent = text;
+  f.style.left = x + "%"; $("boltlane").appendChild(f); setTimeout(() => f.remove(), 1000);
+}
+function boltCast(spell) {
+  if (!boltOn) return;
+  if (boltOver) return;
+  const front = boltQ[0];
+  if (!front) return;
+  boltSound(spell);
+  // the projectile is just for show, the outcome is decided right away so fast players never wait on it
+  const p = document.createElement("div"); p.className = "bproj"; p.textContent = spell === "fire" ? "☄️" : "❄️";
+  p.style.left = "12%"; $("boltlane").appendChild(p);
+  setTimeout(() => { p.style.left = (boltX(0) - 4) + "%"; }, 15);
+  setTimeout(() => p.remove(), 180);
+  const right = (spell === "frost") === (front.type === "fire");
+  if (!right) { boltLose(spell, front); return; }
+  boltStarted = true;
+  boltScore++; $("boltscore").textContent = boltScore;
+  boltQ.shift();
+  setTimeout(() => { front.el.classList.add("die"); if (ctx && !muted) tone(spell === "fire" ? 180 : 520, "triangle", ctx.currentTime, .15, .06); }, 150);
+  setTimeout(() => front.el.remove(), 450);
+  if (boltScore % 10 === 0) boltPop(boltScore + "!", boltX(0), true);
+  $("boltmsg").textContent = "";
+  boltFill();
+  // it gets faster: 2s for the first one, down to half a second
+  boltLimit = Math.max(500, 2000 - boltScore * 30);
+  boltDeadline = performance.now() + boltLimit;
+}
+const BOLT_WHY = {
+  fire: ["You cast Firebolt on a Fire Elemental. It said thanks.", "Fire Elemental absorbed your Firebolt and got bigger. Great job.",
+         "Fire on fire. Bold strategy."],
+  frost: ["You cast Frostbolt on a Frost Elemental. It is now even colder. And angrier.", "Frost Elemental absorbed your Frostbolt. Refreshing.",
+          "Ice on ice. Bold strategy."],
+  slow: ["Too slow. The elemental gave you a very warm (or very cold) hug.", "You stood there. The elemental did not.",
+         "Casting... casting... dead."]
+};
+function boltLose(why, front) {
+  boltOver = true;
+  front = front || boltQ[0];
+  const lane = $("boltlane");
+  if (why !== "slow") setTimeout(() => { boltPop("Immune", boltX(0)); front.el.classList.add("immune"); }, 160);
+  setTimeout(() => { front.el.classList.add("smash"); front.el.style.left = "12%"; }, why === "slow" ? 0 : 550);
+  setTimeout(() => {
+    lane.classList.remove("shake"); void lane.offsetWidth; lane.classList.add("shake"); boom();
+  }, why === "slow" ? 300 : 850);
+  setTimeout(() => {
+    const rec = boltScore > boltBest;
+    if (rec) { boltBest = boltScore; try { localStorage.setItem("boltBest", boltBest); } catch (e) {} }
+    $("boltbest").textContent = boltBest;
+    $("boltwhy").textContent = pick(BOLT_WHY[why]);
+    $("boltfinal").textContent = boltScore + (boltScore === 1 ? " elemental" : " elementals");
+    $("boltrec").textContent = rec && boltScore > 0 ? "New personal best!" : "";
+    const s = boltScore;
+    $("boltcomment").textContent = s === 0 ? "Zero. Did you even read the tooltip?"
+      : s < 5 ? "Even a level 1 mage would be disappointed."
+      : s < 15 ? "Respectable. For a warlock."
+      : s < 30 ? "Solid. You may now spam Frostbolt in raid."
+      : s < 50 ? "Archmage material. Jaina is getting nervous."
+      : "Unreal. Go outside, it's almost launch.";
+    $("boltover").classList.add("on");
+  }, why === "slow" ? 1100 : 1600);
+}
+$("boltlbl").addEventListener("click", openBolt);
+$("boltclose").addEventListener("click", closeBolt);
+$("boltagain").addEventListener("click", boltReset);
+$("bfire").addEventListener("click", () => boltCast("fire"));
+$("bfrost").addEventListener("click", () => boltCast("frost"));
+addEventListener("keydown", e => {
+  if (!boltOn) return;
+  const k = e.key.toLowerCase();
+  if (k === "a" || k === "arrowleft") { e.preventDefault(); if (!e.repeat) boltCast("fire"); }
+  else if (k === "d" || k === "arrowright") { e.preventDefault(); if (!e.repeat) boltCast("frost"); }
+  else if ((k === " " || k === "enter") && boltOver && $("boltover").classList.contains("on")) { e.preventDefault(); boltReset(); }
+  else if (k === "escape") closeBolt();
+});
+
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
   clearTimeout(fusionFallback); fusionWaiting = false;
@@ -2580,7 +2775,8 @@ const HINTS = [
   ["mail", "Every adventurer checks their mailbox. Look in the corner, it's tiny."],
   ["gnome", "Something small keeps peeking in from the left edge of the screen. Give it a warm welcome."],
   ["offer", "Collect 12 achievements and you'll get an offer you can't refuse."],
-  ["vault", "Some treasures are kept behind a keyhole. Check the right side of the page."]
+  ["vault", "Some treasures are kept behind a keyhole. Check the right side of the page."],
+  ["bolt", "A mage counts every second until launch. Pay the seconds a visit."]
 ];
 const TIPS = [
   "Don't stand in the fire.",

@@ -1597,7 +1597,10 @@ function leeroy() {
 $("chicken").addEventListener("click", leeroy);
 
 // ---------- Easter egg: fishing. A ripple shows up now and then near the bottom; click it to fish ----------
-const RARITY = { poor: "#9d9d9d", common: "#ffffff", uncommon: "#1eff00", rare: "#0070dd", epic: "#a335ee", legendary: "#ff8000" };
+const RARITY = { poor: "#9d9d9d", common: "#ffffff", uncommon: "#1eff00", rare: "#0070dd", epic: "#a335ee", legendary: "#ff8000",
+  artifact: "#e6cc80" };
+// the ultimate fish: only ever caught once every other item is in the journal
+const ULTIMATE_FISH = "Jacob, get a life";
 const RARITY_WEIGHT = { poor: 28, common: 30, uncommon: 22, rare: 12, epic: 6, legendary: 2 };
 const LOOT = {
   poor: ["Old Boot", "Waterlogged Sock", "Rusty Hook", "Soggy Bread", "Broken Fishing Pole", "Torn Map of Westfall", "Empty Bottle",
@@ -1651,12 +1654,14 @@ try {
 } catch (e) {}
 function fishStats() {
   $("fishstats").textContent = "Fishing skill: " + fishSkill + "/300 · Total catches: " + fishCaught +
-    " · Journal: " + fishJournal.size + "/" + LOOT_TOTAL;
+    " · Journal: " + journalCount() + "/" + LOOT_TOTAL;
 }
+const journalCount = () => Object.values(LOOT).flat().filter(i => fishJournal.has(i)).length;
 function renderJournal() {
   const j = $("fishjournal"); j.textContent = "";
   const c = document.createElement("div"); c.id = "jcount";
-  c.textContent = "Collected " + fishJournal.size + " / " + LOOT_TOTAL + " · " + (LOOT_TOTAL - fishJournal.size) + " missing";
+  const got = journalCount();
+  c.textContent = "Collected " + got + " / " + LOOT_TOTAL + " · " + (LOOT_TOTAL - got) + " missing";
   j.appendChild(c);
   for (const [rar, items] of Object.entries(LOOT)) {
     const h = document.createElement("h3"), ul = document.createElement("ul");
@@ -1670,6 +1675,10 @@ function renderJournal() {
     });
     j.append(h, ul);
   }
+  const h = document.createElement("h3"), ul = document.createElement("ul"), li = document.createElement("li"), has = fishJournal.has(ULTIMATE_FISH);
+  h.style.color = RARITY.artifact; h.textContent = "ultimate (" + (has ? 1 : 0) + "/1)";
+  if (has) { li.textContent = ULTIMATE_FISH; li.style.color = RARITY.artifact; } else { li.textContent = "???"; li.className = "missing"; }
+  ul.appendChild(li); j.append(h, ul);
 }
 function fishMsg(html) { $("fishmsg").innerHTML = html; }
 function splashAt(x, y, quiet) {
@@ -1706,7 +1715,9 @@ function rollLoot() {
 function fishCatch() {
   clearTimeout(fishMissT);
   fishState = "idle"; $("bob").className = "";
-  const [rar, item] = rollLoot();
+  let [rar, item] = rollLoot();
+  const ultimate = journalCount() === LOOT_TOTAL && !fishJournal.has(ULTIMATE_FISH);
+  if (ultimate) [rar, item] = ["artifact", ULTIMATE_FISH];
   fishCaught++; if (fishSkill < 300) fishSkill = Math.min(300, fishSkill + 1 + (Math.random() < .3 ? 1 : 0));
   const isNew = !fishJournal.has(item);
   fishJournal.add(item);
@@ -1716,12 +1727,13 @@ function fishCatch() {
   } catch (e) {}
   const b = document.createElement("b"); b.style.color = RARITY[rar]; b.textContent = item;
   $("fishmsg").textContent = "You caught: "; $("fishmsg").appendChild(b);
-  if (isNew) $("fishmsg").append(" · New journal entry!");
+  if (ultimate) $("fishmsg").append(" · ULTIMATE CATCH! You have fished up literally everything.");
+  else if (isNew) $("fishmsg").append(" · New journal entry!");
   const li = document.createElement("li"); li.style.color = RARITY[rar]; li.textContent = item;
   $("fishlog").prepend(li);
   fishStats(); renderJournal();
   const ladder = { poor: 1, common: 2, uncommon: 3, rare: 4, epic: 5, legendary: 6 }[rar];
-  if (rar === "legendary") {
+  if (rar === "legendary" || rar === "artifact") {
     const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
     if (playSfx("legendary", .6)) return;
   }

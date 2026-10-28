@@ -116,6 +116,73 @@
   #raidbtns button:hover, #raidclose:hover { background:#3a2b10; }
   #raidbtns button:disabled { opacity:.4; cursor:default; }
   #raidclose { position:absolute; top:.6rem; right:.6rem; padding:.2rem .6rem; }
+  /* Asmongold jumpscare */
+  #scare { position:fixed; inset:0; z-index:60; display:none; align-items:center; justify-content:center; pointer-events:none;
+           background:radial-gradient(circle, #3a0000 0%, #000 75%); }
+  #scare.on { display:flex; }
+  #scare img { width:min(140vw, 170vh); max-width:none; animation:scarezoom .35s cubic-bezier(.2,1.6,.4,1), scareshake .07s linear .35s 12; }
+  @keyframes scarezoom { from { transform:scale(.04) rotate(-12deg); } to { transform:scale(1) rotate(0); } }
+  @keyframes scareshake { 0% { transform:translate(-2%,1%) rotate(-2deg); } 50% { transform:translate(2%,-1%) rotate(2deg); } 100% { transform:none; } }
+  /* easter egg counter: hidden until the first egg is found */
+  #eggcount { position:fixed; bottom:.6rem; right:.8rem; z-index:6; display:none; background:rgba(0,0,0,.6); border:1px solid #7a5a1c;
+              color:var(--gold); font-size:.75rem; letter-spacing:.08em; padding:.35rem .7rem; }
+  #eggcount.show { display:block; }
+  #eggcount.pop { animation:eggpop 1.2s ease-out; }
+  @keyframes eggpop { 0% { transform:scale(1.6); box-shadow:0 0 30px var(--gold); color:#fff; } 100% { transform:scale(1); box-shadow:none; } }
+  /* Fusion easter egg: invisible button in the dark, DBZ-style fusion of Naga + Dirty Tactics */
+  #fusionbtn { position:fixed; left:5vw; bottom:16vh; z-index:4; opacity:0; background:none; border:1px solid var(--gold);
+               color:var(--gold); font:inherit; font-weight:bold; letter-spacing:.3em; padding:.4rem .8rem; cursor:pointer; transition:opacity .4s; }
+  #fusionbtn:hover, #fusionbtn:focus-visible { opacity:.9; }
+  #fusion { position:fixed; inset:0; z-index:55; display:none; overflow:hidden; cursor:pointer;
+            background:radial-gradient(circle at 50% 55%, #2b1846 0%, #0c0618 55%, #000 100%); }
+  #fusion.on { display:block; }
+  #fusion .fl { position:absolute; left:50%; top:52%; width:min(30vw, 46vh, 260px); transform:translate(-50%,-50%);
+                transition:transform .85s cubic-bezier(.3,1.35,.5,1); filter:drop-shadow(0 0 18px rgba(255,220,120,.35)); }
+  #fusion.s0 #fl-naga { transform:translate(-50%,-50%) translateX(-120vw); }
+  #fusion.s0 #fl-dt   { transform:translate(-50%,-50%) translateX(120vw); }
+  #fusion.s1 #fl-naga { transform:translate(-50%,-50%) translateX(-28vw); }
+  #fusion.s1 #fl-dt   { transform:translate(-50%,-50%) translateX(28vw); }
+  #fusion.s2 #fl-naga { transform:translate(-50%,-50%) translateX(-36vw) rotate(-28deg); }
+  #fusion.s2 #fl-dt   { transform:translate(-50%,-50%) translateX(36vw) rotate(28deg); }
+  #fusion.s3 #fl-naga { transform:translate(-50%,-50%) translateX(-14vw) rotate(24deg) scale(.9); }
+  #fusion.s3 #fl-dt   { transform:translate(-50%,-50%) translateX(14vw) rotate(-24deg) scale(.9); }
+  #fusion.s4 .fl { transform:translate(-50%,-50%) scale(.5); transition-duration:.25s; }
+  #fusion.s5 .fl { opacity:0; }
+  /* energy ball that slowly swallows both logos after "HA!" */
+  #fball { position:absolute; left:50%; top:52%; width:min(34vw, 42vh, 300px); aspect-ratio:1; border-radius:50%; z-index:2;
+           pointer-events:none; opacity:0; transform:translate(-50%,-50%) scale(.2);
+           background:radial-gradient(circle, #fff 0%, #fff6c8 22%, #ffd84d 42%, rgba(255,140,0,.75) 60%, rgba(80,120,255,.4) 72%, transparent 74%);
+           box-shadow:0 0 60px 20px rgba(255,200,80,.55), 0 0 140px 50px rgba(90,130,255,.35);
+           transition:opacity 4s ease-in, transform 4s ease-in; }
+  #fusion.s4 #fball { opacity:1; transform:translate(-50%,-50%) scale(1); animation:ballpulse .3s ease-in-out infinite alternate; }
+  #fusion.s5 #fball { opacity:0; transition:opacity .2s; }
+  @keyframes ballpulse { from { filter:brightness(1); } to { filter:brightness(1.4) saturate(1.3); } }
+  #fusion.charge .fl { animation:charge .45s ease-in-out infinite alternate; }
+  @keyframes charge { from { filter:drop-shadow(0 0 10px rgba(255,220,120,.4)) brightness(1); }
+                      to { filter:drop-shadow(0 0 40px rgba(255,200,60,.95)) brightness(1.35); } }
+  #fusiontxt { z-index:3; position:absolute; left:50%; top:14%; transform:translateX(-50%); white-space:nowrap; font-family:Impact,"Arial Black",sans-serif;
+               font-size:clamp(2.5rem,10vw,7rem); color:#ffe14d; -webkit-text-stroke:3px #7a2a00; text-shadow:0 0 30px #ff9d00; letter-spacing:.05em; }
+  #fusiontxt.pop { animation:ftxt .5s cubic-bezier(.2,1.8,.4,1); }
+  @keyframes ftxt { from { transform:translateX(-50%) scale(2.2); opacity:0; } to { transform:translateX(-50%) scale(1); opacity:1; } }
+  #fusionflash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+  #fusionflash.on { animation:fflash 1.1s ease-out; }
+  @keyframes fflash { 0% { opacity:0; } 8% { opacity:1; } 100% { opacity:0; } }
+  #fused { position:absolute; left:50%; top:50%; width:min(42vw, 52vh, 340px); aspect-ratio:1; transform:translate(-50%,-55%); display:none; }
+  #fusion.s5 #fused { display:block; animation:fborn 1s cubic-bezier(.2,1.5,.4,1); }
+  @keyframes fborn { from { transform:translate(-50%,-55%) scale(0) rotate(-540deg); } to { transform:translate(-50%,-55%) scale(1) rotate(0); } }
+  #fused::before { content:""; position:absolute; inset:-28%; border-radius:50%; z-index:-1; animation:aura 1s linear infinite;
+                   background:conic-gradient(from 0deg, #ffe14d, #ff7a00, #2a6cff, #8a2be2, #ffe14d); filter:blur(28px); opacity:.85; }
+  @keyframes aura { to { transform:rotate(360deg) scale(1.05); } }
+  #fused .body { position:absolute; inset:0; animation:abomination 2.2s ease-in-out infinite; }
+  #fused img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; }
+  @keyframes abomination { 0%,100% { transform:rotate(-3deg) scale(1); } 50% { transform:rotate(3deg) scale(1.05); } }
+  #fusedname { position:absolute; left:50%; bottom:9%; transform:translateX(-50%); display:none; text-align:center; white-space:nowrap;
+               font-family:Impact,"Arial Black",sans-serif; font-size:clamp(2rem,8vw,5.5rem); letter-spacing:.06em;
+               background:linear-gradient(90deg, #ffb300, #ff6a00 45%, #4f8cff 55%, #c9d8ff); -webkit-background-clip:text; background-clip:text; color:transparent;
+               filter:drop-shadow(0 0 14px rgba(255,170,0,.6)); }
+  #fusedname small { display:block; font-family:Arial,sans-serif; font-size:clamp(.7rem,1.6vw,1rem); letter-spacing:.25em; color:#bbb;
+                     -webkit-background-clip:initial; background-clip:initial; }
+  #fusion.s5 #fusedname { display:block; animation:ftxt .7s .5s both cubic-bezier(.2,1.6,.4,1); }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -126,7 +193,7 @@
     <input id="vol" type="range" min="0" max="100" value="35" aria-label="Music volume">
     <button id="mute" aria-label="Toggle sound">🔊 Ticks on</button>
   </div>
-  <div id="ytbox"><div id="yt"></div></div>
+  <div id="ytbox"><div id="yt"></div><div id="ytfusion"></div></div>
   <h1>World of Warcraft: <span id="egg">Forever</span></h1>
   <div id="clock">
     <div class="unit"><div class="num" id="d">00</div><div class="lbl" id="signup">Days</div></div><div class="sep">:</div>
@@ -137,8 +204,22 @@
   <div id="done">IT HAS BEGUN</div>
   <p id="sub"></p>
   <p id="tip"></p>
+  <div id="eggcount"></div>
+  <button id="fusionbtn" aria-label="Fusion">FUSION</button>
+  <div id="fusion">
+    <img class="fl" id="fl-naga" src="naga.webp" alt="Naga">
+    <img class="fl" id="fl-dt" src="dt.webp" alt="Dirty Tactics">
+    <div id="fball"></div>
+    <div id="fusiontxt"></div>
+    <div id="fused"><div class="body">
+      <img src="nagatics.webp" alt="Dirty Nagatics">
+    </div></div>
+    <div id="fusedname">DIRTY NAGATICS</div>
+    <div id="fusionflash"></div>
+  </div>
   <p id="ver" style="position:fixed;bottom:.5rem;left:.8rem;color:#444;font-size:.7rem"></p>
 
+  <div id="scare"><img src="asmon.png" alt=""></div>
   <div id="flash"></div>
   <div id="tfchat"></div>
   <div id="raidbox"><div id="raid">
@@ -158,7 +239,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "17";
+const VERSION = "18";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -171,10 +252,32 @@ fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.t
 const LAUNCH = new Date("2026-11-04T23:00:00Z");
 // Background music: YouTube video id (Seasons of War, WoW soundtrack). Plays audio only, loops.
 const MUSIC_ID = "X-PNMaf7C-o";
+// Fusion easter egg song (first 23 s are used) and when each step of the dance happens, in ms from the song's start.
+const FUSION_ID = "qZnbfXQxV4A";
+const FUSION_STEPS = [[0, "s1"], [2000, "s1 charge"], [4000, "s2 charge", "FU..."], [7500, "s3 charge", "SION..."],
+  [11000, "s4 charge", "HA!"], [16000, "reveal"]];
+const FUSION_END = 23000;
 // ===================================================================================
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
+
+// ---------- Easter eggs found counter (remembered per browser) ----------
+const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion"];
+let eggsFound = new Set();
+try { eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e))); } catch (e) {}
+function renderEggs(pop) {
+  const c = $("eggcount");
+  c.textContent = "🥚 Easter eggs found: " + eggsFound.size + "/" + EGGS.length;
+  c.classList.toggle("show", eggsFound.size > 0);
+  if (pop) { c.classList.remove("pop"); void c.offsetWidth; c.classList.add("pop"); }
+}
+function foundEgg(id) {
+  if (eggsFound.has(id)) return;
+  eggsFound.add(id);
+  try { localStorage.setItem("eggsFound", JSON.stringify([...eggsFound])); } catch (e) {}
+  renderEggs(true);
+}
 let ctx = null, muted = false, eggOn = false, lastSec = null, finished = false;
 
 $("sub").textContent = "Launch: " + LAUNCH.toLocaleString(undefined, { dateStyle:"full", timeStyle:"long" });
@@ -213,7 +316,7 @@ function tone(freq, type, start, dur, vol) {
 }
 // Deep cinematic thump: pitch-dropping sub kick + low noise knock + booming tail
 function tick(final) {
-  if (!ctx || muted || eggOn) return;
+  if (!ctx || muted || eggOn || fusing) return;
   const t = ctx.currentTime, k = final ? 1 : 0.8;
   if (tickBuf) {
     const src = ctx.createBufferSource(), g = ctx.createGain();
@@ -295,6 +398,15 @@ function startYouTube() {
         onStateChange: e => { if (e.data === YT.PlayerState.ENDED && !disco) e.target.seekTo(0).playVideo(); }
       }
     });
+    fusionYt = new YT.Player("ytfusion", {
+      width: "200", height: "200", videoId: FUSION_ID,
+      playerVars: { controls: 0, playsinline: 1, rel: 0, origin: location.origin },
+      events: {
+        onReady: () => { fusionReady = true; },
+        // the dance starts the moment the song actually plays, so they stay in sync
+        onStateChange: e => { if (e.data === YT.PlayerState.PLAYING && fusionWaiting) runFusion(true); }
+      }
+    });
   };
   const tag = document.createElement("script");
   tag.src = "https://www.youtube.com/iframe_api";
@@ -303,6 +415,7 @@ function startYouTube() {
 function startDisco() {
   if (disco) return;
   disco = true;
+  foundEgg("disco");
   document.body.classList.add("disco");
   if (yt && yt.pauseVideo) yt.pauseVideo();
   discoGain = ctx.createGain(); discoGain.gain.value = musicOn && !eggOn ? vol() / 100 : 0;
@@ -331,7 +444,9 @@ addEventListener("keydown", e => {
   if (!ctx || e.key.length !== 1) return;
   typed = (typed + e.key.toLowerCase()).slice(-11);
   if (typed.endsWith("thunderfury")) { typed = ""; thunderfury(); }
-  else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }  else if (typed.endsWith("dt")) startDisco(); // Dirty Tactics
+  else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }
+  else if (typed.endsWith("olympus")) { typed = ""; jumpscare(); }
+  else if (typed.endsWith("dt")) startDisco(); // Dirty Tactics
 });
 
 // ---------- Easter egg: type "thunderfury" -> lightning + Trade chat spam ----------
@@ -391,6 +506,7 @@ function chatBurst(channel, color, lines, gap, onLine) {
 function thunderfury() {
   const lines = [TF_LINES[0]].concat(TF_LINES.slice(1).sort(() => Math.random() - .5), [TF_LINES[0]]);
   if (!chatBurst("[2. Trade]", "#ffc0c0", lines, 550)) return;
+  foundEgg("thunderfury");
   const fl = $("flash");
   fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
   thunder();
@@ -422,7 +538,7 @@ function gurgle(when) {
 }
 function murlocs() {
   const lines = MURLOC_LINES.slice().sort(() => Math.random() - .5).slice(0, 10);
-  chatBurst("[1. General - Stormwind City]", "#ffc0a0", lines, 650, i => { if (i % 2 === 0) gurgle(0); });
+  if (chatBurst("[1. General - Stormwind City]", "#ffc0a0", lines, 650, i => { if (i % 2 === 0) gurgle(0); })) foundEgg("murloc");
 }
 
 // ---------- Easter egg: type "raid" -> DT Raid Manager. Every ready check is rigged; you always wipe. ----------
@@ -854,7 +970,115 @@ function raidReady() {
     at += cls === "score" ? 450 : 800;
   });
 }
-function openRaid() { buildRaid(); $("raidbox").classList.add("on"); }
+// ---------- Easter egg: hidden FUSION button -> Naga + Dirty Tactics = Dirty Nagatics ----------
+let fusing = false, fusionTimers = [];
+function whoosh(f0, f1, dur) {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime, len = Math.floor(ctx.sampleRate * dur);
+  const nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
+  for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
+  const n = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), g = ctx.createGain();
+  n.buffer = nb; bp.type = "bandpass"; bp.Q.value = 4;
+  bp.frequency.setValueAtTime(f0, t); bp.frequency.exponentialRampToValueAtTime(f1, t + dur);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.6, t + dur * .6); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  n.connect(bp).connect(g); out(g, true); n.start(t);
+}
+function fusionBoom() {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime;
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = "sine"; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(28, t + 1.2);
+  g.gain.setValueAtTime(1.3, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.5);
+  o.connect(g); out(g, true); o.start(t); o.stop(t + 1.6);
+  whoosh(4000, 200, 1.2);
+  // power-up shimmer
+  [523.3, 659.3, 784, 1046.5, 1318.5].forEach((f, i) => tone(f, "triangle", t + 0.5 + i * 0.09, 1.6, 0.07));
+}
+function fusionStep(cls, text) {
+  const f = $("fusion"), tx = $("fusiontxt");
+  f.className = "on " + cls;
+  tx.textContent = text || "";
+  if (text) { tx.classList.remove("pop"); void tx.offsetWidth; tx.classList.add("pop"); }
+}
+let fusionYt = null, fusionReady = false, fusionWaiting = false, fusionFallback = null;
+function startFusion() {
+  if (fusing) return;
+  fusing = true;
+  foundEgg("fusion");
+  fusionStep("s0");
+  // background music takes a break
+  if (discoGain) discoGain.gain.value = 0; else if (yt && yt.pauseVideo) yt.pauseVideo();
+  if (fusionReady && !muted) {
+    fusionWaiting = true;
+    fusionYt.setVolume(Math.max(vol(), 70));
+    fusionYt.seekTo(0, true);
+    fusionYt.playVideo();
+    // if the song doesn't start within 2 s (blocked or offline), dance without it
+    fusionFallback = setTimeout(() => { if (fusionWaiting) { fusionYt.pauseVideo(); runFusion(false); } }, 2000);
+  } else runFusion(false);
+}
+function runFusion(withSong) {
+  fusionWaiting = false;
+  clearTimeout(fusionFallback);
+  const at = (ms, fn) => fusionTimers.push(setTimeout(fn, ms));
+  FUSION_STEPS.forEach(([ms, step, text]) => at(ms, () => {
+    if (step !== "reveal") {
+      fusionStep(step, text);
+      if (!withSong && text) whoosh(300 + ms / 10, 1200 + ms / 5, .8);
+      return;
+    }
+    const fl = $("fusionflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
+    if (!withSong) fusionBoom();
+    fusionStep("s5");
+  }));
+  at(FUSION_END, endFusion);
+}
+function endFusion() {
+  fusionTimers.forEach(clearTimeout); fusionTimers = [];
+  clearTimeout(fusionFallback); fusionWaiting = false;
+  if (fusionYt && fusionYt.pauseVideo) fusionYt.pauseVideo();
+  $("fusion").className = ""; fusing = false;
+  if (!musicOn || eggOn) return;
+  if (discoGain) discoGain.gain.value = vol() / 100; else if (yt && yt.playVideo) yt.playVideo();
+}
+$("fusionbtn").addEventListener("click", startFusion);
+// once the abomination is born, a click anywhere sends it away
+$("fusion").addEventListener("click", () => { if ($("fusion").classList.contains("s5")) endFusion(); });
+
+function openRaid() { buildRaid(); $("raidbox").classList.add("on"); foundEgg("raid"); }
+
+// ---------- Easter egg: Asmongold jumpscare ----------
+// Trigger: typing "olympus".
+let scaring = false;
+function scream() {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime, len = ctx.sampleRate;
+  const nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
+  for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
+  const n = ctx.createBufferSource(), hp = ctx.createBiquadFilter(), ng = ctx.createGain();
+  n.buffer = nb; hp.type = "highpass"; hp.frequency.value = 900;
+  ng.gain.setValueAtTime(0.9, t); ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+  n.connect(hp).connect(ng); out(ng, false); n.start(t); n.stop(t + 1);
+  // distorted shriek sweeping down
+  const shape = ctx.createWaveShaper(), curve = new Float32Array(256);
+  for (let i = 0; i < 256; i++) { const x = i / 128 - 1; curve[i] = Math.tanh(x * 8); }
+  shape.curve = curve;
+  [[880, 0], [1320, 0.003]].forEach(([f, d]) => {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "sawtooth"; o.frequency.setValueAtTime(f, t + d); o.frequency.exponentialRampToValueAtTime(f * 0.35, t + 1.1);
+    g.gain.setValueAtTime(0.5, t + d); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);
+    o.connect(shape); shape.connect(g); out(g, false); o.start(t + d); o.stop(t + 1.25);
+  });
+}
+function jumpscare() {
+  if (scaring) return;
+  scaring = true;
+  foundEgg("olympus");
+  const s = $("scare"), img = s.querySelector("img");
+  s.classList.remove("on"); void img.offsetWidth; s.classList.add("on");
+  scream();
+  setTimeout(() => { s.classList.remove("on"); scaring = false; }, 1500);
+}
 function closeRaid() { $("raidbox").classList.remove("on"); }
 $("signup").addEventListener("click", openRaid);
 $("raidready").addEventListener("click", raidReady);
@@ -889,6 +1113,7 @@ function loadRuffle() {
 function openEgg() {
   if (eggOn) return;
   eggOn = true;
+  foundEgg("forever");
   if (discoGain) discoGain.gain.value = 0; else if (yt && yt.pauseVideo) yt.pauseVideo();
   $("eggbox").classList.add("on");
   loadRuffle().then(() => {
@@ -933,7 +1158,9 @@ const HINTS = [
   "True Dirty Tactics members know the two-letter password.",
   "Some legendary blades come running when you type their name.",
   "Stormwind General chat never recovered from the beta. Say the M-word and see.",
-  "Raid sign-ups are always in the calendar. Count the days."
+  "Raid sign-ups are always in the calendar. Count the days.",
+  "WoW Forever was terrorized by an alliance of guilds. Nobody dares to type their name.",
+  "Two guilds, one destiny. Search the darkness for the dance that makes them one."
 ];
 const TIPS = [
   "Don't stand in the fire.",
@@ -1012,6 +1239,7 @@ $("mute").addEventListener("click", () => {
   $("mute").textContent = muted ? "🔇 Ticks off" : "🔊 Ticks on";
 });
 if (Date.now() >= LAUNCH) { $("gate").style.display = "none"; }
+renderEggs(false);
 update();
 </script>
 </body>

@@ -183,6 +183,92 @@
   #fusedname small { display:block; font-family:Arial,sans-serif; font-size:clamp(.7rem,1.6vw,1rem); letter-spacing:.25em; color:#bbb;
                      -webkit-background-clip:initial; background-clip:initial; }
   #fusion.s5 #fusedname { display:block; animation:ftxt .7s .5s both cubic-bezier(.2,1.6,.4,1); }
+  /* Hearthstone: cast bar + Goldshire video */
+  #castbar { position:fixed; left:50%; top:72%; transform:translateX(-50%); width:min(380px, 80vw); height:26px; z-index:30; display:none;
+             background:#111; border:2px solid #9a7b3a; box-shadow:0 0 12px #000; font-family:Arial,sans-serif; font-size:.8rem; }
+  #castbar.on { display:block; }
+  #castbar .fill { position:absolute; inset:0; width:0; background:linear-gradient(#f7d36b, #c7901d); }
+  #castbar.fail .fill { background:linear-gradient(#e74c3c, #8e1b10); width:100% !important; }
+  #castbar span { position:absolute; inset:0; display:flex; align-items:center; justify-content:space-between; padding:0 .6rem; color:#fff; text-shadow:1px 1px 0 #000; }
+  .ov { position:fixed; inset:0; z-index:50; display:none; align-items:center; justify-content:center; }
+  .ov.on { display:flex; }
+  #goldshire { background:#000; padding:4vmin; cursor:pointer; animation:gsfade 1.2s ease-out; }
+  @keyframes gsfade { from { background:#fff; } to { background:#000; } }
+  #gsframe { position:relative; width:100%; height:100%; cursor:default; }
+  #gsframe iframe, #gsframe > div { width:100%; height:100%; border:0; }
+  #gstxt { position:absolute; left:50%; top:8%; transform:translateX(-50%); pointer-events:none; white-space:nowrap; font-family:Georgia,serif;
+           font-size:clamp(1.4rem,4vw,3rem); color:#ffd100; text-shadow:2px 2px 0 #000, 0 0 20px #000; animation:gstxt 5s forwards; }
+  @keyframes gstxt { 0%,70% { opacity:1; } 100% { opacity:0; } }
+  #gshint { position:absolute; bottom:.8vmin; left:0; right:0; text-align:center; color:#666; font-size:.7rem; pointer-events:none; }
+  /* Login queue */
+  #queue { background:rgba(0,0,0,.75); }
+  .qbox { width:min(440px, 90vw); background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #7a5a1c; box-shadow:0 0 30px #000;
+          padding:1.4rem 1.6rem; text-align:center; font-family:Arial,sans-serif; color:#ffd100; }
+  .qbox h4 { font-size:1.1rem; margin-bottom:.9rem; }
+  .qbox p { color:#fff; margin:.35rem 0; }
+  .qbox b { color:#ffd100; }
+  #qnote { color:#ff6b6b !important; min-height:1.2em; font-size:.85rem; }
+  .qbox button { margin:.8rem .3rem 0; background:linear-gradient(#9b1c1c, #4a0808); border:1px solid #c9a14a; color:#ffd100;
+                 font:inherit; font-weight:bold; padding:.45rem 1.1rem; cursor:pointer; }
+  .qbox button:hover { filter:brightness(1.25); }
+  /* Leeroy: hidden chicken + whelp swarm */
+  #chicken { position:fixed; right:7vw; bottom:27vh; z-index:4; font-size:18px; opacity:.1; cursor:default; user-select:none;
+             filter:grayscale(.6); transition:opacity .4s, filter .4s, transform .2s; }
+  #chicken:hover { opacity:.9; filter:none; transform:scale(1.2) rotate(-10deg); }
+  #leeroy { position:fixed; inset:0; z-index:45; pointer-events:none; display:none; overflow:hidden; }
+  #leeroy.on { display:block; }
+  #ljtxt { position:absolute; left:50%; top:40%; transform:translate(-50%,-50%); white-space:nowrap; font-family:Impact,"Arial Black",sans-serif;
+           font-size:clamp(2.5rem,11vw,8rem); color:#ffcc00; -webkit-text-stroke:3px #7a1a00; text-shadow:0 0 30px #ff5500;
+           animation:ljshake .09s linear infinite; }
+  #ljtxt.calm { animation:none; font-size:clamp(1.2rem,4vw,2.6rem); color:#fff; -webkit-text-stroke:0; text-shadow:0 0 12px #000; }
+  @keyframes ljshake { 0% { transform:translate(-51%,-50%) rotate(-2deg); } 50% { transform:translate(-49%,-51%) rotate(2deg); } 100% { transform:translate(-50%,-49%); } }
+  .whelp { position:absolute; left:0; top:0; }
+  .whelp svg { width:100%; height:100%; display:block; }
+  .whelp .wing { transform-box:view-box; transform-origin:20px 13px; animation:flap .13s ease-in-out infinite alternate; }
+  @keyframes flap { to { transform:scaleY(.25); } }
+  /* Fishing: ripple trigger + pond */
+  #fishspot { position:fixed; left:30vw; bottom:6vh; z-index:4; width:90px; height:36px; cursor:pointer; opacity:0; transition:opacity .5s; }
+  #fishspot:hover { opacity:1; }
+  #fishspot i { position:absolute; inset:0; border:2px solid rgba(140,200,255,.6); border-radius:50%; animation:ripplering 1.8s ease-out infinite; }
+  #fishspot i:nth-child(2) { animation-delay:.6s; } #fishspot i:nth-child(3) { animation-delay:1.2s; }
+  @keyframes ripplering { from { transform:scale(.1); opacity:1; } to { transform:scale(1); opacity:0; } }
+  #fish { background:rgba(0,0,0,.8); }
+  .fbox { position:relative; width:min(580px, 94vw); max-height:94vh; overflow:auto; background:#140f08; border:2px solid #7a5a1c;
+          padding:1rem 1.2rem; font-family:Arial,sans-serif; color:#ddd; text-align:center; }
+  .fbox h2 { color:var(--gold); letter-spacing:.2em; text-transform:uppercase; font-size:1.1rem; margin-bottom:.6rem; }
+  #pond { position:relative; height:min(42vh, 280px); border-radius:50% / 35%; overflow:hidden; cursor:crosshair;
+          background:radial-gradient(ellipse at 50% 40%, #3a8cc4, #164f7a 60%, #0b2d4a); box-shadow:inset 0 0 40px #031524; }
+  #pond::before { content:""; position:absolute; inset:-20%; opacity:.25; animation:waves 6s linear infinite;
+                  background:repeating-radial-gradient(ellipse at 30% 40%, transparent 0 18px, rgba(255,255,255,.35) 19px 20px); }
+  @keyframes waves { to { transform:translate(8%,4%); } }
+  #bob { position:absolute; width:20px; height:20px; border-radius:50%; transform:translate(-50%,-50%); display:none;
+         background:linear-gradient(#e53935 50%, #fafafa 50%); box-shadow:0 2px 6px rgba(0,0,0,.6); }
+  #bob.on { display:block; animation:bobbing 1.6s ease-in-out infinite; }
+  #bob.bite { animation:bite .25s ease-in-out infinite alternate; }
+  @keyframes bobbing { 50% { transform:translate(-50%,-30%); } }
+  @keyframes bite { from { transform:translate(-50%,-50%); } to { transform:translate(-50%,10%) scale(.85); } }
+  .splash { position:absolute; width:60px; height:24px; border:2px solid rgba(255,255,255,.85); border-radius:50%; transform:translate(-50%,-50%) scale(.2);
+            pointer-events:none; animation:splash .7s ease-out forwards; }
+  @keyframes splash { to { transform:translate(-50%,-50%) scale(1.4); opacity:0; } }
+  #fishmsg { min-height:2.6em; margin:.7rem 0 .3rem; font-size:.95rem; }
+  #fishmsg b { font-size:1.05rem; }
+  #fishstats { color:#aaa; font-size:.8rem; }
+  #fishlog { list-style:none; margin-top:.5rem; font-size:.8rem; text-align:left; max-height:7.5em; overflow:auto; }
+  #fishlog li { padding:.1rem 0; border-bottom:1px solid #2a2014; }
+  #fishjournal { display:none; text-align:left; max-height:min(52vh, 360px); overflow:auto; padding:.4rem .2rem; }
+  .fbox.journal #fishjournal { display:block; }
+  .fbox.journal #pond, .fbox.journal #fishmsg, .fbox.journal #fishlog, .fbox.journal #fishcast { display:none; }
+  #fishjournal h3 { font-size:.8rem; letter-spacing:.15em; text-transform:uppercase; margin:.8rem 0 .3rem; }
+  #fishjournal h3:first-child { margin-top:0; }
+  #fishjournal ul { list-style:none; columns:2 200px; column-gap:1rem; font-size:.8rem; }
+  #fishjournal li { padding:.1rem 0; break-inside:avoid; }
+  #fishjournal li.missing { color:#4a4a4a; font-style:italic; }
+  #jcount { color:var(--gold); font-weight:bold; margin-bottom:.4rem; }
+  #fishjournalbtn { margin-top:.6rem; margin-left:.4rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1.2rem; cursor:pointer; }
+  #fishcast { margin-top:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1.2rem; cursor:pointer; }
+  #fishclose { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  #legendflash { position:fixed; inset:0; z-index:56; pointer-events:none; background:radial-gradient(circle, rgba(255,140,0,.6), transparent 70%); opacity:0; }
+  #legendflash.on { animation:fflash 1.6s ease-out; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -193,7 +279,7 @@
     <input id="vol" type="range" min="0" max="100" value="35" aria-label="Music volume">
     <button id="mute" aria-label="Toggle sound">🔊 Ticks on</button>
   </div>
-  <div id="ytbox"><div id="yt"></div><div id="ytfusion"></div></div>
+  <div id="ytbox"><div id="yt"></div><div id="ytfusion"></div><div id="ytleeroy"></div></div>
   <h1>World of Warcraft: <span id="egg">Forever</span></h1>
   <div id="clock">
     <div class="unit"><div class="num" id="d">00</div><div class="lbl" id="signup">Days</div></div><div class="sep">:</div>
@@ -205,6 +291,30 @@
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="castbar"><div class="fill"></div><span><em>Hearthstone</em><em id="casttime"></em></span></div>
+  <div id="goldshire" class="ov"><div id="gsframe"><div id="gsplayer"></div><div id="gstxt">You return to Goldshire</div></div>
+    <div id="gshint">click the border to leave the inn</div></div>
+  <div id="queue" class="ov"><div class="qbox">
+    <h4>Forever is full</h4>
+    <p>Position in queue: <b id="qpos"></b></p>
+    <p>Estimated time: <b id="qtime"></b></p>
+    <p id="qnote"></p>
+    <button id="qrealm">Change Realm</button><button id="qcancel">Cancel</button>
+  </div></div>
+  <div id="chicken" aria-hidden="true">🍗</div>
+  <div id="leeroy"><div id="ljtxt"></div></div>
+  <div id="fish" class="ov"><div class="fbox">
+    <button id="fishclose" aria-label="Close">✕</button>
+    <h2>Fishing</h2>
+    <div id="pond"><div id="bob"></div></div>
+    <div id="fishmsg">Click the water (or Cast) to throw your line.</div>
+    <div id="fishstats"></div>
+    <div id="fishjournal"></div>
+    <button id="fishcast">🎣 Cast</button><button id="fishjournalbtn">📖 Journal</button>
+    <ul id="fishlog"></ul>
+  </div></div>
+  <div id="legendflash"></div>
+  <div id="fishspot" aria-label="Fishing spot"><i></i><i></i><i></i></div>
   <button id="fusionbtn" aria-label="Fusion">FUSION</button>
   <div id="fusion">
     <img class="fl" id="fl-naga" src="naga.webp" alt="Naga">
@@ -239,7 +349,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "18";
+const VERSION = "19";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -257,13 +367,17 @@ const FUSION_ID = "qZnbfXQxV4A";
 const FUSION_STEPS = [[0, "s1"], [2000, "s1 charge"], [4000, "s2 charge", "FU..."], [7500, "s3 charge", "SION..."],
   [11000, "s4 charge", "HA!"], [16000, "reveal"]];
 const FUSION_END = 23000;
+// Hearthstone easter egg: Goldshire inn video (picture + music in one)
+const GOLDSHIRE_ID = "siGaJvUTqGI";
+// Leeroy easter egg sound
+const LEEROY_ID = "yOMj7WttkOA";
 // ===================================================================================
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
-const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion"];
+const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing"];
 let eggsFound = new Set();
 try { eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e))); } catch (e) {}
 function renderEggs(pop) {
@@ -316,7 +430,7 @@ function tone(freq, type, start, dur, vol) {
 }
 // Deep cinematic thump: pitch-dropping sub kick + low noise knock + booming tail
 function tick(final) {
-  if (!ctx || muted || eggOn || fusing) return;
+  if (!ctx || muted || eggOn || fusing || inGoldshire) return;
   const t = ctx.currentTime, k = final ? 1 : 0.8;
   if (tickBuf) {
     const src = ctx.createBufferSource(), g = ctx.createGain();
@@ -407,6 +521,11 @@ function startYouTube() {
         onStateChange: e => { if (e.data === YT.PlayerState.PLAYING && fusionWaiting) runFusion(true); }
       }
     });
+    leeroyYt = new YT.Player("ytleeroy", {
+      width: "200", height: "200", videoId: LEEROY_ID,
+      playerVars: { controls: 0, playsinline: 1, rel: 0, origin: location.origin },
+      events: { onReady: () => { leeroyReady = true; } }
+    });
   };
   const tag = document.createElement("script");
   tag.src = "https://www.youtube.com/iframe_api";
@@ -446,6 +565,7 @@ addEventListener("keydown", e => {
   if (typed.endsWith("thunderfury")) { typed = ""; thunderfury(); }
   else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }
   else if (typed.endsWith("olympus")) { typed = ""; jumpscare(); }
+  else if (typed.endsWith("login")) { typed = ""; openQueue(); }
   else if (typed.endsWith("dt")) startDisco(); // Dirty Tactics
 });
 
@@ -1034,6 +1154,305 @@ function runFusion(withSong) {
   }));
   at(FUSION_END, endFusion);
 }
+// ---------- shared: pause / resume the background music around an easter egg ----------
+function pauseBg() { if (discoGain) discoGain.gain.value = 0; else if (yt && yt.pauseVideo) yt.pauseVideo(); }
+function resumeBg() {
+  if (!musicOn || eggOn || fusing || inGoldshire) return;
+  if (discoGain) discoGain.gain.value = vol() / 100; else if (yt && yt.playVideo) yt.playVideo();
+}
+const anyOverlay = () => !!document.querySelector(".ov.on, #fusion.on, #raidbox.on, #eggbox.on, #scare.on") || inGoldshire;
+
+// ---------- Easter egg: Hearthstone. Hold the clock 1.5 s, then stand still for a 10 s cast ----------
+let inGoldshire = false, castTimer = null, castStart = 0, castFrom = null, holdTimer = null, holdFrom = null, castOsc = null, gsPlayer = null;
+function castSound(stop) {
+  if (castOsc) { try { castOsc.stop(); } catch (e) {} castOsc = null; }
+  if (stop || !ctx || muted) return;
+  const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = "triangle"; o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(880, t + 10);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 0.5); g.gain.setValueAtTime(0.05, t + 9.8);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 10);
+  o.connect(g); out(g, true); o.start(t); o.stop(t + 10.1); castOsc = o;
+}
+function startCast(x, y) {
+  castFrom = { x, y }; castStart = performance.now();
+  const bar = $("castbar"); bar.className = "on";
+  castSound();
+  const step = () => {
+    const p = Math.min(1, (performance.now() - castStart) / 10000);
+    bar.querySelector(".fill").style.width = p * 100 + "%";
+    $("casttime").textContent = (10 - p * 10).toFixed(1) + "s";
+    if (p >= 1) { clearInterval(castTimer); castFrom = null; bar.className = ""; enterGoldshire(); }
+  };
+  // a timer (not requestAnimationFrame) so the cast also finishes when the tab is in the background
+  castTimer = setInterval(step, 50);
+  step();
+}
+function interruptCast() {
+  if (!castFrom) return;
+  clearInterval(castTimer); castFrom = null; castSound(true);
+  const bar = $("castbar"); bar.className = "on fail"; $("casttime").textContent = "Interrupted";
+  setTimeout(() => { if (!castFrom) bar.className = ""; }, 1200);
+}
+$("clock").addEventListener("pointerdown", e => {
+  if (e.target.id === "signup" || castFrom || anyOverlay()) return;
+  holdFrom = { x: e.clientX, y: e.clientY };
+  holdTimer = setTimeout(() => { holdTimer = null; startCast(holdFrom.x, holdFrom.y); }, 1500);
+});
+const cancelHold = () => { clearTimeout(holdTimer); holdTimer = null; };
+addEventListener("pointerup", cancelHold);
+addEventListener("pointermove", e => {
+  if (holdTimer && Math.hypot(e.clientX - holdFrom.x, e.clientY - holdFrom.y) > 12) cancelHold();
+  // any real movement during the cast interrupts it, just like in game
+  if (castFrom && Math.hypot(e.clientX - castFrom.x, e.clientY - castFrom.y) > 12) interruptCast();
+});
+addEventListener("keydown", () => interruptCast());
+addEventListener("wheel", () => interruptCast(), { passive: true });
+function enterGoldshire() {
+  inGoldshire = true;
+  foundEgg("hearth");
+  pauseBg();
+  $("goldshire").classList.add("on");
+  const t = $("gstxt"); t.style.animation = "none"; void t.offsetWidth; t.style.animation = "";
+  if (window.YT && YT.Player) {
+    gsPlayer = new YT.Player("gsplayer", {
+      width: "100%", height: "100%", videoId: GOLDSHIRE_ID,
+      playerVars: { autoplay: 1, controls: 0, playsinline: 1, rel: 0, modestbranding: 1, origin: location.origin },
+      events: { onReady: e => { e.target.setVolume(Math.max(vol(), 60)); e.target.playVideo(); } }
+    });
+  }
+}
+function leaveGoldshire() {
+  if (gsPlayer) { try { gsPlayer.destroy(); } catch (e) {} gsPlayer = null; }
+  // the API replaces the placeholder div with an iframe; put a fresh one back for next time
+  const f = $("gsframe"); if (!$("gsplayer")) { const d = document.createElement("div"); d.id = "gsplayer"; f.prepend(d); }
+  $("goldshire").classList.remove("on");
+  inGoldshire = false;
+  resumeBg();
+}
+$("goldshire").addEventListener("click", e => { if (e.target.id === "goldshire") leaveGoldshire(); });
+
+// ---------- Easter egg: type "login" -> the login queue only gets worse ----------
+let qTimer = null, qPos = 0, qMin = 0;
+const fmt = n => n.toLocaleString("en-US");
+const Q_NOTES = ["All realms are full. Even the PvP ones.", "Realm changed. You are now in an even longer queue.",
+  "Blizzard has added more servers. They are also full.", "Tip: the queue moves faster if you stare at it. (It doesn't.)",
+  "Your friends are already in game. They say hi.", "Layering enabled. You are now in queue for 3 layers at once."];
+function openQueue() {
+  foundEgg("login");
+  qPos = 2000 + Math.floor(Math.random() * 3000); qMin = 3 + Math.floor(Math.random() * 4);
+  $("qnote").textContent = "";
+  const draw = () => { $("qpos").textContent = fmt(qPos); $("qtime").textContent = qMin + " min"; };
+  draw();
+  $("queue").classList.add("on");
+  clearInterval(qTimer);
+  qTimer = setInterval(() => {
+    qPos += 3 + Math.floor(Math.random() * 60);
+    if (Math.random() < .3) qMin += 1 + Math.floor(Math.random() * 2);
+    draw();
+  }, 1000);
+}
+function closeQueue() { clearInterval(qTimer); $("queue").classList.remove("on"); }
+$("qcancel").addEventListener("click", closeQueue);
+$("qrealm").addEventListener("click", () => {
+  qPos += 500 + Math.floor(Math.random() * 1500); qMin += 5 + Math.floor(Math.random() * 10);
+  $("qpos").textContent = fmt(qPos); $("qtime").textContent = qMin + " min";
+  $("qnote").textContent = pick(Q_NOTES);
+});
+
+// ---------- Easter egg: hidden chicken -> LEEROY JENKINS + whelp swarm ----------
+const WHELP_SVG = '<svg viewBox="0 0 40 30"><path class="wing" d="M17 13 L3 2 L9 15 Z" fill="#7b1414"/><path class="wing" d="M23 13 L37 2 L31 15 Z" fill="#7b1414"/>' +
+  '<path d="M20 22 Q24 29 30 27" stroke="#b83224" stroke-width="2.4" fill="none"/><ellipse cx="20" cy="17" rx="7.5" ry="6" fill="#c0392b"/>' +
+  '<circle cx="20" cy="9.5" r="4.6" fill="#c0392b"/><path d="M17 6 L16 2.5 L18.5 5 M23 6 L24 2.5 L21.5 5" stroke="#5a0e0e" stroke-width="1.2" fill="none"/>' +
+  '<circle cx="18.4" cy="9" r="1" fill="#ffeb3b"/><circle cx="21.6" cy="9" r="1" fill="#ffeb3b"/></svg>';
+let leeroyOn = false, leeroyYt = null, leeroyReady = false;
+function chirp(when) {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime + when, o = ctx.createOscillator(), g = ctx.createGain(), f = 1400 + Math.random() * 900;
+  o.type = "square"; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * .6, t + .12);
+  g.gain.setValueAtTime(0.04, t); g.gain.exponentialRampToValueAtTime(0.0001, t + .14);
+  o.connect(g); out(g, false); o.start(t); o.stop(t + .16);
+}
+function leeroy() {
+  if (leeroyOn) return;
+  leeroyOn = true;
+  foundEgg("leeroy");
+  const box = $("leeroy"), txt = $("ljtxt"), W = innerWidth, H = innerHeight;
+  // the swarm lasts as long as the sound clip (6-15 s); without the clip it falls back to chirps
+  let total = 8500;
+  const withClip = leeroyReady && !muted;
+  if (withClip) {
+    pauseBg();
+    total = Math.min(15000, Math.max(6000, (leeroyYt.getDuration() || 8.5) * 1000));
+    leeroyYt.setVolume(Math.max(vol(), 70)); leeroyYt.seekTo(0, true); leeroyYt.playVideo();
+  }
+  box.classList.add("on"); txt.className = ""; txt.textContent = "LEEROY JENKINS!";
+  for (let i = 0; i < 45; i++) {
+    const w = document.createElement("div"), size = 30 + Math.random() * 45, fromLeft = Math.random() < .5;
+    w.className = "whelp"; w.style.width = size + "px"; w.style.height = size * .75 + "px"; w.innerHTML = WHELP_SVG;
+    if (!fromLeft) w.firstChild.style.transform = "scaleX(-1)";
+    box.appendChild(w);
+    const y0 = Math.random() * H, y1 = Math.random() * H, ym = Math.random() * H;
+    const x0 = fromLeft ? -100 : W + 100, x1 = fromLeft ? W + 100 : -100;
+    w.animate([{ transform: `translate(${x0}px,${y0}px)` }, { transform: `translate(${(x0 + x1) / 2}px,${ym}px)` }, { transform: `translate(${x1}px,${y1}px)` }],
+      { duration: 2500 + Math.random() * 3500, delay: Math.random() * Math.max(2500, total - 6500), easing: "ease-in-out", fill: "both" });
+  }
+  if (!withClip) for (let i = 0; i < 24; i++) chirp(i * 0.22 + Math.random() * 0.15);
+  setTimeout(() => { txt.className = "calm"; txt.textContent = "At least I have chicken."; }, total - 3000);
+  setTimeout(() => {
+    box.classList.remove("on"); box.querySelectorAll(".whelp").forEach(w => w.remove()); leeroyOn = false;
+    if (withClip) { leeroyYt.pauseVideo(); resumeBg(); }
+  }, total);
+}
+$("chicken").addEventListener("click", leeroy);
+
+// ---------- Easter egg: fishing. A ripple shows up now and then near the bottom; click it to fish ----------
+const RARITY = { poor: "#9d9d9d", common: "#ffffff", uncommon: "#1eff00", rare: "#0070dd", epic: "#a335ee", legendary: "#ff8000" };
+const RARITY_WEIGHT = { poor: 28, common: 30, uncommon: 22, rare: 12, epic: 6, legendary: 2 };
+const LOOT = {
+  poor: ["Old Boot", "Waterlogged Sock", "Rusty Hook", "Soggy Bread", "Broken Fishing Pole", "Torn Map of Westfall", "Empty Bottle",
+    "Clump of Seaweed", "Slimy Rock", "Half a Murloc Fin", "Wet Paperwork", "A Single Lost Shoe", "Rotten Kaj Cake", "Unpaid Repair Bill",
+    "Someone's Dentures", "A Very Ordinary Stick", "Pine Cone (it's a tree, technically)", "Expired Mana Potion", "Cracked Hearthstone",
+    "Gnome Sock (still warm)", "Grey Item That Sells for 1 Copper", "Moldy Cheese", "Tangled Fishing Line", "Soggy Discord Invite",
+    "Lost Raid Strategy (illegible)", "Broken Keyboard Key (W)", "Duck Feather", "Chewed Pencil", "Damp Matches", "Leeroy's Lunchbox (empty)"],
+  common: ["Raw Brilliant Smallfish", "Raw Longjaw Mud Snapper", "Raw Bristle Whisker Catfish", "Raw Rainbow Fin Albacore", "Raw Rockscale Cod",
+    "Raw Mithril Head Trout", "Raw Spotted Yellowtail", "Raw Glossy Mightfish", "Raw Whitescale Salmon", "Raw Nightfin Snapper",
+    "Raw Sunscale Salmon", "Raw Redgill", "Oily Blackmouth", "Firefin Snapper", "Stonescale Eel", "Deviate Fish", "Raw Slitherskin Mackerel",
+    "A Perfectly Normal Fish", "Fish That Looks Like Andre", "Bucket of Water", "Murloc Scale", "Handful of Shrimp", "Jar of Pickled Eyes",
+    "Very Wet Cat", "Fresh Danish", "Kaj Cake (slightly damp)", "Healthstone (someone forgot it)", "Bag of Copper Coins",
+    "Stormwind Tourist Map", "Linen Bandage"],
+  uncommon: ["Lucky Fishing Hat", "Bright Baubles", "Aquadynamic Fish Attractor", "Murloc Fin Soup", "Waterlogged Crate", "Battered Chest",
+    "Gøj's Missing Intellect", "Alt Account Login (#638)", "Feral Druid Guide (it just says \"Feral is great\")", "A Pair of White Lines",
+    "Bloodlust Button (pressed)", "Paladeeeeeeeeen Plushie", "Kat's Danish", "Esports' Stream Snacks", "A Fully Erected Eye",
+    "Lyra's Explanation", "Ulaw's Intellect Meter (empty)", "Sab's Spare Moustache", "13th Account Authenticator", "Noah's \"I Got You\" Medal",
+    "Andre's Trust (fragile)", "Johny's Lost Headset", "Esports' Ring Light", "Raid Leader's Patience (dented)",
+    "Sealed Envelope: \"Do Not Open Until Launch\"", "Bag of Murloc Eggs", "Goblin Fishing Pole (it explodes sometimes)",
+    "Waterproof Keyboard", "A Fish With Better Gear Than You", "Kybris' Lost Loot Roll"],
+  rare: ["Big Iron Fishing Pole", "Mr. Pinchy (he grants wishes)", "Sea Turtle (sadly not a mount)", "Speckled Tastyfish",
+    "Savory Deviate Delight", "Dirty Tactics Guild Tabard", "Golden Kaj Cake", "Raid Strategy That Actually Works (wet)",
+    "Onyxia Scale Cloak", "Free Action Potion", "Greater Stoneshield Potion (not a regular stone)", "Ancient Murloc Crown",
+    "The Raid Manager's Missing Brain Cells", "Signed Photo of Hogger", "Golden Chicken (still cooked)", "Flask of the Titans",
+    "Rumsey Rum Black Label", "Nat Pagle's Business Card", "Deed to the Goldshire Inn", "Jacob's Sock Collection (no feet involved)"],
+  epic: ["Arcanite Fishing Pole", "Nat Pagle's Extreme Angler FC-5000", "Hook of the Master Angler", "Sulfuras Fishing Rod",
+    "Mount: Murloc on a Stick", "Dirty Nagatics Plushie (cursed)", "Onyxia's Lost Whelp (it bites)", "Gøj's Intellect (restored!)",
+    "A Login Queue That Goes Down", "A Perfectly Timed Ready Check", "The Tank Who Never Pulls Early", "Hearthstone Without a Cooldown",
+    "Alisha's Secret Raid Notes", "Kaelisra's Lucky Dice (always 100)"],
+  legendary: ["[Thunderfury, Blessed Blade of the Windseeker]", "[Bindings of the Windseeker] (left)", "[Bindings of the Windseeker] (right)",
+    "[Sulfuras, Hand of Ragnaros]", "[Atiesh, Greatstaff of the Guardian]", "[Eye of C'Thun] (it's looking at you)",
+    "World First Kill (Dirty Tactics)", "The Mythical Fish That Is Also a Murloc", "Olympus Guild Invite (do not accept)"]
+};
+const TOO_EARLY = ["You pulled too early. The fish is laughing at you.", "Nothing was biting. Your line comes back with a confused snail.",
+  "Patience, young angler. That was just a wave.", "You yanked the rod so hard you scared every fish in Azeroth."];
+const TOO_LATE = ["It got away. Story of your life.", "Too slow! The fish stole your bait and left a thank-you note.",
+  "The fish escaped. It will tell all its friends about you.", "Missed it. Somewhere, a murloc is eating your catch."];
+let fishState = "idle", fishBiteT = null, fishMissT = null;
+let fishSkill = 1, fishCaught = 0;
+let fishJournal = new Set();
+const LOOT_TOTAL = Object.values(LOOT).reduce((n, l) => n + l.length, 0);
+try {
+  fishSkill = +localStorage.getItem("fishSkill") || 1; fishCaught = +localStorage.getItem("fishCaught") || 0;
+  fishJournal = new Set(JSON.parse(localStorage.getItem("fishJournal") || "[]"));
+} catch (e) {}
+function fishStats() {
+  $("fishstats").textContent = "Fishing skill: " + fishSkill + "/300 · Total catches: " + fishCaught +
+    " · Journal: " + fishJournal.size + "/" + LOOT_TOTAL;
+}
+function renderJournal() {
+  const j = $("fishjournal"); j.textContent = "";
+  const c = document.createElement("div"); c.id = "jcount";
+  c.textContent = "Collected " + fishJournal.size + " / " + LOOT_TOTAL + " · " + (LOOT_TOTAL - fishJournal.size) + " missing";
+  j.appendChild(c);
+  for (const [rar, items] of Object.entries(LOOT)) {
+    const h = document.createElement("h3"), ul = document.createElement("ul");
+    h.style.color = RARITY[rar];
+    h.textContent = rar + " (" + items.filter(i => fishJournal.has(i)).length + "/" + items.length + ")";
+    items.forEach(item => {
+      const li = document.createElement("li");
+      if (fishJournal.has(item)) { li.textContent = item; li.style.color = RARITY[rar]; }
+      else { li.textContent = "???"; li.className = "missing"; }
+      ul.appendChild(li);
+    });
+    j.append(h, ul);
+  }
+}
+function toggleJournal(show) {
+  const box = $("fish").querySelector(".fbox"), open = show === undefined ? !box.classList.contains("journal") : show;
+  box.classList.toggle("journal", open);
+  $("fishjournalbtn").textContent = open ? "🎣 Back to fishing" : "📖 Journal";
+  if (open) renderJournal();
+}
+$("fishjournalbtn").addEventListener("click", () => toggleJournal());
+function fishMsg(html) { $("fishmsg").innerHTML = html; }
+function splashAt(x, y) {
+  const p = $("pond"), sp = document.createElement("div");
+  sp.className = "splash"; sp.style.left = x + "%"; sp.style.top = y + "%"; p.appendChild(sp);
+  setTimeout(() => sp.remove(), 800);
+  if (!ctx || muted) return;
+  const t = ctx.currentTime, len = Math.floor(ctx.sampleRate * .35), nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
+  for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
+  const n = ctx.createBufferSource(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
+  n.buffer = nb; lp.type = "lowpass"; lp.frequency.value = 1400;
+  g.gain.setValueAtTime(0.35, t); g.gain.exponentialRampToValueAtTime(0.0001, t + .35);
+  n.connect(lp).connect(g); out(g, false); n.start(t);
+}
+let bobX = 50, bobY = 50;
+function fishCast() {
+  if (fishState !== "idle") return;
+  clearTimeout(fishMissT);
+  bobX = 20 + Math.random() * 60; bobY = 25 + Math.random() * 50;
+  const b = $("bob"); b.style.left = bobX + "%"; b.style.top = bobY + "%"; b.className = "on";
+  splashAt(bobX, bobY);
+  fishState = "waiting"; fishMsg("Waiting for a bite...");
+  fishBiteT = setTimeout(() => {
+    fishState = "bite"; $("bob").className = "on bite"; splashAt(bobX, bobY); fishMsg("<b>!!!</b>");
+    fishMissT = setTimeout(() => { fishState = "idle"; $("bob").className = ""; fishMsg(pick(TOO_LATE)); }, 1100);
+  }, 2000 + Math.random() * 7000);
+}
+function rollLoot() {
+  let r = Math.random() * 100;
+  for (const [rar, w] of Object.entries(RARITY_WEIGHT)) { if ((r -= w) < 0) return [rar, pick(LOOT[rar])]; }
+  return ["poor", pick(LOOT.poor)];
+}
+function fishCatch() {
+  clearTimeout(fishMissT);
+  fishState = "idle"; $("bob").className = "";
+  const [rar, item] = rollLoot();
+  fishCaught++; if (fishSkill < 300) fishSkill = Math.min(300, fishSkill + 1 + (Math.random() < .3 ? 1 : 0));
+  const isNew = !fishJournal.has(item);
+  fishJournal.add(item);
+  try {
+    localStorage.setItem("fishSkill", fishSkill); localStorage.setItem("fishCaught", fishCaught);
+    localStorage.setItem("fishJournal", JSON.stringify([...fishJournal]));
+  } catch (e) {}
+  const b = document.createElement("b"); b.style.color = RARITY[rar]; b.textContent = item;
+  $("fishmsg").textContent = "You caught: "; $("fishmsg").appendChild(b);
+  if (isNew) $("fishmsg").append(" · New journal entry!");
+  const li = document.createElement("li"); li.style.color = RARITY[rar]; li.textContent = item;
+  $("fishlog").prepend(li);
+  fishStats();
+  const ladder = { poor: 1, common: 2, uncommon: 3, rare: 4, epic: 5, legendary: 6 }[rar];
+  if (ctx && !muted) [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", ctx.currentTime + i * .08, .5, .07));
+  if (rar === "legendary") { const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on"); }
+}
+$("pond").addEventListener("click", () => {
+  if (fishState === "idle") fishCast();
+  else if (fishState === "waiting") { clearTimeout(fishBiteT); fishState = "idle"; $("bob").className = ""; fishMsg(pick(TOO_EARLY)); }
+  else if (fishState === "bite") fishCatch();
+});
+$("fishcast").addEventListener("click", fishCast);
+function openFishing() {
+  foundEgg("fishing");
+  fishState = "idle"; $("bob").className = ""; fishStats(); toggleJournal(false);
+  fishMsg("Click the water (or Cast) to throw your line.");
+  $("fish").classList.add("on");
+}
+function closeFishing() {
+  clearTimeout(fishBiteT); clearTimeout(fishMissT); fishState = "idle";
+  $("fish").classList.remove("on");
+}
+$("fishclose").addEventListener("click", closeFishing);
+$("fish").addEventListener("click", e => { if (e.target.id === "fish") closeFishing(); });
+$("fishspot").addEventListener("click", openFishing);
+
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
   clearTimeout(fusionFallback); fusionWaiting = false;
@@ -1161,7 +1580,11 @@ const HINTS = [
   "Stormwind General chat never recovered from the beta. Say the M-word and see.",
   "Raid sign-ups are always in the calendar. Count the days.",
   "WoW Forever was terrorized by an alliance of guilds. Nobody dares to type their name.",
-  "Two guilds, one destiny. Search the darkness for the dance that makes them one."
+  "Two guilds, one destiny. Search the darkness for the dance that makes them one.",
+  "Every adventurer knows the way home: hold on to time itself and don't move a muscle.",
+  "Remember launch day? Try to log in. Good luck with that.",
+  "Time's up, let's do this. Somebody left their chicken lying around in the dark.",
+  "Something keeps splashing near the bottom of the page. Patient anglers get rewarded."
 ];
 const TIPS = [
   "Don't stand in the fire.",

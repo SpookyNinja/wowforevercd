@@ -548,6 +548,30 @@
   #boltover .rec { color:#1eff00; font-weight:bold; min-height:1.2em; }
   #boltover p { margin:.35rem 0; font-size:.9rem; }
   #boltover button { margin-top:.5rem; background:#2a1f0c; border:1px solid #c9a14a; color:#ffd100; font:bold .95rem Arial,sans-serif; padding:.45rem 1rem; cursor:pointer; }
+  /* Don't Stand in the Fire: click HOURS, dodge an ever crazier bullet hell */
+  #firelbl { user-select:none; transition:color .4s, text-shadow .4s; }
+  #firelbl:hover { color:#ff8a3d; text-shadow:0 0 8px rgba(255,90,0,.7); }
+  #fire { background:rgba(0,0,0,.85); }
+  #fire .pbox { width:min(860px, 96vw); user-select:none; }
+  #firehud { display:flex; justify-content:space-between; color:#bbb; font-size:.9rem; margin:0 .2rem .35rem; }
+  #firehud b { color:#ffd100; }
+  #firewrap { position:relative; }
+  #firecv { display:block; width:min(100%, calc(64vh * 800 / 560)); aspect-ratio:800 / 560; margin:0 auto; border:1px solid #3a2b14;
+            background:#0a0705; cursor:none; touch-action:none; }
+  #firewarn { position:absolute; left:0; right:0; top:12%; text-align:center; pointer-events:none; opacity:0;
+              font:bold clamp(1.1rem,3vw,1.9rem) Arial,sans-serif; color:#ff7b00; text-shadow:0 0 10px #000, 2px 2px 0 #000; }
+  #firewarn.on { animation:firewarn 3s ease-out forwards; }
+  @keyframes firewarn { 0% { opacity:0; transform:scale(1.4); } 10% { opacity:1; transform:scale(1); } 75% { opacity:1; } 100% { opacity:0; } }
+  #firemsg { min-height:1.3em; margin:.5rem 0 0; color:#999; font-size:.85rem; }
+  #fireclose { position:absolute; top:.55rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  #fireover { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); display:none; width:min(400px, 86%); z-index:5;
+              background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #c9a14a; box-shadow:0 0 30px #000; padding:1rem 1.2rem; }
+  #fireover.on { display:block; animation:duelin .35s ease-out; }
+  #fireover h3 { color:#ff4040; font-size:1.3rem; margin-bottom:.3rem; }
+  #fireover .big { font-family:Impact,"Arial Black",sans-serif; font-size:2.6rem; color:#fff; }
+  #fireover .rec { color:#1eff00; font-weight:bold; min-height:1.2em; }
+  #fireover p { margin:.35rem 0; font-size:.9rem; }
+  #fireover button { margin-top:.5rem; background:#2a1f0c; border:1px solid #c9a14a; color:#ffd100; font:bold .95rem Arial,sans-serif; padding:.45rem 1rem; cursor:pointer; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -562,7 +586,7 @@
   <h1><span id="onytrig">World of Warcraft:</span> <span id="egg">Forever</span></h1>
   <div id="clock">
     <div class="unit"><div class="num" id="d">00</div><div class="lbl" id="signup">Days</div></div><div class="sep">:</div>
-    <div class="unit"><div class="num" id="h">00</div><div class="lbl">Hours</div></div><div class="sep">:</div>
+    <div class="unit"><div class="num" id="h">00</div><div class="lbl" id="firelbl">Hours</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="m">00</div><div class="lbl">Minutes</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="sec">00</div><div class="lbl" id="boltlbl">Seconds</div></div>
   </div>
@@ -570,6 +594,15 @@
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="fire" class="ov"><div class="pbox">
+    <button id="fireclose" aria-label="Close">✕</button>
+    <h2>🔥 Don't Stand in the Fire 🔥</h2>
+    <div id="firehud"><span>Time: <b id="firetime">0.0</b>s</span><span>Graze: <b id="firegraze">0</b></span><span>Best: <b id="firebest">0.0</b>s</span></div>
+    <div id="firewrap"><canvas id="firecv" width="800" height="560"></canvas><div id="firewarn"></div>
+      <div id="fireover"><h3>You died.</h3><div class="big" id="firefinal"></div><div class="rec" id="firerec"></div>
+        <p id="fireblame"></p><p id="firecomment"></p><button id="fireagain">Try again</button></div></div>
+    <div id="firemsg">Move with the mouse (or WASD / arrows, hold Shift to move slowly). Only the little dot in the middle can get hit.</div>
+  </div></div>
   <div id="bolt" class="ov"><div class="pbox">
     <button id="boltclose" aria-label="Close">✕</button>
     <h2>🔥 Firebolt or Frostbolt ❄️</h2>
@@ -729,7 +762,7 @@ const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
 const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
-  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer", "vault", "bolt"];
+  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer", "vault", "bolt", "fire"];
 // Bump this when a release should start everyone's egg hunt from 0 again (fishing and gnome records are kept).
 const EGG_SAVE_VERSION = "20";
 let eggsFound = new Set();
@@ -814,7 +847,7 @@ function tone(freq, type, start, dur, vol) {
 }
 // Deep cinematic thump: pitch-dropping sub kick + low noise knock + booming tail
 function tick(final) {
-  if (!ctx || muted || eggOn || fusing || inGoldshire || vaultOn) return;
+  if (!ctx || muted || eggOn || fusing || inGoldshire || vaultOn || fireOn) return;
   const t = ctx.currentTime, k = final ? 1 : 0.8;
   if (tickBuf) {
     const src = ctx.createBufferSource(), g = ctx.createGain();
@@ -949,7 +982,7 @@ function stopDisco() {
 }
 let typed = "";
 addEventListener("keydown", e => {
-  if (!ctx || e.key.length !== 1 || boltOn) return;
+  if (!ctx || e.key.length !== 1 || boltOn || fireOn) return;
   typed = (typed + e.key.toLowerCase()).slice(-11);
   if (typed.endsWith("thunderfury")) { typed = ""; thunderfury(); }
   else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }
@@ -1587,7 +1620,7 @@ function interruptCast() {
   setTimeout(() => { if (!castFrom) bar.className = ""; }, 1200);
 }
 $("clock").addEventListener("pointerdown", e => {
-  if (e.target.id === "signup" || e.target.id === "boltlbl" || castFrom || anyOverlay()) return;
+  if (e.target.id === "signup" || e.target.id === "boltlbl" || e.target.id === "firelbl" || castFrom || anyOverlay()) return;
   holdFrom = { x: e.clientX, y: e.clientY };
   holdTimer = setTimeout(() => { holdTimer = null; startCast(holdFrom.x, holdFrom.y); }, 1500);
 });
@@ -1872,7 +1905,7 @@ const ACH_NAMES = {
   login: "Position in Queue: Yes", leeroy: "At Least I Have Chicken", fishing: "Gone Fishin'",
   barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat",
   onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail", gnome: "Gnomeregan Air Force",
-  offer: "Best Value Ever", vault: "Saucy Vault", bolt: "Elementary, My Dear Mage"
+  offer: "Best Value Ever", vault: "Saucy Vault", bolt: "Elementary, My Dear Mage", fire: "Fire Resistance Is Futile"
 };
 let achTimer = null;
 function achievementToast(id) {
@@ -2639,6 +2672,203 @@ addEventListener("keydown", e => {
   else if (k === "escape") closeBolt();
 });
 
+// ---------- Easter egg: click HOURS -> Don't Stand in the Fire, a bullet hell that starts tame and goes completely nuts ----------
+const FW = 800, FH = 560, F_HIT = 3, F_GRAZE = 16;
+// [second, raid warning] - each one also unlocks the next kind of hazard
+const FIRE_PHASES = [[0, "Don't stand in the fire."], [14, "Onyxia takes in a deep breath..."], [26, "BY FIRE BE PURGED!"],
+  [38, "Raid leader: SPREAD OUT!"], [50, "Raid leader: no wait, STACK!"], [64, "It's raining fire. Hallelujah."],
+  [80, "Touhou mode enabled. Good luck."], [100, "Seriously, how are you still alive?"]];
+let fireOn = false, fireOver = false, fireRaf = null, fireLast = 0, fireT = 0, fireBest = 0, fireGraze = 0, firePhase = 0;
+let fP = null, fAim = null, fKeys = {}, fHaz = [], fBul = [], fSpawn = {}, fSpin = 0, fDeadBy = "";
+try { fireBest = +localStorage.getItem("fireBest") || 0; } catch (e) {}
+const fRand = (a, b) => a + Math.random() * (b - a);
+function fireReset() {
+  fireT = 0; fireGraze = 0; firePhase = 0; fireOver = false; fHaz = []; fBul = []; fSpin = 0;
+  fP = { x: FW / 2, y: FH - 70 }; fAim = null;
+  fSpawn = { zone: .8, beam: 0, spiral: 0, ring: 0, fan: 0, rain: 0 };
+  $("fireover").classList.remove("on");
+  $("firebest").textContent = fireBest.toFixed(1);
+  fireWarn(FIRE_PHASES[0][1]);
+}
+function fireWarn(text) {
+  const w = $("firewarn"); w.textContent = text; w.classList.remove("on"); void w.offsetWidth; w.classList.add("on");
+  if (firePhase > 0 && !playSfx("readyCheck", .5) && ctx && !muted) tone(880, "square", ctx.currentTime, .15, .03);
+}
+function openFire() {
+  if (fireOn) return;
+  fireOn = true; foundEgg("fire");
+  $("fire").classList.add("on"); playSfx("menuOpen", .6);
+  fireReset();
+  fireLast = performance.now(); cancelAnimationFrame(fireRaf); fireRaf = requestAnimationFrame(fireLoop);
+}
+function closeFire() { fireOn = false; cancelAnimationFrame(fireRaf); $("fire").classList.remove("on"); fKeys = {}; }
+function fireLoop(now) {
+  if (!fireOn) return;
+  const dt = Math.min(.05, (now - fireLast) / 1000); fireLast = now;
+  fireStep(dt); fireDraw();
+  fireRaf = requestAnimationFrame(fireLoop);
+}
+function fireBullet(x, y, ang, speed, r, col) { fBul.push({ x, y, vx: Math.cos(ang) * speed, vy: Math.sin(ang) * speed, r, col, grazed: false }); }
+// the hazards, in the order they join the party
+function fireSpawn(dt) {
+  const t = fireT, S = fSpawn, boss = { x: FW / 2, y: 70 };
+  // fire patches on the floor: a warning circle, then it burns for a while. Later some land right on you
+  if ((S.zone -= dt) <= 0) {
+    S.zone = Math.max(.28, 1.9 - t * .03);
+    const aimed = t > 8 && Math.random() < .35;
+    fHaz.push({ k: "zone", x: aimed ? fP.x : fRand(40, FW - 40), y: aimed ? fP.y : fRand(150, FH - 30), r: fRand(30, 55 + Math.min(40, t)),
+                warn: 1.1, life: fRand(2.5, 4.5), t: 0 });
+  }
+  // breath lines across the whole room
+  if (t > 14 && (S.beam -= dt) <= 0) {
+    S.beam = Math.max(1.1, 4.5 - (t - 14) * .06);
+    const vert = Math.random() < .5;
+    fHaz.push({ k: "beam", vert, pos: vert ? (Math.random() < .5 ? fP.x : fRand(40, FW - 40)) : fRand(160, FH - 40),
+                w: fRand(40, 70), warn: 1.0, life: .7, t: 0 });
+  }
+  // the boss starts spinning out spirals of fireballs
+  if (t > 26 && (S.spiral -= dt) <= 0) {
+    S.spiral = Math.max(.045, .14 - (t - 26) * .0015);
+    const arms = t > 80 ? 4 : t > 50 ? 3 : 2;
+    fSpin += .23;
+    for (let a = 0; a < arms; a++) fireBullet(boss.x, boss.y, fSpin + a * Math.PI * 2 / arms, 110 + t * 1.2, 6, "#ff9a2e");
+  }
+  // full rings
+  if (t > 38 && (S.ring -= dt) <= 0) {
+    S.ring = Math.max(.9, 3.2 - (t - 38) * .04);
+    const n = Math.min(40, 14 + Math.floor(t / 6)), off = Math.random() * 7;
+    for (let i = 0; i < n; i++) fireBullet(boss.x, boss.y, off + i * Math.PI * 2 / n, 90 + t, 7, "#ff4d2e");
+  }
+  // aimed fans straight at you
+  if (t > 50 && (S.fan -= dt) <= 0) {
+    S.fan = Math.max(.6, 1.8 - (t - 50) * .02);
+    const base = Math.atan2(fP.y - boss.y, fP.x - boss.x), n = t > 80 ? 9 : 5;
+    for (let i = 0; i < n; i++) fireBullet(boss.x, boss.y, base + (i - (n - 1) / 2) * .13, 200 + t, 5, "#ffe066");
+  }
+  // meteor rain from the top
+  if (t > 64 && (S.rain -= dt) <= 0) {
+    S.rain = Math.max(.04, .16 - (t - 64) * .002);
+    fireBullet(fRand(0, FW), -10, Math.PI / 2 + fRand(-.25, .25), fRand(140, 240 + t), fRand(4, 9), "#ff6a00");
+  }
+}
+function fireStep(dt) {
+  if (fireOver) return;
+  fireT += dt;
+  if (firePhase + 1 < FIRE_PHASES.length && fireT >= FIRE_PHASES[firePhase + 1][0]) { firePhase++; fireWarn(FIRE_PHASES[firePhase][1]); }
+  // movement: keys if held, otherwise glide after the mouse (fast, but no teleporting)
+  let mx = (fKeys.right ? 1 : 0) - (fKeys.left ? 1 : 0), my = (fKeys.down ? 1 : 0) - (fKeys.up ? 1 : 0);
+  if (mx || my) {
+    const sp = (fKeys.slow ? 130 : 290) / Math.hypot(mx, my);
+    fP.x += mx * sp * dt; fP.y += my * sp * dt; fAim = null;
+  } else if (fAim) {
+    const dx = fAim.x - fP.x, dy = fAim.y - fP.y, d = Math.hypot(dx, dy), step = 520 * dt;
+    if (d <= step) { fP.x = fAim.x; fP.y = fAim.y; } else { fP.x += dx / d * step; fP.y += dy / d * step; }
+  }
+  fP.x = Math.max(8, Math.min(FW - 8, fP.x)); fP.y = Math.max(8, Math.min(FH - 8, fP.y));
+  fireSpawn(dt);
+  let hit = "";
+  fHaz.forEach(h => {
+    h.t += dt;
+    if (h.t < h.warn) return;
+    if (h.k === "zone" && Math.hypot(fP.x - h.x, fP.y - h.y) < h.r - 4) hit = "fire";
+    if (h.k === "beam" && Math.abs((h.vert ? fP.x : fP.y) - h.pos) < h.w / 2) hit = "breath";
+  });
+  fHaz = fHaz.filter(h => h.t < h.warn + h.life);
+  fBul.forEach(b => {
+    b.x += b.vx * dt; b.y += b.vy * dt;
+    const d = Math.hypot(fP.x - b.x, fP.y - b.y);
+    if (d < b.r + F_HIT) hit = "fireball";
+    else if (!b.grazed && d < b.r + F_GRAZE) { b.grazed = true; fireGraze++; }
+  });
+  fBul = fBul.filter(b => b.x > -30 && b.x < FW + 30 && b.y > -30 && b.y < FH + 30);
+  $("firetime").textContent = fireT.toFixed(1); $("firegraze").textContent = fireGraze;
+  if (hit) fireDie(hit);
+}
+const FIRE_BLAME = ["{n} pulled the boss onto you.", "{n} said \"go left\". {n} meant right.", "{n} stacked on you with the bomb debuff.",
+  "{n} was in the fire first and you followed for moral support.", "{n} body-pulled the next pack mid-fight.",
+  "{n} was busy linking Thunderfury.", "{n} healed everyone except you. Personal reasons.", "{n} called \"safe spot!\". It was not."];
+const FIRE_HOW = { fire: "Stood in the fire", breath: "Ate a Deep Breath", fireball: "Caught a fireball with the face" };
+function fireDie(how) {
+  fireOver = true; fDeadBy = how;
+  boom();
+  const rec = fireT > fireBest;
+  if (rec) { fireBest = fireT; try { localStorage.setItem("fireBest", fireBest.toFixed(1)); } catch (e) {} }
+  $("firebest").textContent = fireBest.toFixed(1);
+  const n = pick(GUILD);
+  $("firefinal").textContent = fireT.toFixed(1) + "s";
+  $("firerec").textContent = rec ? "New personal best!" : "";
+  $("fireblame").textContent = FIRE_HOW[how] + ". " + pick(FIRE_BLAME).split("{n}").join(n);
+  const t = fireT;
+  $("firecomment").textContent = t < 10 ? "You stood in the fire. The fire won."
+    : t < 25 ? "Classic. The healers saw that coming."
+    : t < 45 ? "Not bad. You'd survive a raid night with DT."
+    : t < 70 ? "Impressive. The fire is starting to respect you."
+    : t < 100 ? "Raid leader material. Please never lead a raid."
+    : "Gensokyo is calling. Go play Touhou.";
+  setTimeout(() => { if (fireOver && fireOn) $("fireover").classList.add("on"); }, 700);
+}
+function fireDraw() {
+  const c = $("firecv").getContext("2d"), t = fireT;
+  c.clearRect(0, 0, FW, FH);
+  // floor + heat shimmer that gets angrier over time
+  const heat = Math.min(1, t / 90);
+  const g = c.createRadialGradient(FW / 2, 60, 20, FW / 2, 60, FH);
+  g.addColorStop(0, "rgba(" + (60 + heat * 60 | 0) + ",18,8,1)"); g.addColorStop(1, "#0a0705");
+  c.fillStyle = g; c.fillRect(0, 0, FW, FH);
+  // boss (placeholder until there's a sprite): a burning eye at the top
+  if (t > 20) {
+    const pulse = 1 + Math.sin(performance.now() / 150) * .08, a = Math.min(1, (t - 20) / 4);
+    c.globalAlpha = a; c.font = (54 * pulse | 0) + "px serif"; c.textAlign = "center"; c.textBaseline = "middle";
+    c.shadowColor = "#ff4000"; c.shadowBlur = 30; c.fillText("👹", FW / 2, 70); c.shadowBlur = 0; c.globalAlpha = 1;
+  }
+  fHaz.forEach(h => {
+    const warn = h.t < h.warn, fade = warn ? .35 + .35 * Math.sin(h.t * 20) : Math.min(1, (h.warn + h.life - h.t) * 3);
+    if (h.k === "zone") {
+      if (warn) { c.strokeStyle = "rgba(255,60,30," + fade + ")"; c.lineWidth = 2; c.setLineDash([6, 5]);
+                  c.beginPath(); c.arc(h.x, h.y, h.r, 0, 7); c.stroke(); c.setLineDash([]); }
+      else { const zg = c.createRadialGradient(h.x, h.y, 2, h.x, h.y, h.r);
+             zg.addColorStop(0, "rgba(255,230,120," + fade + ")"); zg.addColorStop(.5, "rgba(255,110,0," + fade * .9 + ")");
+             zg.addColorStop(1, "rgba(160,20,0,0)");
+             c.fillStyle = zg; c.beginPath(); c.arc(h.x, h.y, h.r * (1 + Math.sin(h.t * 9) * .04), 0, 7); c.fill(); }
+    } else {
+      const x = h.vert ? h.pos - h.w / 2 : 0, y = h.vert ? 0 : h.pos - h.w / 2, w = h.vert ? h.w : FW, hh = h.vert ? FH : h.w;
+      if (warn) { c.fillStyle = "rgba(255,60,30," + fade * .25 + ")"; c.fillRect(x, y, w, hh); }
+      else { const bg = h.vert ? c.createLinearGradient(x, 0, x + w, 0) : c.createLinearGradient(0, y, 0, y + hh);
+             bg.addColorStop(0, "rgba(255,80,0,0)"); bg.addColorStop(.5, "rgba(255,240,170," + fade + ")"); bg.addColorStop(1, "rgba(255,80,0,0)");
+             c.fillStyle = bg; c.fillRect(x, y, w, hh); }
+    }
+  });
+  fBul.forEach(b => {
+    c.fillStyle = b.col; c.shadowColor = b.col; c.shadowBlur = 10;
+    c.beginPath(); c.arc(b.x, b.y, b.r, 0, 7); c.fill();
+    c.shadowBlur = 0; c.fillStyle = "#fff8e0"; c.beginPath(); c.arc(b.x, b.y, b.r * .45, 0, 7); c.fill();
+  });
+  // you: a little adventurer with the tiny Touhou hitbox in the middle
+  if (!fireOver || Math.floor(performance.now() / 120) % 2) {
+    c.fillStyle = "rgba(120,180,255,.25)"; c.beginPath(); c.arc(fP.x, fP.y, 13, 0, 7); c.fill();
+    c.strokeStyle = "#9fd0ff"; c.lineWidth = 2; c.beginPath(); c.arc(fP.x, fP.y, 13, 0, 7); c.stroke();
+    c.fillStyle = "#fff"; c.beginPath(); c.arc(fP.x, fP.y, F_HIT, 0, 7); c.fill();
+  }
+}
+function fireAimFrom(e) {
+  const r = $("firecv").getBoundingClientRect();
+  fAim = { x: (e.clientX - r.left) / r.width * FW, y: (e.clientY - r.top) / r.height * FH };
+}
+$("firecv").addEventListener("pointermove", fireAimFrom);
+$("firecv").addEventListener("pointerdown", e => { e.preventDefault(); fireAimFrom(e); });
+$("firelbl").addEventListener("click", openFire);
+$("fireclose").addEventListener("click", closeFire);
+$("fireagain").addEventListener("click", fireReset);
+const FIRE_KEYS = { a: "left", arrowleft: "left", d: "right", arrowright: "right", w: "up", arrowup: "up", s: "down", arrowdown: "down", shift: "slow" };
+addEventListener("keydown", e => {
+  if (!fireOn) return;
+  const k = e.key.toLowerCase();
+  if (FIRE_KEYS[k]) { e.preventDefault(); fKeys[FIRE_KEYS[k]] = true; }
+  else if ((k === " " || k === "enter") && fireOver && $("fireover").classList.contains("on")) { e.preventDefault(); fireReset(); }
+  else if (k === "escape") closeFire();
+});
+addEventListener("keyup", e => { const k = FIRE_KEYS[e.key.toLowerCase()]; if (k) fKeys[k] = false; });
+
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
   clearTimeout(fusionFallback); fusionWaiting = false;
@@ -2791,7 +3021,8 @@ const HINTS = [
   ["gnome", "Something small keeps peeking in from the left edge of the screen. Give it a warm welcome."],
   ["offer", "Collect 12 achievements and you'll get an offer you can't refuse."],
   ["vault", "Some treasures are kept behind a keyhole. Check the right side of the page."],
-  ["bolt", "A mage counts every second until launch. Pay the seconds a visit."]
+  ["bolt", "A mage counts every second until launch. Pay the seconds a visit."],
+  ["fire", "Some people have been standing in the fire for hours."]
 ];
 const TIPS = [
   "Don't stand in the fire.",

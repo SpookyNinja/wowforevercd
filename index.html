@@ -412,6 +412,24 @@
   .banbox p { color:#ffd100; font-size:clamp(.95rem,2.4vw,1.35rem); line-height:1.4; text-shadow:1px 1px 0 #000; }
   .banbox p span { color:#1eff00; }
   .banbox button { margin-top:1rem; width:min(260px, 70%); }
+  /* Gnome punting: a gnome peeks in from the left edge; click him to open the minigame */
+  #gnomepeek { position:fixed; left:0; top:42vh; z-index:5; width:46px; height:120px; overflow:hidden; cursor:pointer; }
+  #gnomepeek img { position:absolute; left:-80px; top:8px; height:110px; transform:rotate(18deg); transition:left .35s cubic-bezier(.3,1.5,.5,1); }
+  #gnomepeek:hover img { left:-30px; }
+  #punt { background:rgba(0,0,0,.8); }
+  .pbox { position:relative; width:min(1100px, 96vw); background:#140f08; border:2px solid #7a5a1c; padding:.8rem 1rem 1rem;
+          font-family:Arial,sans-serif; color:#ddd; text-align:center; }
+  .pbox h2 { color:var(--gold); letter-spacing:.2em; text-transform:uppercase; font-size:1.05rem; margin-bottom:.5rem; }
+  #puntcv { display:block; width:100%; height:min(60vh, 460px); border:1px solid #3a2b14; cursor:pointer; touch-action:manipulation; }
+  #puntclose { position:absolute; top:.55rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  #puntscore { position:absolute; left:50%; top:50%; transform:translate(-50%,-45%); display:none; width:min(380px, 86%);
+               background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #c9a14a; box-shadow:0 0 30px #000; padding:1rem 1.2rem; }
+  #puntscore.on { display:block; animation:duelin .35s ease-out; }
+  #puntscore h3 { color:#ffd100; font-size:1.3rem; margin-bottom:.3rem; }
+  #puntscore .big { font-family:Impact,"Arial Black",sans-serif; font-size:2.6rem; color:#fff; }
+  #puntscore .rec { color:#1eff00; font-weight:bold; min-height:1.2em; }
+  #puntscore p { margin:.3rem 0; }
+  #puntagain { margin-top:.6rem; background:linear-gradient(#9b1c1c, #4a0808); border:1px solid #c9a14a; color:#ffd100; font:inherit; font-weight:bold; padding:.45rem 1.2rem; cursor:pointer; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -434,6 +452,14 @@
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="gnomepeek" aria-label="A gnome"><img src="img/gnome_stand.webp" alt=""></div>
+  <div id="punt" class="ov"><div class="pbox">
+    <button id="puntclose" aria-label="Close">✕</button>
+    <h2>Gnome Punting</h2>
+    <canvas id="puntcv"></canvas>
+    <div id="puntscore"><h3>The gnome has landed</h3><div class="big" id="puntdist"></div><div class="rec" id="puntrec"></div>
+      <p id="puntbest"></p><p id="puntcomment"></p><button id="puntagain">Punt another gnome</button></div>
+  </div></div>
   <div id="onyxia"><div id="onyglow"></div><img id="onyimg" src="img/onyxia.webp" alt=""><div id="onyfire"></div>
     <div id="onyemote">Onyxia takes in a deep breath...</div></div>
   <img id="hogger" src="img/hogger_walk1.webp" alt="Hogger">
@@ -562,7 +588,7 @@ const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
 const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
-  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail"];
+  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome"];
 let eggsFound = new Set();
 try { eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e))); } catch (e) {}
 function renderEggs(pop) {
@@ -607,7 +633,9 @@ function ensureAudio() {
 }
 // official WoW sound effects, decoded once after ENTER
 const SFX = { breath: "sfx/flamebreath.ogg", gnollAggro: "sfx/gnoll_aggro.ogg", gnollAttack: "sfx/gnoll_attack.ogg",
-  achievement: "sfx/achievement.ogg" };
+  achievement: "sfx/achievement.ogg", gnomeKick: "sfx/gnome_kick.ogg", gnomeDeath: "sfx/gnome_death.ogg",
+  gnomePissed1: "sfx/gnome_pissed1.ogg", gnomePissed2: "sfx/gnome_pissed2.ogg", gnomePissed3: "sfx/gnome_pissed3.ogg",
+  gnomePissed4: "sfx/gnome_pissed4.ogg" };
 const sfxBuf = {};
 function loadSfx() {
   Object.entries(SFX).forEach(([k, url]) => fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject())
@@ -1657,7 +1685,7 @@ const ACH_NAMES = {
   raid: "Raid Leader (Allegedly)", olympus: "Do Not Type That Name", fusion: "Fusion HA!", hearth: "Home Sweet Goldshire",
   login: "Position in Queue: Yes", leeroy: "At Least I Have Chicken", fishing: "Gone Fishin'",
   barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat",
-  onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail"
+  onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail", gnome: "Gnomeregan Air Force"
 };
 let achTimer = null;
 function achievementToast(id) {
@@ -2001,6 +2029,179 @@ $("mprev").addEventListener("click", () => uiError("You are already on the first
 $("mnext").addEventListener("click", () => uiError("There is no next page. You have no friends."));
 $("banok").addEventListener("click", () => { $("ban").classList.remove("on"); resumeBg(); });
 
+// ---------- Easter egg: gnome punting minigame ----------
+// Click to lock the swinging angle, click again to lock the power, the orc kicks. Mines and jetpack goblins keep him going.
+const PUNT_IMG = {};
+["gnome_stand", "gnome_fly", "gnome_lying", "orc_idle", "orc_kick", "goblin_jetpack", "mine"].forEach(n => {
+  const im = new Image(); im.src = "img/" + n + ".webp"; PUNT_IMG[n] = im;
+});
+const PUNT_COMMENTS = [[50, "That's not a punt, that's a nudge."], [150, "The gnome is mildly inconvenienced."],
+  [300, "Respectable. The gnome disagrees."], [600, "Gnomeregan Air Force wants to recruit him."], [1e9, "He's still filing the complaint."]];
+let pcv, pc, PW = 0, PH = 0, pState = "off", pT = 0, pAngle = 45, pPower = .5, pLast = 0, pRaf = null;
+let pG = null, pOrcKick = 0, pBoost = [], pFx = [], pMsg = "", pMsgT = 0, pCarry = 0, pCarrier = null, pBest = 0;
+try { pBest = +localStorage.getItem("gnomeBest") || 0; } catch (e) {}
+const GROUND = () => PH - 46;
+const yards = px => Math.max(0, Math.round(px / 10));
+function puntSize() {
+  const dpr = window.devicePixelRatio || 1, r = pcv.getBoundingClientRect();
+  PW = r.width; PH = r.height; pcv.width = PW * dpr; pcv.height = PH * dpr; pc.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function puntReset() {
+  pState = "angle"; pT = 0; pOrcKick = 0; pCarry = 0; pCarrier = null; pFx = []; pMsg = "";
+  pG = { x: 150, y: GROUND(), vx: 0, vy: 0, rot: 0, start: 150 };
+  // boosters along the track: mines on the ground, jetpack goblins in the air
+  pBoost = [];
+  for (let x = 700; x < 60000; x += 650 + Math.random() * 900) pBoost.push({ t: "mine", x, y: GROUND(), used: false });
+  for (let x = 1100; x < 60000; x += 1100 + Math.random() * 1600) pBoost.push({ t: "goblin", x, y: GROUND() - 110 - Math.random() * 170, used: false, ph: Math.random() * 6 });
+  $("puntscore").classList.remove("on");
+}
+function openPunt() {
+  foundEgg("gnome");
+  $("punt").classList.add("on");
+  pcv = $("puntcv"); pc = pcv.getContext("2d");
+  puntSize(); puntReset();
+  pLast = performance.now(); cancelAnimationFrame(pRaf); pRaf = requestAnimationFrame(puntLoop);
+}
+function closePunt() { $("punt").classList.remove("on"); pState = "off"; cancelAnimationFrame(pRaf); }
+function puntFlash(text) { pMsg = text; pMsgT = 1600; }
+function boom() {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+  o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(30, t + .5);
+  g.gain.setValueAtTime(1, t); g.gain.exponentialRampToValueAtTime(.0001, t + .6);
+  o.connect(g); out(g, true); o.start(t); o.stop(t + .65);
+  whoosh(3000, 300, .6);
+}
+function puntClick() {
+  if (pState === "angle") { pState = "power"; pT = 0; }
+  else if (pState === "power") {
+    // kick! power 0..1 maps to launch speed, angle in degrees above the ground
+    pState = "fly"; pOrcKick = 450;
+    const v = 7 + pPower * 23, a = pAngle * Math.PI / 180;
+    pG.vx = v * Math.cos(a); pG.vy = -v * Math.sin(a); pG.y -= 2;
+    if (!playSfx("gnomeKick", .8) && ctx && !muted) beat(ctx.currentTime, true);
+  }
+}
+function puntLand() {
+  pState = "land";
+  playSfx("gnomeDeath", .8);
+  setTimeout(() => {
+    if (pState !== "land") return;
+    pState = "done";
+    const d = yards(pG.x - pG.start), rec = d > pBest;
+    if (rec) { pBest = d; try { localStorage.setItem("gnomeBest", d); } catch (e) {} }
+    $("puntdist").textContent = d + " yards";
+    $("puntrec").textContent = rec ? "New personal record!" : "";
+    $("puntbest").textContent = "Personal best: " + pBest + " yards";
+    $("puntcomment").textContent = PUNT_COMMENTS.find(([lim]) => d < lim)[1];
+    $("puntscore").classList.add("on");
+    playSfx("gnomePissed" + (1 + Math.floor(Math.random() * 4)), .8);
+  }, 900);
+}
+function puntStep(dt) {
+  pT += dt;
+  if (pState === "angle") pAngle = 10 + 70 * (.5 + .5 * Math.sin(pT * .045));
+  if (pState === "power") pPower = Math.abs(((pT * .022) % 2) - 1);        // triangle wave 0..1..0
+  if (pOrcKick > 0) pOrcKick -= dt * 16.7;
+  if (pState === "fly") {
+    const g = pG, gy = GROUND();
+    if (pCarry > 0) {                         // a jetpack goblin is carrying him
+      pCarry -= dt * 16.7;
+      g.vx = 13; g.vy = Math.sin(pT * .1) * .6 - .4;
+      if (pCarry <= 0) { g.vx = 12; g.vy = -6; pCarrier = null; }
+    } else {
+      g.vy += .33 * dt; g.vx *= Math.pow(.999, dt);
+    }
+    g.x += g.vx * dt; g.y += g.vy * dt; g.rot += g.vx * .02 * dt;
+    if (pCarrier) { pCarrier.x = g.x; pCarrier.y = g.y - 55; }
+    for (const b of pBoost) {
+      if (b.used || Math.abs(b.x - g.x) > 60) continue;
+      if (b.t === "mine" && g.y > gy - 30 && Math.abs(b.x - g.x) < 34) {
+        b.used = true; g.vy = -(11 + Math.random() * 6); g.vx += 5; puntFlash("BOOM! Goblin land mine!"); boom();
+        for (let i = 0; i < 30; i++) pFx.push({ x: b.x, y: gy - 10, vx: (Math.random() - .5) * 9, vy: -Math.random() * 9, life: 40 + Math.random() * 30 });
+      }
+      if (b.t === "goblin" && pCarry <= 0 && Math.hypot(b.x - g.x, b.y - (g.y - 30)) < 60) {
+        b.used = true; pCarry = 1500; pCarrier = b; puntFlash("Goblin taxi! Hold on tight!"); whoosh(400, 1400, 1.4);
+      }
+    }
+    if (g.y >= gy) {                           // bounce, then roll out
+      g.y = gy;
+      if (g.vy > 3) { g.vy = -g.vy * .42; g.vx *= .72; } else { g.vy = 0; g.vx *= Math.pow(.9, dt); }
+      if (g.vy === 0 && g.vx < .3) puntLand();
+    }
+  }
+  pFx = pFx.filter(p => (p.life -= dt) > 0);
+  pFx.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += .3 * dt; });
+  if (pMsgT > 0) pMsgT -= dt * 16.7;
+}
+function drawImg(name, x, y, h, rot) {      // x,y = bottom centre of the sprite
+  const im = PUNT_IMG[name]; if (!im.complete || !im.naturalWidth) return;
+  const w = h * im.naturalWidth / im.naturalHeight;
+  pc.save(); pc.translate(x, y - h / 2); if (rot) pc.rotate(rot); pc.drawImage(im, -w / 2, -h / 2, w, h); pc.restore();
+}
+function puntDraw() {
+  const gy = GROUND(), camX = Math.max(0, pG.x - PW * .35);
+  const sky = pc.createLinearGradient(0, 0, 0, PH);
+  sky.addColorStop(0, "#1b2a4a"); sky.addColorStop(.7, "#6a4a5a"); sky.addColorStop(1, "#c9845a");
+  pc.fillStyle = sky; pc.fillRect(0, 0, PW, PH);
+  // far mountains (parallax)
+  pc.fillStyle = "#2b2f45"; pc.beginPath(); pc.moveTo(0, gy);
+  for (let sx = 0; sx <= PW + 40; sx += 40) {
+    const wx = sx + camX * .3; pc.lineTo(sx, gy - 70 - 45 * Math.sin(wx * .006) - 25 * Math.sin(wx * .017));
+  }
+  pc.lineTo(PW, gy); pc.fill();
+  // ground with yard markers every 50 yards
+  pc.fillStyle = "#4a6b2a"; pc.fillRect(0, gy, PW, 8); pc.fillStyle = "#5a3b1e"; pc.fillRect(0, gy + 8, PW, PH - gy);
+  pc.fillStyle = "#e8d9b0"; pc.font = "12px Arial"; pc.textAlign = "center";
+  for (let m = Math.floor((camX - pG.start) / 500) * 500; m < camX + PW; m += 500) {
+    const sx = m + pG.start - camX; if (m <= 0) continue;
+    pc.fillRect(sx - 1, gy, 2, 14); pc.fillText(yards(m) + " yd", sx, gy + 30);
+  }
+  pc.save(); pc.translate(-camX, 0);
+  for (const b of pBoost) {
+    if (b.x < camX - 100 || b.x > camX + PW + 100) continue;
+    if (b.t === "mine" && !b.used) drawImg("mine", b.x, gy + 4, 34);
+    if (b.t === "goblin" && b !== pCarrier && !b.used) drawImg("goblin_jetpack", b.x, b.y + Math.sin(pT * .06 + b.ph) * 8, 70);
+  }
+  drawImg(pOrcKick > 0 ? "orc_kick" : "orc_idle", 70, gy, 150);
+  if (pCarrier) drawImg("goblin_jetpack", pCarrier.x, pCarrier.y + 10, 70);
+  if (pState === "angle" || pState === "power") {
+    drawImg("gnome_stand", pG.x, gy, 70);
+    // aim arrow
+    const a = pAngle * Math.PI / 180, len = 50 + (pState === "power" ? pPower : .4) * 90, ox = pG.x + 10, oy = gy - 40;
+    pc.strokeStyle = "#ffd100"; pc.lineWidth = 4; pc.beginPath(); pc.moveTo(ox, oy);
+    pc.lineTo(ox + Math.cos(a) * len, oy - Math.sin(a) * len); pc.stroke();
+  } else if (pState === "fly") drawImg("gnome_fly", pG.x, pG.y, 70, pG.rot);
+  else drawImg("gnome_lying", pG.x, gy + 6, 34);
+  pFx.forEach(p => { pc.fillStyle = `rgba(255,${120 + (p.life * 2 | 0)},0,${Math.min(1, p.life / 40)})`; pc.beginPath(); pc.arc(p.x, p.y, 4, 0, 7); pc.fill(); });
+  pc.restore();
+  // HUD
+  pc.textAlign = "left"; pc.font = "bold 16px Arial"; pc.fillStyle = "#fff"; pc.shadowColor = "#000"; pc.shadowBlur = 4;
+  pc.fillText("Distance: " + yards(pG.x - pG.start) + " yd", 14, 26); pc.fillText("Best: " + pBest + " yd", 14, 48);
+  pc.textAlign = "center"; pc.font = "bold 18px Arial"; pc.fillStyle = "#ffd100";
+  if (pState === "angle") pc.fillText("Click to set the ANGLE", PW / 2, 30);
+  if (pState === "power") {
+    pc.fillText("Click to set the POWER", PW / 2, 30);
+    pc.fillStyle = "#000"; pc.fillRect(PW / 2 - 110, 42, 220, 14);
+    pc.fillStyle = pPower > .85 ? "#ff3b1f" : "#ffd100"; pc.fillRect(PW / 2 - 110, 42, 220 * pPower, 14);
+  }
+  if (pMsgT > 0) { pc.font = "bold 24px Impact, Arial"; pc.fillStyle = "#ff9a1f"; pc.fillText(pMsg, PW / 2, 80); }
+  pc.shadowBlur = 0;
+}
+function puntLoop(now) {
+  if (pState === "off") return;
+  const dt = Math.min(50, now - pLast) / 16.7; pLast = now;
+  puntStep(dt); puntDraw();
+  pRaf = requestAnimationFrame(puntLoop);
+}
+$("gnomepeek").addEventListener("click", openPunt);
+$("puntcv").addEventListener("pointerdown", e => { e.preventDefault(); puntClick(); });
+addEventListener("keydown", e => { if (pState !== "off" && (e.key === " " || e.key === "Enter")) { e.preventDefault(); puntClick(); } });
+$("puntagain").addEventListener("click", puntReset);
+$("puntclose").addEventListener("click", closePunt);
+$("punt").addEventListener("click", e => { if (e.target.id === "punt") closePunt(); });
+addEventListener("resize", () => { if (pState !== "off") puntSize(); });
+
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
   clearTimeout(fusionFallback); fusionWaiting = false;
@@ -2140,7 +2341,8 @@ const HINTS = [
   ["duel", "Stay on the page long enough and somebody will want to fight you."],
   ["onyxia", "A dragon sleeps inside the title. Knock on the World three times."],
   ["hogger", "Hogger roams these lands from time to time. Say hi if you see him."],
-  ["mail", "Every adventurer checks their mailbox. Look in the corner, it's tiny."]
+  ["mail", "Every adventurer checks their mailbox. Look in the corner, it's tiny."],
+  ["gnome", "Something small keeps peeking in from the left edge of the screen. Give it a warm welcome."]
 ];
 const TIPS = [
   "Don't stand in the fire.",

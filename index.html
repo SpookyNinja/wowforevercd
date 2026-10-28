@@ -476,6 +476,7 @@
                        radial-gradient(circle at 50% 50%, rgba(255,60,120,.25), transparent 70%); }
   @keyframes vlight { 0% { transform:rotate(0) scale(1); filter:hue-rotate(0); } 100% { transform:rotate(25deg) scale(1.15); filter:hue-rotate(-30deg); } }
   #vstage { position:relative; width:min(86vw, calc(70vh * 1.6), 1050px); aspect-ratio:1.6; overflow:hidden; border-radius:14px;
+            transition:transform 1.1s cubic-bezier(.3,1.3,.5,1);
             box-shadow:0 0 50px 10px rgba(255,40,140,.45), 0 0 120px 30px rgba(140,30,255,.3); }
   #vstage img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.3s ease;
                 filter:saturate(1.15) contrast(1.05); }
@@ -2398,6 +2399,8 @@ function openVault() {
   pics.forEach((src, i) => at(i * VAULT_SLIDE, () => {
     const img = imgs[i % 2], other = imgs[(i + 1) % 2];
     img.src = src; img.className = "on kb" + (1 + i % 3);
+    // a little tilt now and then, like photos lying askew on a table
+    $("vstage").style.transform = "rotate(" + pick([-5, -3.5, -2, 0, 0, 2, 3.5, 5]) + "deg)";
     other.classList.remove("on");
     cap.classList.remove("on");
     at(700, () => { cap.textContent = caps[i]; cap.classList.add("on"); });
@@ -2418,6 +2421,7 @@ function closeVault() {
   if (vaultWithSong && vaultYt && vaultYt.pauseVideo) vaultYt.pauseVideo();
   const box = $("vault"); box.classList.remove("on"); box.querySelectorAll(".vheart").forEach(h => h.remove());
   $("vstage").querySelectorAll("img").forEach(im => { im.className = ""; });
+  $("vstage").style.transform = "";
   $("vcap").classList.remove("on");
   vaultOn = false;
   resumeBg();

@@ -465,6 +465,36 @@
   #paid.on { display:block; animation:paid 2.8s ease-out forwards; }
   @keyframes paid { 0% { transform:translate(-50%,-50%) scale(.6); opacity:0; } 12% { transform:translate(-50%,-50%) scale(1.15); opacity:1; }
                     35% { transform:translate(-50%,-60%) scale(1); opacity:1; } 100% { transform:translate(-50%,-260%) scale(1); opacity:0; } }
+  /* Saucy vault: hidden keyhole -> sultry slideshow of Great Vault screenshots */
+  #vaultkey { position:fixed; right:2.5vw; top:48vh; z-index:5; font-size:20px; opacity:.06; cursor:default; user-select:none;
+              transition:opacity .4s, filter .4s, transform .3s; }
+  #vaultkey:hover { opacity:.95; transform:scale(1.25); filter:drop-shadow(0 0 8px #ff3d9a); }
+  #vault { z-index:56; background:#000; cursor:pointer; overflow:hidden; }
+  #vlight { position:absolute; inset:-20%; opacity:.85; animation:vlight 6s ease-in-out infinite alternate;
+            background:radial-gradient(circle at 25% 30%, rgba(255,20,90,.55), transparent 45%),
+                       radial-gradient(circle at 75% 70%, rgba(150,30,255,.5), transparent 45%),
+                       radial-gradient(circle at 50% 50%, rgba(255,60,120,.25), transparent 70%); }
+  @keyframes vlight { 0% { transform:rotate(0) scale(1); filter:hue-rotate(0); } 100% { transform:rotate(25deg) scale(1.15); filter:hue-rotate(-30deg); } }
+  #vstage { position:relative; width:min(86vw, calc(70vh * 1.6), 1050px); aspect-ratio:1.6; overflow:hidden; border-radius:14px;
+            box-shadow:0 0 50px 10px rgba(255,40,140,.45), 0 0 120px 30px rgba(140,30,255,.3); }
+  #vstage img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.3s ease;
+                filter:saturate(1.15) contrast(1.05); }
+  #vstage img.on { opacity:1; }
+  #vstage img.kb1 { animation:kb1 5.5s ease-in-out forwards; } #vstage img.kb2 { animation:kb2 5.5s ease-in-out forwards; }
+  #vstage img.kb3 { animation:kb3 5.5s ease-in-out forwards; }
+  @keyframes kb1 { from { transform:scale(1.02); } to { transform:scale(1.18) translate(-3%,-2%); } }
+  @keyframes kb2 { from { transform:scale(1.18) translate(3%,2%); } to { transform:scale(1.03); } }
+  @keyframes kb3 { from { transform:scale(1.05) translate(-3%,2%); } to { transform:scale(1.2) translate(3%,-2%); } }
+  #vstage::after { content:""; position:absolute; inset:0; pointer-events:none; box-shadow:inset 0 0 90px 30px rgba(40,0,30,.85);
+                   background:linear-gradient(transparent 60%, rgba(60,0,40,.55)); mix-blend-mode:multiply; }
+  #vcap { position:absolute; left:0; right:0; bottom:9%; text-align:center; pointer-events:none; padding:0 5vw;
+          font-family:"Brush Script MT","Segoe Script",Georgia,serif; font-style:italic; font-size:clamp(1.4rem,3.6vw,2.6rem);
+          color:#ffd6ec; text-shadow:0 0 14px #ff2d95, 0 0 30px #b0207a, 2px 2px 0 #000; opacity:0; transition:opacity .8s; }
+  #vcap.on { opacity:1; }
+  #vhint { position:absolute; bottom:2%; left:0; right:0; text-align:center; color:#a0607e; font-size:.75rem; pointer-events:none; }
+  .vheart { position:absolute; bottom:-40px; pointer-events:none; animation:vfloat 5s ease-in forwards; }
+  @keyframes vfloat { 0% { transform:translateY(0) rotate(0); opacity:0; } 15% { opacity:1; }
+                      100% { transform:translateY(-110vh) rotate(40deg); opacity:0; } }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -475,7 +505,7 @@
     <input id="vol" type="range" min="0" max="100" value="35" aria-label="Music volume">
     <button id="mute" aria-label="Toggle sound">🔊 Ticks on</button>
   </div>
-  <div id="ytbox"><div id="yt"></div><div id="ytfusion"></div><div id="ytleeroy"></div></div>
+  <div id="ytbox"><div id="yt"></div><div id="ytfusion"></div><div id="ytleeroy"></div><div id="ytvault"></div></div>
   <h1><span id="onytrig">World of Warcraft:</span> <span id="egg">Forever</span></h1>
   <div id="clock">
     <div class="unit"><div class="num" id="d">00</div><div class="lbl" id="signup">Days</div></div><div class="sep">:</div>
@@ -487,6 +517,10 @@
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="vaultkey" aria-hidden="true">🔐</div>
+  <div id="vault" class="ov"><div id="vlight"></div>
+    <div id="vstage"><img alt=""><img alt=""></div>
+    <div id="vcap"></div><div id="vhint">click anywhere to make it stop</div></div>
   <div id="offer" class="ov"><div id="offerbox"><img src="img/sub_offer.webp" alt="12-Month Subscription Special Offer: $349.99">
     <div id="offerbuy" title="Buy now"></div></div></div>
   <div id="paid">Paid</div>
@@ -622,6 +656,8 @@ const FUSION_END = 23000;
 const GOLDSHIRE_ID = "siGaJvUTqGI";
 // Leeroy easter egg sound
 const LEEROY_ID = "yOMj7WttkOA";
+// Saucy vault easter egg music
+const VAULT_ID = "izGwDsrQ1eQ";
 // ===================================================================================
 
 const $ = id => document.getElementById(id);
@@ -629,7 +665,7 @@ const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
 const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
-  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer"];
+  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer", "vault"];
 // Bump this when a release should start everyone's egg hunt from 0 again (fishing and gnome records are kept).
 const EGG_SAVE_VERSION = "20";
 let eggsFound = new Set();
@@ -713,7 +749,7 @@ function tone(freq, type, start, dur, vol) {
 }
 // Deep cinematic thump: pitch-dropping sub kick + low noise knock + booming tail
 function tick(final) {
-  if (!ctx || muted || eggOn || fusing || inGoldshire) return;
+  if (!ctx || muted || eggOn || fusing || inGoldshire || vaultOn) return;
   const t = ctx.currentTime, k = final ? 1 : 0.8;
   if (tickBuf) {
     const src = ctx.createBufferSource(), g = ctx.createGain();
@@ -808,6 +844,11 @@ function startYouTube() {
       width: "200", height: "200", videoId: LEEROY_ID,
       playerVars: { controls: 0, playsinline: 1, rel: 0, origin: location.origin },
       events: { onReady: () => { leeroyReady = true; } }
+    });
+    vaultYt = new YT.Player("ytvault", {
+      width: "200", height: "200", videoId: VAULT_ID,
+      playerVars: { controls: 0, playsinline: 1, rel: 0, origin: location.origin },
+      events: { onReady: () => { vaultReady = true; }, onError: () => { vaultReady = false; } }
     });
   };
   const tag = document.createElement("script");
@@ -1766,7 +1807,7 @@ const ACH_NAMES = {
   login: "Position in Queue: Yes", leeroy: "At Least I Have Chicken", fishing: "Gone Fishin'",
   barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat",
   onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail", gnome: "Gnomeregan Air Force",
-  offer: "Best Value Ever"
+  offer: "Best Value Ever", vault: "Saucy Vault"
 };
 let achTimer = null;
 function achievementToast(id) {
@@ -2328,6 +2369,62 @@ $("offer").addEventListener("click", () => {
   if (ctx && !muted) tone(180, "square", ctx.currentTime, .12, .04);
 });
 
+// ---------- Easter egg: hidden keyhole -> saucy Great Vault slideshow ----------
+const VAULT_PICS = [1, 2, 3, 4, 5, 6, 7, 8].map(n => "img/vault" + n + ".webp");
+const VAULT_CAPS = ["Oh my... look at that item level 😳", "Three rows of pure temptation", "Alluring Bubbleband... again 😏",
+  "Don't tell the raid leader about this one", "Is it hot in here or is it the 318s?", "Every slot unlocked. Shameless.",
+  "\"You may only select ONE\"... such a tease", "Mmm, Preyhunter's everything", "Select reward? Not yet. Let me look a little longer",
+  "Those green checkmarks though ✔✔✔", "Item Level 279... we don't talk about that one", "Collect x6? No thanks, I'm here for the view"];
+const VAULT_SLIDE = 3800;
+let vaultOn = false, vaultYt = null, vaultReady = false, vaultTimers = [], vaultHearts = null, vaultWithSong = false, vaultLoop = null;
+function loungeLoop() {
+  // fallback when the song can't play: a slow, smoky two-chord synth vamp
+  if (!ctx || muted) return;
+  const chords = [[146.8, 174.6, 220, 261.6], [196, 246.9, 293.7, 349.2]];
+  let k = 0;
+  const play = () => { const t = ctx.currentTime; chords[k++ % 2].forEach(f => tone(f, "triangle", t, 2.2, .035)); tone(73.4 + (k % 2) * 24.6, "sine", t, 2, .12); };
+  play(); vaultLoop = setInterval(play, 2000);
+}
+function openVault() {
+  if (vaultOn) return;
+  vaultOn = true; foundEgg("vault");
+  pauseBg();
+  const box = $("vault"), imgs = $("vstage").querySelectorAll("img"), cap = $("vcap");
+  box.classList.add("on");
+  vaultWithSong = vaultReady && !muted;
+  if (vaultWithSong) { vaultYt.setVolume(Math.max(vol(), 60)); vaultYt.seekTo(0, true); vaultYt.playVideo(); }
+  else loungeLoop();
+  const pics = shuffle(VAULT_PICS), caps = shuffle(VAULT_CAPS), at = (ms, fn) => vaultTimers.push(setTimeout(fn, ms));
+  pics.forEach((src, i) => at(i * VAULT_SLIDE, () => {
+    const img = imgs[i % 2], other = imgs[(i + 1) % 2];
+    img.src = src; img.className = "on kb" + (1 + i % 3);
+    other.classList.remove("on");
+    cap.classList.remove("on");
+    at(700, () => { cap.textContent = caps[i]; cap.classList.add("on"); });
+  }));
+  at(pics.length * VAULT_SLIDE, () => { imgs.forEach(im => im.classList.remove("on")); cap.textContent = "Same time next week? 😘"; });
+  at(pics.length * VAULT_SLIDE + 3500, closeVault);
+  const EMO = ["💋", "❤️", "✨", "💜", "🔥", "💕"];
+  vaultHearts = setInterval(() => {
+    const h = document.createElement("span"); h.className = "vheart"; h.textContent = pick(EMO);
+    h.style.left = Math.random() * 100 + "vw"; h.style.fontSize = (16 + Math.random() * 26) + "px";
+    box.appendChild(h); setTimeout(() => h.remove(), 5200);
+  }, 260);
+}
+function closeVault() {
+  if (!vaultOn) return;
+  vaultTimers.forEach(clearTimeout); vaultTimers = [];
+  clearInterval(vaultHearts); clearInterval(vaultLoop);
+  if (vaultWithSong && vaultYt && vaultYt.pauseVideo) vaultYt.pauseVideo();
+  const box = $("vault"); box.classList.remove("on"); box.querySelectorAll(".vheart").forEach(h => h.remove());
+  $("vstage").querySelectorAll("img").forEach(im => { im.className = ""; });
+  $("vcap").classList.remove("on");
+  vaultOn = false;
+  resumeBg();
+}
+$("vaultkey").addEventListener("click", openVault);
+$("vault").addEventListener("click", closeVault);
+
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
   clearTimeout(fusionFallback); fusionWaiting = false;
@@ -2478,7 +2575,8 @@ const HINTS = [
   ["hogger", "Hogger roams these lands from time to time. Say hi if you see him."],
   ["mail", "Every adventurer checks their mailbox. Look in the corner, it's tiny."],
   ["gnome", "Something small keeps peeking in from the left edge of the screen. Give it a warm welcome."],
-  ["offer", "Collect 12 achievements and you'll get an offer you can't refuse."]
+  ["offer", "Collect 12 achievements and you'll get an offer you can't refuse."],
+  ["vault", "Some treasures are kept behind a keyhole. Check the right side of the page."]
 ];
 const TIPS = [
   "Don't stand in the fire.",

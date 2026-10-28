@@ -450,6 +450,21 @@
   #puntscore .rec { color:#1eff00; font-weight:bold; min-height:1.2em; }
   #puntscore p { margin:.3rem 0; }
   #puntagain { margin-top:.6rem; background:linear-gradient(#9b1c1c, #4a0808); border:1px solid #c9a14a; color:#ffd100; font:inherit; font-weight:bold; padding:.45rem 1.2rem; cursor:pointer; }
+  /* 12 achievements -> "12-Month Subscription Special Offer"; only the price button closes it */
+  #offer { z-index:65; background:rgba(0,0,0,.82); }
+  #offerbox { position:relative; width:min(92vw, calc(88vh * 1568 / 1264), 900px); animation:offerin .6s cubic-bezier(.2,1.4,.4,1); }
+  #offerbox img { display:block; width:100%; border:2px solid #7a5a1c; box-shadow:0 0 50px rgba(255,190,80,.35); }
+  #offerbox.nope { animation:offernope .35s; }
+  @keyframes offerin { from { transform:scale(.6); opacity:0; } }
+  @keyframes offernope { 25% { transform:translateX(-10px) rotate(-1deg); } 75% { transform:translateX(10px) rotate(1deg); } }
+  #offerbuy { position:absolute; left:28.8%; width:43.1%; top:85.4%; height:9.7%; cursor:pointer; border-radius:6px; }
+  #offerbuy:hover { box-shadow:0 0 22px 4px rgba(255,80,40,.75); }
+  #paid { position:fixed; left:50%; top:46%; z-index:66; pointer-events:none; display:none; white-space:nowrap;
+          font-family:Impact,"Arial Black",sans-serif; font-size:clamp(3rem,12vw,8rem); color:#1eff00;
+          -webkit-text-stroke:2px #0a3a00; text-shadow:0 0 25px rgba(30,255,0,.6); }
+  #paid.on { display:block; animation:paid 2.8s ease-out forwards; }
+  @keyframes paid { 0% { transform:translate(-50%,-50%) scale(.6); opacity:0; } 12% { transform:translate(-50%,-50%) scale(1.15); opacity:1; }
+                    35% { transform:translate(-50%,-60%) scale(1); opacity:1; } 100% { transform:translate(-50%,-260%) scale(1); opacity:0; } }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -472,6 +487,9 @@
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="offer" class="ov"><div id="offerbox"><img src="img/sub_offer.webp" alt="12-Month Subscription Special Offer: $349.99">
+    <div id="offerbuy" title="Buy now"></div></div></div>
+  <div id="paid">Paid</div>
   <div id="gnomepeek" aria-label="A gnome"><img src="img/gnome_stand.webp" alt=""></div>
   <div id="punt" class="ov"><div class="pbox">
     <button id="puntclose" aria-label="Close">✕</button>
@@ -611,7 +629,7 @@ const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
 const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
-  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome"];
+  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer"];
 let eggsFound = new Set();
 try { eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e))); } catch (e) {}
 function renderEggs(pop) {
@@ -626,6 +644,7 @@ function foundEgg(id) {
   try { localStorage.setItem("eggsFound", JSON.stringify([...eggsFound])); } catch (e) {}
   renderEggs(true);
   achievementToast(id);
+  checkOffer(2600);   // after the achievement banner had its moment
 }
 let ctx = null, muted = false, eggOn = false, lastSec = null, finished = false;
 
@@ -1720,7 +1739,8 @@ const ACH_NAMES = {
   raid: "Raid Leader (Allegedly)", olympus: "Do Not Type That Name", fusion: "Fusion HA!", hearth: "Home Sweet Goldshire",
   login: "Position in Queue: Yes", leeroy: "At Least I Have Chicken", fishing: "Gone Fishin'",
   barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat",
-  onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail", gnome: "Gnomeregan Air Force"
+  onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail", gnome: "Gnomeregan Air Force",
+  offer: "Best Value Ever"
 };
 let achTimer = null;
 function achievementToast(id) {
@@ -2262,6 +2282,26 @@ $("puntclose").addEventListener("click", closePunt);
 $("punt").addEventListener("click", e => { if (e.target.id === "punt") closePunt(); });
 addEventListener("resize", () => { if (pState !== "off") puntSize(); });
 
+// ---------- 12 achievements: the 12-Month Subscription Special Offer. Only the price button closes it ----------
+let offerShown = false;
+function checkOffer(delay) {
+  if (offerShown || eggsFound.has("offer") || eggsFound.size < 12) return;
+  offerShown = true;
+  setTimeout(() => { $("offer").classList.add("on"); playSfx("menuOpen", .6); }, delay);
+}
+$("offerbuy").addEventListener("click", e => {
+  e.stopPropagation();
+  $("offer").classList.remove("on");
+  if (!playSfx("coin", .9) && ctx && !muted) tone(1318.5, "triangle", ctx.currentTime, .4, .08);
+  const p = $("paid"); p.classList.remove("on"); void p.offsetWidth; p.classList.add("on");
+  setTimeout(() => { p.classList.remove("on"); foundEgg("offer"); }, 2800);
+});
+// clicking anywhere else does nothing except a little "no"
+$("offer").addEventListener("click", () => {
+  const b = $("offerbox"); b.classList.remove("nope"); void b.offsetWidth; b.classList.add("nope");
+  if (ctx && !muted) tone(180, "square", ctx.currentTime, .12, .04);
+});
+
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
   clearTimeout(fusionFallback); fusionWaiting = false;
@@ -2402,7 +2442,8 @@ const HINTS = [
   ["onyxia", "A dragon sleeps inside the title. Knock on the World three times."],
   ["hogger", "Hogger roams these lands from time to time. Say hi if you see him."],
   ["mail", "Every adventurer checks their mailbox. Look in the corner, it's tiny."],
-  ["gnome", "Something small keeps peeking in from the left edge of the screen. Give it a warm welcome."]
+  ["gnome", "Something small keeps peeking in from the left edge of the screen. Give it a warm welcome."],
+  ["offer", "Collect 12 achievements and you'll get an offer you can't refuse."]
 ];
 const TIPS = [
   "Don't stand in the fire.",
@@ -2477,7 +2518,7 @@ setInterval(nextTip, 9000);
 $("eggclose").addEventListener("click", closeEgg);
 $("eggbox").addEventListener("click", e => { if (e.target.id === "eggbox") closeEgg(); });
 
-$("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; scheduleDuel(); scheduleHogger(); });
+$("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; scheduleDuel(); scheduleHogger(); checkOffer(1500); });
 $("mute").addEventListener("click", () => {
   muted = !muted; ensureAudio();
   $("mute").textContent = muted ? "🔇 Ticks off" : "🔊 Ticks on";

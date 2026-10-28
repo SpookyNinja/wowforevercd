@@ -630,8 +630,16 @@ const pad = n => String(n).padStart(2, "0");
 // ---------- Easter eggs found counter (remembered per browser) ----------
 const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
   "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer"];
+// Bump this when a release should start everyone's egg hunt from 0 again (fishing and gnome records are kept).
+const EGG_SAVE_VERSION = "20";
 let eggsFound = new Set();
-try { eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e))); } catch (e) {}
+try {
+  if (localStorage.getItem("eggsVersion") !== EGG_SAVE_VERSION) {
+    localStorage.removeItem("eggsFound");
+    localStorage.setItem("eggsVersion", EGG_SAVE_VERSION);
+  }
+  eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e)));
+} catch (e) {}
 function renderEggs(pop) {
   const c = $("eggcount");
   c.textContent = "🥚 Easter eggs found: " + eggsFound.size + "/" + EGGS.length;

@@ -1578,18 +1578,19 @@ $("egg").addEventListener("click", () => {
 });
 
 // ---------- Loading-screen tips + guild quotes; every 4th line is an easter-egg hint ----------
+// [easter egg id, hint]: a hint stops showing once its easter egg has been found
 const HINTS = [
-  "Some say if you call out \"Forever\" ten times, a sandstorm answers.",
-  "True Dirty Tactics members know the two-letter password.",
-  "Some legendary blades come running when you type their name.",
-  "Stormwind General chat never recovered from the beta. Say the M-word and see.",
-  "Raid sign-ups are always in the calendar. Count the days.",
-  "WoW Forever was terrorized by an alliance of guilds. Nobody dares to type their name.",
-  "Two guilds, one destiny. Search the darkness for the dance that makes them one.",
-  "Every adventurer knows the way home: hold on to time itself and don't move a muscle.",
-  "Remember launch day? Try to log in. Good luck with that.",
-  "Time's up, let's do this. Somebody left their chicken lying around in the dark.",
-  "Something keeps splashing near the bottom of the page. Patient anglers get rewarded."
+  ["forever", "Some say if you call out \"Forever\" ten times, a sandstorm answers."],
+  ["disco", "True Dirty Tactics members know the two-letter password."],
+  ["thunderfury", "Some legendary blades come running when you type their name."],
+  ["murloc", "Stormwind General chat never recovered from the beta. Say the M-word and see."],
+  ["raid", "Raid sign-ups are always in the calendar. Count the days."],
+  ["olympus", "WoW Forever was terrorized by an alliance of guilds. Nobody dares to type their name."],
+  ["fusion", "Two guilds, one destiny. Search the darkness for the dance that makes them one."],
+  ["hearth", "Every adventurer knows the way home: hold on to time itself and don't move a muscle."],
+  ["login", "Remember launch day? Try to log in. Good luck with that."],
+  ["leeroy", "Time's up, let's do this. Somebody left their chicken lying around in the dark."],
+  ["fishing", "Something keeps splashing near the bottom of the page. Patient anglers get rewarded."]
 ];
 const TIPS = [
   "Don't stand in the fire.",
@@ -1643,7 +1644,9 @@ const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 let tipOrder = [], tipPos = 0, tipCount = 0, hintPos = 0;
 function nextTip() {
   let html;
-  if (++tipCount % 4 === 0) html = "<b>Tip:</b> " + esc(HINTS[hintPos++ % HINTS.length]);
+  const openHints = HINTS.filter(([egg]) => !eggsFound.has(egg));
+  if (++tipCount % 4 === 0 && openHints.length) html = "<b>Tip:</b> " + esc(openHints[hintPos++ % openHints.length][1]);
+  else if (tipCount % 4 === 0) html = "<b>Tip:</b> You found every easter egg. Dirty Tactics salutes you.";
   else {
     if (tipPos >= tipOrder.length) {
       tipOrder = TIPS.map(t => "<b>Tip:</b> " + esc(t))

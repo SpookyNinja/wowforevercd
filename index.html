@@ -312,14 +312,13 @@
   /* achievements: toast + list behind the egg counter */
   #eggcount { cursor:pointer; }
   #eggcount:hover { border-color:var(--gold); }
-  #achtoast { position:fixed; left:50%; top:1rem; transform:translate(-50%,-160%); z-index:70; display:flex; align-items:center; gap:.8rem;
-              width:min(430px, 92vw); padding:.6rem 1rem; pointer-events:none; transition:transform .5s cubic-bezier(.2,1.3,.4,1);
-              background:linear-gradient(#2a2418, #120e07); border:2px solid #c9a14a; border-radius:8px; box-shadow:0 0 25px rgba(255,200,80,.35); }
+  #achtoast { position:fixed; left:50%; top:.8rem; transform:translate(-50%,-180%); z-index:70; pointer-events:none;
+              width:min(480px, 94vw); aspect-ratio:483/97; background:url(img/ach_banner.webp) center/100% 100% no-repeat;
+              filter:drop-shadow(0 4px 14px rgba(0,0,0,.7)); transition:transform .55s cubic-bezier(.2,1.3,.4,1); }
   #achtoast.on { transform:translate(-50%,0); }
-  #achtoast .ico { font-size:2rem; filter:drop-shadow(0 0 6px #ffcc33); }
-  #achtoast small { display:block; color:#ffd100; font-family:Arial,sans-serif; font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; }
-  #achtoast b { display:block; color:#fff; font-family:Georgia,serif; font-size:1.15rem; }
-  #achtoast .pts { margin-left:auto; color:#ffd100; font-family:Georgia,serif; font-size:1.3rem; font-weight:bold; }
+  #achname { position:absolute; left:24%; width:52.4%; top:34%; height:31%; display:flex; align-items:center; justify-content:center;
+             color:#fff; font-family:Georgia,"Times New Roman",serif; font-size:clamp(.8rem, 3.4vw, 1.4rem); white-space:nowrap;
+             overflow:hidden; text-shadow:1px 1px 2px #000, 0 0 6px rgba(0,0,0,.8); }
   #achlist { background:rgba(0,0,0,.8); }
   .abox { position:relative; width:min(640px, 94vw); max-height:88vh; overflow:auto; background:#140f08; border:2px solid #7a5a1c;
           padding:1rem 1.2rem; font-family:Arial,sans-serif; color:#ddd; text-align:left; }
@@ -331,6 +330,88 @@
   .ach.locked { opacity:.55; }
   .ach.locked b, .ach.locked span { color:#666; }
   #achclose { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  /* Onyxia: click "World of Warcraft:" 3x -> Deep Breath across the screen */
+  #onytrig { user-select:none; cursor:default; }
+  #onyxia { position:fixed; inset:0; z-index:46; pointer-events:none; display:none; overflow:hidden; }
+  #onyxia.on { display:block; }
+  #onyemote { position:absolute; left:0; right:0; top:16%; text-align:center; font-family:Georgia,serif; font-weight:bold;
+              font-size:clamp(1rem,3vw,1.9rem); color:#ff8c1a; text-shadow:2px 2px 0 #000, 0 0 12px #000; opacity:0; transition:opacity .4s; }
+  #onyemote.on { opacity:1; }
+  #onyimg { position:absolute; top:50%; height:min(62vh, 440px); transform:translate(-110%,-50%); transition:transform 1s cubic-bezier(.2,.9,.3,1); }
+  #onyxia.in #onyimg { transform:translate(-8%,-50%); }
+  #onyfire { position:absolute; height:44vh; transform-origin:0 50%; transform:translateY(-50%) scaleX(0); opacity:0;
+             clip-path:polygon(0 44%, 100% 0, 100% 100%, 0 56%); filter:blur(3px);
+             background:linear-gradient(to right, rgba(255,255,230,.95), #ffe066 10%, #ff9a1f 35%, #ff4a00 65%, rgba(160,20,0,.6) 88%, transparent); }
+  #onyfire.on { opacity:1; transform:translateY(-50%) scaleX(1); transition:transform .35s ease-out; animation:fireflick .09s linear infinite alternate; }
+  #onyfire.out { opacity:0; transition:opacity .6s; }
+  @keyframes fireflick { from { filter:blur(3px) brightness(1); } to { filter:blur(4px) brightness(1.25) hue-rotate(-8deg); } }
+  #onyglow { position:absolute; inset:0; background:radial-gradient(ellipse at 70% 50%, rgba(255,110,0,.45), transparent 70%); opacity:0; transition:opacity .4s; }
+  #onyglow.on { opacity:1; }
+  body.charred .num { color:#2b2522; text-shadow:0 0 8px #ff4500, 0 0 26px #8b1a00; animation:ember .4s ease-in-out infinite alternate; transition:color 1.5s; }
+  @keyframes ember { to { text-shadow:0 0 14px #ff7a1a, 0 0 34px #b02000; } }
+  /* Hogger: wanders past now and then; click him and die */
+  #hogger { position:fixed; bottom:1.5vh; left:0; z-index:5; height:min(22vh, 170px); display:none; cursor:pointer; user-select:none; }
+  #hogger.on { display:block; }
+  #hogger.attack { transform-origin:50% 100%; }
+  #redflash { position:fixed; inset:0; z-index:58; pointer-events:none; background:radial-gradient(circle, rgba(200,0,0,.2), rgba(140,0,0,.75)); opacity:0; }
+  #redflash.on { animation:fflash 1s ease-out; }
+  body.dead > *:not(#deathbox):not(#redflash):not(#corpse):not(#ghostmsg):not(#achtoast) { filter:grayscale(1) brightness(.6); transition:filter 1s; }
+  body.ghost > *:not(#deathbox):not(#corpse):not(#ghostmsg):not(#achtoast) { filter:grayscale(1) brightness(.9) sepia(.3) hue-rotate(170deg) saturate(2); transition:filter 1s; }
+  #deathbox { position:fixed; left:50%; top:22%; transform:translateX(-50%); z-index:60; display:none; }
+  #deathbox.on { display:block; }
+  #corpse { position:fixed; z-index:60; display:none; font-size:2.4rem; transform:translate(-50%,-50%); cursor:pointer;
+            filter:drop-shadow(0 0 10px #9fe7ff); animation:corpse 1.2s ease-in-out infinite alternate; }
+  #corpse.on { display:block; }
+  @keyframes corpse { to { transform:translate(-50%,-60%) scale(1.15); } }
+  #ghostmsg { position:fixed; left:0; right:0; top:12%; z-index:60; display:none; text-align:center; font-family:Georgia,serif;
+              font-size:clamp(1rem,2.6vw,1.6rem); color:#cfefff; text-shadow:0 0 12px #3fb4ff, 2px 2px 0 #000; }
+  #ghostmsg.on { display:block; }
+  /* Mailbox: tiny hidden mailbox -> WoW inbox, letters, a gold seller and a ban */
+  #mailicon { position:fixed; left:1rem; top:1rem; z-index:5; font-size:22px; opacity:.07; cursor:default; user-select:none;
+              filter:grayscale(.5); transition:opacity .4s, filter .4s, transform .2s; }
+  #mailicon:hover { opacity:.95; filter:none; transform:scale(1.15); }
+  #mail { background:rgba(0,0,0,.7); }
+  .mwrap { display:flex; gap:.6rem; align-items:flex-start; flex-wrap:wrap; justify-content:center; max-height:96vh; overflow:auto; padding:.5rem; }
+  .mpanel { width:min(360px, 94vw); background:#1b1b1b; border:3px solid #5d5d5d; outline:1px solid #000; box-shadow:0 0 25px #000;
+            font-family:Arial,Helvetica,sans-serif; font-size:.82rem; color:#fff; }
+  .mhead { position:relative; background:linear-gradient(#3c3c3c, #1c1c1c); border-bottom:2px solid #5d5d5d; padding:.35rem .5rem;
+           text-align:center; color:#ffd100; font-weight:bold; }
+  .mhead button { position:absolute; right:.3rem; top:.2rem; }
+  .mbtn { background:linear-gradient(#a3151b, #5a0a0d); border:1px solid #d6a33a; border-radius:3px; color:#ffd100; font:inherit;
+          font-weight:bold; padding:.25rem .7rem; cursor:pointer; }
+  .mbtn:hover { filter:brightness(1.25); }
+  .mx { background:linear-gradient(#a3151b, #5a0a0d); border:1px solid #d6a33a; color:#ffd100; font-weight:bold; width:1.5rem; height:1.5rem;
+        line-height:1; padding:0; cursor:pointer; }
+  .mbar { display:flex; justify-content:center; gap:.6rem; padding:.4rem; background:#232323; }
+  #mlist { background:linear-gradient(#3b2a14, #24180a); padding:.3rem; }
+  .mrow { display:flex; align-items:center; gap:.45rem; height:46px; padding:0 .3rem; margin-bottom:3px; cursor:pointer;
+          background:linear-gradient(90deg, rgba(120,80,30,.55), rgba(70,45,15,.35)); border:1px solid #4a3418; }
+  .mrow:hover, .mrow.sel { background:linear-gradient(90deg, rgba(170,120,40,.6), rgba(90,60,20,.45)); border-color:#9a7b3a; }
+  .mrow.empty { cursor:default; background:rgba(60,40,15,.35); }
+  .mcheck { width:16px; height:16px; border:1px solid #777; background:#111; flex-shrink:0; }
+  .mico { width:38px; height:38px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+          background:radial-gradient(#4a4a4a, #151515); border:1px solid #8a8a8a; border-radius:3px; }
+  .mtext { flex:1; min-width:0; line-height:1.25; }
+  .mfrom { color:#ffd100; } .msub { color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mdays { color:#1eff00; font-size:.75rem; align-self:flex-start; margin-top:.4rem; }
+  .mrow.cod .mdays { color:#ff4040; }
+  #mopen .mmeta { display:grid; grid-template-columns:auto 1fr auto; gap:.15rem .5rem; align-items:center; padding:.45rem .6rem; }
+  #mopen .mmeta span:nth-child(2), #mopen .mmeta span:nth-child(5) { color:#ffd100; }
+  #mbody { margin:0 .5rem; height:min(32vh, 220px); overflow:auto; padding:.8rem 1rem; color:#3a2410; font-family:Georgia,serif; font-size:.95rem;
+           line-height:1.45; white-space:pre-wrap; background:radial-gradient(ellipse at 50% 40%, #f1dfb3, #d9bd83 70%, #b8935a); border:1px solid #6b4f24; }
+  #matt { display:flex; align-items:center; gap:.4rem; padding:.5rem .6rem; min-height:56px; flex-wrap:wrap; }
+  #matt .mico { cursor:pointer; position:relative; }
+  #matt .mico small { position:absolute; right:2px; bottom:0; font-size:.65rem; color:#fff; text-shadow:1px 1px 0 #000; }
+  #mcod { color:#ff4040; font-weight:bold; }
+  #uierr { position:fixed; left:0; right:0; top:18%; z-index:66; text-align:center; pointer-events:none; color:#ff2020;
+           font-family:Arial,sans-serif; font-weight:bold; font-size:clamp(.95rem,2.2vw,1.3rem); text-shadow:1px 1px 0 #000; opacity:0; transition:opacity .4s; }
+  #uierr.on { opacity:1; transition:none; }
+  #ban { z-index:68; background:radial-gradient(ellipse at 50% 40%, #1c2a3a, #04070b 75%); }
+  .banbox { width:min(620px, 92vw); padding:1.4rem 1.6rem 1.2rem; text-align:center; background:rgba(10,10,10,.92); border:2px solid #555;
+            box-shadow:0 0 40px #000; font-family:Arial,sans-serif; }
+  .banbox p { color:#ffd100; font-size:clamp(.95rem,2.4vw,1.35rem); line-height:1.4; text-shadow:1px 1px 0 #000; }
+  .banbox p span { color:#1eff00; }
+  .banbox button { margin-top:1rem; width:min(260px, 70%); }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -342,7 +423,7 @@
     <button id="mute" aria-label="Toggle sound">🔊 Ticks on</button>
   </div>
   <div id="ytbox"><div id="yt"></div><div id="ytfusion"></div><div id="ytleeroy"></div></div>
-  <h1>World of Warcraft: <span id="egg">Forever</span></h1>
+  <h1><span id="onytrig">World of Warcraft:</span> <span id="egg">Forever</span></h1>
   <div id="clock">
     <div class="unit"><div class="num" id="d">00</div><div class="lbl" id="signup">Days</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="h">00</div><div class="lbl">Hours</div></div><div class="sep">:</div>
@@ -353,11 +434,42 @@
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="onyxia"><div id="onyglow"></div><img id="onyimg" src="img/onyxia.webp" alt=""><div id="onyfire"></div>
+    <div id="onyemote">Onyxia takes in a deep breath...</div></div>
+  <img id="hogger" src="img/hogger_walk1.webp" alt="Hogger">
+  <div id="redflash"></div>
+  <div id="deathbox"><div class="qbox"><h4 id="deathtitle">You died.</h4><p id="deathtext"></p><button id="deathbtn">Release Spirit</button></div></div>
+  <div id="corpse" title="Your corpse">💀</div>
+  <div id="ghostmsg">You are a ghost. Return to your corpse to resurrect.</div>
+  <div id="mailicon" aria-hidden="true">📫</div>
+  <div id="mail" class="ov"><div class="mwrap">
+    <div class="mpanel" id="minbox">
+      <div class="mhead">Inbox <button class="mx" id="mclose" aria-label="Close">✕</button></div>
+      <div class="mbar"><button class="mbtn" id="mmark">Mark All</button><button class="mbtn" id="mgetall">Get Attachments</button></div>
+      <div id="mlist"></div>
+      <div class="mbar"><button class="mbtn" id="mprev">Prev</button><button class="mbtn" id="mnext">Next</button></div>
+    </div>
+    <div class="mpanel" id="mopen">
+      <div class="mhead">Open Mail <button class="mx" id="mclose2" aria-label="Close">✕</button></div>
+      <div class="mmeta"><span>From:</span><span id="mfrom"></span><button class="mbtn" id="mspam">Report Spam</button>
+        <span>Subject:</span><span id="msub"></span><span></span></div>
+      <div id="mbody"></div>
+      <div id="matt"></div>
+      <div class="mbar"><button class="mbtn" id="mtake">Take All</button><button class="mbtn" id="mreply">Reply</button>
+        <button class="mbtn" id="mreturn">Return</button><button class="mbtn" id="mclose3">Close</button></div>
+    </div>
+  </div></div>
+  <div id="uierr"></div>
+  <div id="ban" class="ov"><div class="banbox">
+    <p>This World of Warcraft account has been temporarily suspended. The suspension expires in 177 days, 14 hours, 4 minutes.
+      Please go to <span>[http://www.worldofwarcraft.com/misc/banned.html]</span> for further information. (BLZ51900053)</p>
+    <button class="mbtn" id="banok">Okay</button>
+  </div></div>
   <div id="reload" class="ov"><h2>World of Warcraft</h2><p id="rltip"></p>
     <div id="rlbar"><div id="rlfill"></div><div id="rlpct"></div></div></div>
   <div id="duel"><p id="duelq"></p><button id="dueln">Accept</button><button id="duelx">Decline</button></div>
   <div id="dueltxt"></div>
-  <div id="achtoast"><div class="ico">🏆</div><div><small>Achievement earned</small><b id="achname"></b></div><div class="pts">10</div></div>
+  <div id="achtoast"><div id="achname"></div></div>
   <div id="achlist" class="ov"><div class="abox"><button id="achclose" aria-label="Close">✕</button><h2 id="achhead">Achievements</h2><div id="achitems"></div></div></div>
   <div id="castbar"><div class="fill"></div><span><em>Hearthstone</em><em id="casttime"></em></span></div>
   <div id="goldshire" class="ov"><div id="gsframe"><div id="gsplayer"></div><div id="gstxt">You return to Goldshire</div></div>
@@ -450,7 +562,7 @@ const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
 const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
-  "barrens", "dance", "reload", "duel"];
+  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail"];
 let eggsFound = new Set();
 try { eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e))); } catch (e) {}
 function renderEggs(pop) {
@@ -489,8 +601,24 @@ function ensureAudio() {
     // optional custom sample: drop a short "tick.mp3" next to index.html and it replaces the synth thump
     fetch("tick.mp3").then(r => r.ok ? r.arrayBuffer() : Promise.reject())
       .then(b => ctx.decodeAudioData(b)).then(buf => { tickBuf = buf; }).catch(() => {});
+    loadSfx();
   }
   if (ctx.state === "suspended") ctx.resume();
+}
+// official WoW sound effects, decoded once after ENTER
+const SFX = { breath: "sfx/flamebreath.ogg", gnollAggro: "sfx/gnoll_aggro.ogg", gnollAttack: "sfx/gnoll_attack.ogg",
+  achievement: "sfx/achievement.ogg" };
+const sfxBuf = {};
+function loadSfx() {
+  Object.entries(SFX).forEach(([k, url]) => fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject())
+    .then(b => ctx.decodeAudioData(b)).then(buf => { sfxBuf[k] = buf; }).catch(() => {}));
+}
+function playSfx(k, gain) {
+  if (!ctx || muted || !sfxBuf[k]) return false;
+  const src = ctx.createBufferSource(), g = ctx.createGain();
+  src.buffer = sfxBuf[k]; g.gain.value = gain;
+  src.connect(g); out(g, false); src.start();
+  return true;
 }
 function out(node, wet) { node.connect(master); if (wet) node.connect(verb); }
 function tone(freq, type, start, dur, vol) {
@@ -1528,14 +1656,16 @@ const ACH_NAMES = {
   forever: "Darude Sandstorm", disco: "Dirty Disco", thunderfury: "Did Someone Say...?", murloc: "Mrglglglgl",
   raid: "Raid Leader (Allegedly)", olympus: "Do Not Type That Name", fusion: "Fusion HA!", hearth: "Home Sweet Goldshire",
   login: "Position in Queue: Yes", leeroy: "At Least I Have Chicken", fishing: "Gone Fishin'",
-  barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat"
+  barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat",
+  onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail"
 };
 let achTimer = null;
 function achievementToast(id) {
   $("achname").textContent = ACH_NAMES[id] || id;
   const t = $("achtoast"); t.classList.add("on");
   clearTimeout(achTimer); achTimer = setTimeout(() => t.classList.remove("on"), 4500);
-  if (ctx && !muted) [[659.3, 0], [784, .1], [987.8, .2], [1318.5, .32]].forEach(([f, d]) => tone(f, "triangle", ctx.currentTime + d, .7, .07));
+  if (!playSfx("achievement", .3) && ctx && !muted)
+    [[659.3, 0], [784, .1], [987.8, .2], [1318.5, .32]].forEach(([f, d]) => tone(f, "triangle", ctx.currentTime + d, .7, .07));
 }
 function openAchievements() {
   const list = $("achitems"); list.textContent = "";
@@ -1670,6 +1800,206 @@ $("duelx").addEventListener("click", () => {
     setTimeout(() => { $("tfchat").textContent = ""; tfOn = false; }, 5600);
   }, 600);
 });
+
+// ---------- Easter egg: click "World of Warcraft:" 3x -> Onyxia's Deep Breath ----------
+let onyClicks = 0, onyClickT = null, onyBusy = false;
+$("onytrig").addEventListener("click", () => {
+  clearTimeout(onyClickT); onyClickT = setTimeout(() => { onyClicks = 0; }, 1500);
+  if (++onyClicks >= 3) { onyClicks = 0; deepBreath(); }
+});
+function deepBreath() {
+  if (onyBusy) return;
+  onyBusy = true; foundEgg("onyxia");
+  const box = $("onyxia"), img = $("onyimg"), fire = $("onyfire"), emote = $("onyemote"), glow = $("onyglow");
+  box.className = "on"; emote.classList.add("on");
+  setTimeout(() => box.classList.add("in"), 300);
+  setTimeout(() => {
+    // the fire starts at her mouth (about 87% across, 56% down the image) and runs to the right edge
+    const r = img.getBoundingClientRect(), mx = r.left + r.width * .87, my = r.top + r.height * .56;
+    fire.style.left = mx + "px"; fire.style.top = my + "px"; fire.style.width = (innerWidth - mx + 80) + "px";
+    fire.className = "on"; glow.classList.add("on"); emote.classList.remove("on");
+    if (!playSfx("breath", .7)) whoosh(200, 3000, 2.5);
+  }, 1700);
+  setTimeout(() => document.body.classList.add("charred"), 2100);
+  setTimeout(() => { fire.className = "out"; glow.classList.remove("on"); box.classList.remove("in"); }, 4700);
+  setTimeout(() => { box.className = ""; fire.className = ""; onyBusy = false; }, 5900);
+  setTimeout(() => document.body.classList.remove("charred"), 8500);
+}
+
+// ---------- Easter egg: Hogger wanders along the bottom every few minutes; click him and he kills you ----------
+let hogTimer = null, hogWalk = null, hogFrame = null, hogX = 0, hogDead = false;
+function scheduleHogger(ms) {
+  clearTimeout(hogTimer);
+  hogTimer = setTimeout(hoggerWalk, ms || (2 + Math.random() * 3) * 60000);
+}
+function hoggerWalk() {
+  const h = $("hogger");
+  if (anyOverlay() || hogDead || document.hidden) { scheduleHogger(); return; }
+  h.src = "img/hogger_walk1.webp"; h.style.transform = ""; h.classList.add("on");
+  hogX = innerWidth + 20; let f = 0, last = performance.now();
+  clearInterval(hogFrame);
+  hogFrame = setInterval(() => { f ^= 1; h.src = f ? "img/hogger_walk2.webp" : "img/hogger_walk1.webp"; }, 260);
+  clearInterval(hogWalk);
+  hogWalk = setInterval(() => {
+    const now = performance.now(); hogX -= (now - last) * .07; last = now;   // ~70 px per second, right to left
+    h.style.left = hogX + "px";
+    if (hogX < -h.offsetWidth - 20) hoggerGone();
+  }, 30);
+}
+function hoggerGone() {
+  clearInterval(hogWalk); clearInterval(hogFrame);
+  $("hogger").classList.remove("on");
+  scheduleHogger();
+}
+$("hogger").addEventListener("click", () => {
+  if (hogDead) return;
+  hogDead = true;
+  clearInterval(hogWalk); clearInterval(hogFrame);
+  const h = $("hogger");
+  playSfx("gnollAggro", .7);
+  h.src = "img/hogger_attack.webp"; h.style.transform = "scaleX(-1)";   // the attack pose faces right; mirror it to face the player
+  setTimeout(() => {
+    if (!playSfx("gnollAttack", .8) && ctx && !muted) beat(ctx.currentTime, true);
+    const rf = $("redflash"); rf.classList.remove("on"); void rf.offsetWidth; rf.classList.add("on");
+  }, 550);
+  setTimeout(() => {
+    h.classList.remove("on");
+    foundEgg("hogger");
+    document.body.classList.add("dead");
+    $("deathtitle").textContent = "You died.";
+    $("deathtext").textContent = pick(["Killed by Hogger. Again.", "Hogger hits you for 9,999. You die.", "Hogger is undefeated. You are not.",
+      "You were slain by Hogger. Your guild has been notified."]);
+    $("deathbtn").textContent = "Release Spirit";
+    $("deathbox").classList.add("on");
+    if (ctx && !muted) sadTrombone();
+  }, 1300);
+});
+$("deathbtn").addEventListener("click", () => {
+  if (document.body.classList.contains("ghost")) {   // second dialog: resurrect
+    $("deathbox").classList.remove("on");
+    document.body.classList.remove("ghost", "dead");
+    $("corpse").classList.remove("on"); $("ghostmsg").classList.remove("on");
+    if (ctx && !muted) [523.3, 659.3, 784, 1046.5].forEach((f, i) => tone(f, "sine", ctx.currentTime + i * .12, 1.2, .08));
+    hogDead = false; scheduleHogger();
+    return;
+  }
+  // release spirit: become a ghost and run back to the corpse
+  $("deathbox").classList.remove("on");
+  document.body.classList.remove("dead"); document.body.classList.add("ghost");
+  const c = $("corpse"); c.style.left = (15 + Math.random() * 70) + "vw"; c.style.top = (30 + Math.random() * 50) + "vh"; c.classList.add("on");
+  $("ghostmsg").classList.add("on");
+});
+function reachCorpse() {
+  if (!$("corpse").classList.contains("on") || $("deathbox").classList.contains("on")) return;
+  $("corpse").classList.remove("on"); $("ghostmsg").classList.remove("on");
+  $("deathtitle").textContent = "Resurrect now?"; $("deathtext").textContent = "You found your corpse. Hogger is still out there.";
+  $("deathbtn").textContent = "Accept"; $("deathbox").classList.add("on");
+}
+$("corpse").addEventListener("click", reachCorpse);
+addEventListener("pointermove", e => {
+  const c = $("corpse");
+  if (!c.classList.contains("on")) return;
+  const r = c.getBoundingClientRect();
+  if (Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2)) < 45) reachCorpse();
+});
+
+// ---------- Easter egg: tiny hidden mailbox -> inbox with 3-4 letters plus a gold seller on top ----------
+const LETTERS = [
+  { from: "Kat", sub: "Danish delivery", ico: "🥐", body: "Here is the danish I promised.\n\nDo not ask where it has been.\n\n- Kat", att: [["🥐", 1]] },
+  { from: "Esports", sub: "Stream snacks", ico: "🍿", body: "These snacks were on stream.\nThat makes them collector's items now.\n\nCOD is non-negotiable.", att: [["🍿", 3]], cod: 500 },
+  { from: "Andre", sub: "Raid strategy v17 (final) (final2)", ico: "📜", body: "Stand where I told you.\n\nNo, the other where.\n\nActually just stand next to me and do what I do.", att: [["📜", 1]] },
+  { from: "Gøj", sub: "my intellect", ico: "✉️", body: "has anyone seen my intellect\n\nlast seen when i grouped with Ulaw\n\nreward: 1 copper" },
+  { from: "Ulaw", sub: "re: my intellect", ico: "✉️", body: "No." },
+  { from: "Noah", sub: "I got you!", ico: "✉️", body: "I got you!\n\n(I did not get you.)" },
+  { from: "Chi", sub: "Your loot from last raid", ico: "🪨", body: "Here's your loot from last raid.\n\nI took a small handling fee of 100%.\nWhat's left is attached.", att: [["🪨", 1]] },
+  { from: "Amy", sub: "Paladeeeeeeeeen", ico: "🛡️", body: "Paladeeeeeeeeeeeeeeeeeeen.", att: [["🛡️", 1]] },
+  { from: "Jacob", sub: "Your socks", ico: "🧦", body: "Returning your socks.\n\nNot because of feet.\nI swear.", att: [["🧦", 2]] },
+  { from: "Alisha", sub: "Raid notes", ico: "📜", body: "Notes from last raid:\n\n- wiped\n- wiped\n- wiped\n- pizza\n- wiped\n- called it", att: [["📜", 1]] },
+  { from: "Johny", sub: "Found your headset", ico: "🎧", body: "Found your headset in Goldshire.\nIt was playing tavern music all by itself.\n\nSpooky.", att: [["🎧", 1]] },
+  { from: "Andy", sub: "One (1) Kaj cake", ico: "🍰", body: "One Kaj cake, freshly baked in 2019.\n\nStill good. Probably.", att: [["🍰", 1]], cod: 5000 },
+  { from: "Avemae", sub: "Yellow", ico: "🟡", body: "Yellow is a good number.\n\nAttached: more yellow.", att: [["🟡", 7]] },
+  { from: "Dre", sub: "Repair bill", ico: "🧾", body: "You owe the guild bank 243g for the Onyxia wipe.\n\nI did the math. It's 243.\nI did the math twice.", att: [["🧾", 1]], cod: 243 },
+  { from: "Yil", sub: "Look what I caught", ico: "🐟", body: "Caught this in Elwynn Forest.\n\nIt looks like Andre.", att: [["🐟", 1]] },
+  { from: "Kybris", sub: "about your mail", ico: "✉️", body: "I rolled Need on your mail.\n\nSorry.\n\nThis is all that's left." },
+  { from: "Levi", sub: "Got you a mount!", ico: "🐢", body: "Bought you a mount!\n\nIt's a turtle.\nIt's very slow. Like your DPS.", att: [["🐢", 1]] },
+  { from: "Joe", sub: "hi from account 13", ico: "✉️", body: "Logging in on my 13th account just to say hi.\n\nHi.\n\n(Account 14 says hi too.)" },
+  { from: "Kaelisra", sub: "Lucky dice", ico: "🎲", body: "These dice always roll 100.\n\nUse them wisely. Preferably on my loot.", att: [["🎲", 2]] },
+  { from: "Sab", sub: "Moustache (borrowed)", ico: "🥸", body: "Lent you my spare moustache for the raid.\n\nPlease return it washed.", att: [["🥸", 1]] },
+  { from: "Hogger", sub: "HOGGER HUNGRY", ico: "🍖", body: "HOGGER HUNGRY.\n\nSEND FOOD.\n\nOR HOGGER COME TO YOU.", cod: 1 },
+  { from: "Mankrik", sub: "Have you seen my wife?", ico: "✉️", body: "Still looking.\n\nShe said she was going to the Crossroads.\nThat was in 2004.\n\nPlease write back." },
+  { from: "Leeroy Jenkins", sub: "Chicken", ico: "🍗", body: "At least I have chicken.\n\nNow you do too.", att: [["🍗", 1]] },
+  { from: "Blizzard Entertainment", sub: "Your login position", ico: "✉️", body: "Dear adventurer,\n\nyour position in queue is 4,231.\nEstimated time: 7 years.\n\nThank you for your patience." }
+];
+let mailItems = [], mailSel = null, errT = null;
+function uiError(text) {
+  const e = $("uierr"); e.textContent = text; e.classList.add("on");
+  clearTimeout(errT); errT = setTimeout(() => e.classList.remove("on"), 2200);
+  if (ctx && !muted) tone(220, "square", ctx.currentTime, .15, .04);
+}
+function goldSeller() {
+  const name = "Xk" + Math.random().toString(36).slice(2, 7) + "zq";
+  return { from: name.charAt(0).toUpperCase() + name.slice(1), sub: "CHEAP GOLD 100% SAFE!!! FREE SAMPLE", ico: "💰", seller: true,
+    body: "W0W G0LD 4 SALE!!!\n\n10.000g only 5$ !!!\n100% SAFE, NO BAN, FAST DELIVERY 5 MIN\n\nvisit w w w . g0ldf4st . c0m\n\nFREE SAMPLE ATTACHED, ENJOY!!!",
+    att: [["💰", "5000g"]] };
+}
+function openMail() {
+  foundEgg("mail");
+  mailItems = [goldSeller()].concat(LETTERS.slice().sort(() => Math.random() - .5).slice(0, 3 + Math.floor(Math.random() * 2)));
+  const list = $("mlist"); list.textContent = "";
+  mailItems.forEach((m, i) => {
+    const row = document.createElement("div"), ck = document.createElement("div"), ico = document.createElement("div"),
+          tx = document.createElement("div"), fr = document.createElement("div"), sb = document.createElement("div"), dy = document.createElement("div");
+    row.className = "mrow" + (m.cod ? " cod" : ""); ck.className = "mcheck"; ico.className = "mico"; ico.textContent = m.ico;
+    tx.className = "mtext"; fr.className = "mfrom"; fr.textContent = m.from; sb.className = "msub"; sb.textContent = m.sub;
+    dy.className = "mdays"; dy.textContent = m.cod ? "COD" : (m.seller ? "3 Days" : "30 Days");
+    tx.append(fr, sb); row.append(ck, ico, tx, dy);
+    row.addEventListener("click", () => showLetter(i));
+    list.appendChild(row);
+  });
+  for (let i = mailItems.length; i < 7; i++) { const e = document.createElement("div"); e.className = "mrow empty"; list.appendChild(e); }
+  showLetter(0);
+  $("mail").classList.add("on");
+  if (ctx && !muted) tone(1046.5, "triangle", ctx.currentTime, .3, .05);
+}
+function showLetter(i) {
+  mailSel = mailItems[i];
+  [...$("mlist").children].forEach((r, k) => r.classList.toggle("sel", k === i));
+  $("mfrom").textContent = mailSel.from; $("msub").textContent = mailSel.sub; $("mbody").textContent = mailSel.body;
+  const att = $("matt"); att.textContent = "";
+  if (mailSel.cod) { const c = document.createElement("span"); c.id = "mcod"; c.textContent = "COD: " + mailSel.cod.toLocaleString("en-US") + "g"; att.appendChild(c); }
+  (mailSel.att || []).forEach(([ico, n]) => {
+    const a = document.createElement("div"), sm = document.createElement("small");
+    a.className = "mico"; a.textContent = ico; sm.textContent = n; a.appendChild(sm);
+    a.addEventListener("click", takeAttachments); att.appendChild(a);
+  });
+  if (!mailSel.att && !mailSel.cod) { const n = document.createElement("span"); n.style.color = "#888"; n.textContent = "No attachments."; att.appendChild(n); }
+}
+function takeAttachments() {
+  if (!mailSel) return;
+  if (mailSel.seller) { banned(); return; }
+  if (mailSel.cod) { uiError("You can't afford this. You have 3 copper."); return; }
+  if (!mailSel.att) { uiError("There's nothing to take."); return; }
+  uiError("Inventory is full.");
+}
+function banned() {
+  $("mail").classList.remove("on");
+  $("ban").classList.add("on");
+  pauseBg();
+  if (ctx && !muted) [196, 185, 175, 147].forEach((f, i) => tone(f, "sawtooth", ctx.currentTime + i * .35, .5, .06));
+}
+const closeMail = () => $("mail").classList.remove("on");
+$("mailicon").addEventListener("click", openMail);
+["mclose", "mclose2", "mclose3"].forEach(id => $(id).addEventListener("click", closeMail));
+$("mail").addEventListener("click", e => { if (e.target.id === "mail" || e.target.classList.contains("mwrap")) closeMail(); });
+$("mtake").addEventListener("click", takeAttachments);
+$("mgetall").addEventListener("click", () => { mailSel = mailItems[0]; showLetter(0); takeAttachments(); });
+$("mmark").addEventListener("click", () => uiError("Marked all as read. Nobody cares."));
+$("mreply").addEventListener("click", () => uiError("Reply sent. They will not read it."));
+$("mreturn").addEventListener("click", () => uiError("Returned to sender. They're offended now."));
+$("mspam").addEventListener("click", () => uiError("Reported. Nothing will happen."));
+$("mprev").addEventListener("click", () => uiError("You are already on the first page."));
+$("mnext").addEventListener("click", () => uiError("There is no next page. You have no friends."));
+$("banok").addEventListener("click", () => { $("ban").classList.remove("on"); resumeBg(); });
 
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
@@ -1807,7 +2137,10 @@ const HINTS = [
   ["barrens", "The Barrens chat never sleeps. Just name the place and it wakes up."],
   ["dance", "This countdown has moves. Tell it what to do."],
   ["reload", "UI acting weird? Every raider knows the one-word fix."],
-  ["duel", "Stay on the page long enough and somebody will want to fight you."]
+  ["duel", "Stay on the page long enough and somebody will want to fight you."],
+  ["onyxia", "A dragon sleeps inside the title. Knock on the World three times."],
+  ["hogger", "Hogger roams these lands from time to time. Say hi if you see him."],
+  ["mail", "Every adventurer checks their mailbox. Look in the corner, it's tiny."]
 ];
 const TIPS = [
   "Don't stand in the fire.",
@@ -1882,7 +2215,7 @@ setInterval(nextTip, 9000);
 $("eggclose").addEventListener("click", closeEgg);
 $("eggbox").addEventListener("click", e => { if (e.target.id === "eggbox") closeEgg(); });
 
-$("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; scheduleDuel(); });
+$("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; scheduleDuel(); scheduleHogger(); });
 $("mute").addEventListener("click", () => {
   muted = !muted; ensureAudio();
   $("mute").textContent = muted ? "🔇 Ticks off" : "🔊 Ticks on";

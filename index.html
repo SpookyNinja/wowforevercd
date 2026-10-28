@@ -451,9 +451,12 @@ addEventListener("keydown", e => {
 
 // ---------- Easter egg: type "thunderfury" -> lightning + Trade chat spam ----------
 const TF_LINK = "[Thunderfury, Blessed Blade of the Windseeker]";
-const TF_NAMES = [["Edge","#ff7c0a"],["Ima","#f48cba"],["Noah","#ffffff"],["Amy","#00ff98"],["Zarnox","#8788ee"],
-  ["Gøj","#c69b6d"],["Maiken","#3fc7eb"],["Sabre","#fff468"],["Fred","#0070dd"],["Ave","#aad372"],
-  ["Larry","#c41e3a"],["Mykuru","#3fc7eb"],["Farrenor","#33937f"],["Cif","#a330c9"]];
+// Guild members playing Forever (used by the chat easter eggs and the raid minigame)
+const GUILD = ["Chi", "Amy", "Jacob", "Gøj", "Ulaw", "Alisha", "Johny", "Kat", "Andy", "Esports",
+  "Avemae", "Dre", "Yil", "Kybris", "Andre", "Levi", "Joe", "Kaelisra", "Sab", "Noah"];
+// chat names get Classic class colours (warrior, paladin, hunter, rogue, priest, shaman, mage, warlock, druid)
+const CLASS_COLORS = ["#c69b6d", "#f48cba", "#aad372", "#fff468", "#ffffff", "#0070dd", "#3fc7eb", "#8788ee", "#ff7c0a"];
+const TF_NAMES = GUILD.map((n, i) => [n, CLASS_COLORS[i % CLASS_COLORS.length]]);
 const TF_LINES = [
   ["Did someone say ", TF_LINK, "?"],
   ["Did someone say ", TF_LINK, "?"],
@@ -689,9 +692,7 @@ const WIPES = [
   "☠ WIPE. \"That was a good learning pull\" — nobody believes it.",
   "☠ WIPE. Run back, rebuff, repeat. Repair bill: {g}g."
 ];
-// Guild members playing Forever
-const RAID_NAMES = ["Chi", "Amy", "Jacob", "Gøj", "Ulaw", "Alisha", "Johny", "Kat", "Andy", "Esports",
-  "Avemae", "Dre", "Yil", "Kybris", "Andre", "Levi", "Joe", "Kaelisra", "Sab", "Noah"];
+const RAID_NAMES = GUILD;
 const RAID_SIZE = 10;
 // "didn't bring X, so Y happened"
 const BROUGHT = [

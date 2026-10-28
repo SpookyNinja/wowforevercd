@@ -505,25 +505,28 @@
   #bolthud b { color:#ffd100; }
   #bolttime { height:6px; background:#2a1f0c; border:1px solid #3a2b14; margin-bottom:.4rem; }
   #bolttime i { display:block; height:100%; width:100%; background:linear-gradient(90deg, #ff3d00, #ffd100); }
-  #boltlane { position:relative; height:min(42vh, 300px); overflow:hidden; border:1px solid #3a2b14;
-              background:radial-gradient(ellipse at 50% 120%, #2b2214 0%, #0d0a06 70%); }
+  #boltlane { position:relative; height:min(56vh, 440px); overflow:hidden; border:1px solid #3a2b14;
+              background:linear-gradient(#07060a 0%, #0d0b10 42%, #1b150d 43%, #2b2214 100%); }
+  /* the path the line stands on, running back to the horizon */
+  #boltlane::before { content:""; position:absolute; left:50%; bottom:0; width:70%; height:57%; transform:translateX(-50%);
+                      clip-path:polygon(47% 0, 53% 0, 100% 100%, 0 100%);
+                      background:linear-gradient(rgba(201,161,74,.04), rgba(201,161,74,.18)); }
   #boltlane.shake { animation:boltshake .45s; }
   @keyframes boltshake { 20% { transform:translate(-8px,4px); } 40% { transform:translate(7px,-5px); } 60% { transform:translate(-5px,3px); } 80% { transform:translate(4px,-2px); } }
-  #boltmage { position:absolute; left:3%; bottom:12%; font-size:clamp(3rem,9vw,5.5rem); transform:scaleX(-1); }
-  .belem { position:absolute; bottom:12%; transform:translateX(-50%); transition:left .18s ease-out, opacity .25s, transform .25s;
-           font-size:clamp(2.6rem,7.5vw,4.6rem); line-height:1; }
-  .belem span { display:inline-block; animation:bbob 1.4s ease-in-out infinite alternate; }
-  .belem img { height:clamp(70px, 18vh, 150px); display:block; }
+  .belem { --s:1; position:absolute; left:50%; bottom:3%; transform:translateX(-50%) scale(var(--s)); transform-origin:50% 100%;
+           transition:bottom .2s ease-out, left .2s ease-out, opacity .25s, transform .25s, filter .2s; font-size:clamp(5rem,14vw,9rem); line-height:1; }
+  .belem span, .belem img { display:inline-block; animation:bbob 1.4s ease-in-out infinite alternate; }
+  .belem img { height:min(36vh, 270px); display:block; }
   .belem.fire span, .belem.fire img { filter:drop-shadow(0 0 14px #ff5a00) drop-shadow(0 0 30px rgba(255,90,0,.5)); }
   .belem.frost span, .belem.frost img { filter:drop-shadow(0 0 14px #49b6ff) drop-shadow(0 0 30px rgba(73,182,255,.5)); }
-  .belem.front::after { content:""; position:absolute; left:15%; right:15%; bottom:-10px; height:6px; border-radius:50%;
-                        background:rgba(255,209,0,.55); box-shadow:0 0 10px #ffd100; }
-  .belem.die { opacity:0; transform:translateX(-50%) scale(1.6); }
-  .belem.immune { transform:translateX(-50%) scale(1.35); }
-  .belem.smash { transition:left .3s ease-in, transform .3s; transform:translateX(-50%) scale(1.9); }
+  .belem.die { opacity:0; transform:translateX(-50%) scale(calc(var(--s) * 1.25)); }
+  .belem.immune { transform:translateX(-50%) scale(calc(var(--s) * 1.15)); }
+  /* it walks right into your face */
+  .belem.smash { transition:bottom .3s ease-in, transform .3s ease-in; bottom:-45%; transform:translateX(-50%) scale(2.6); }
   @keyframes bbob { from { transform:translateY(0); } to { transform:translateY(-8px); } }
-  .bproj { position:absolute; bottom:24%; font-size:2rem; transition:left .16s linear; pointer-events:none; z-index:2; }
-  .bfloat { position:absolute; bottom:55%; transform:translateX(-50%); font:bold 1.4rem Arial,sans-serif; color:#ffd100;
+  .bproj { position:absolute; left:50%; bottom:-12%; font-size:4.5rem; transform:translateX(-50%); pointer-events:none; z-index:20;
+           transition:bottom .16s linear, font-size .16s linear; }
+  .bfloat { position:absolute; bottom:62%; transform:translateX(-50%); font:bold 1.6rem Arial,sans-serif; color:#ffd100; z-index:21;
             text-shadow:2px 2px 0 #000; pointer-events:none; animation:bfloat 1s ease-out forwards; z-index:3; }
   .bfloat.ok { color:#fff; font-size:1.1rem; }
   @keyframes bfloat { to { transform:translate(-50%,-50px); opacity:0; } }
@@ -570,7 +573,7 @@
     <h2>🔥 Firebolt or Frostbolt ❄️</h2>
     <div id="bolthud"><span>Score: <b id="boltscore">0</b></span><span>Best: <b id="boltbest">0</b></span></div>
     <div id="bolttime"><i></i></div>
-    <div id="boltlane"><div id="boltmage">🧙</div>
+    <div id="boltlane">
       <div id="boltover"><h3 id="boltwhy"></h3><div class="big" id="boltfinal"></div><div class="rec" id="boltrec"></div>
         <p id="boltcomment"></p><button id="boltagain">Try again</button></div></div>
     <div id="boltmsg"></div>
@@ -783,7 +786,8 @@ const SFX = { breath: "sfx/flamebreath.ogg", gnollAggro: "sfx/gnoll_aggro.ogg", 
   gnomePissed4: "sfx/gnome_pissed4.ogg", readyCheck: "sfx/ready_check.ogg", wipe: "sfx/wipe.ogg", murloc: "sfx/murloc.ogg",
   whelpFlap: "sfx/whelp_flap.ogg", fishCast: "sfx/fish_cast.ogg", fishBite1: "sfx/fish_bite1.ogg", fishBite2: "sfx/fish_bite2.ogg",
   fishBite3: "sfx/fish_bite3.ogg", menuOpen: "sfx/menu_open.ogg", menuButton: "sfx/menu_button.ogg", coin: "sfx/coin.ogg",
-  countdown: "sfx/countdown.ogg", legendary: "sfx/legendary.ogg" };
+  countdown: "sfx/countdown.ogg", legendary: "sfx/legendary.ogg",
+  firebolt: "sfx/firebolt.ogg", frostbolt: "sfx/frostbolt.ogg" };
 const sfxBuf = {};
 function loadSfx() {
   Object.entries(SFX).forEach(([k, url]) => fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject())
@@ -2488,25 +2492,30 @@ $("vaultkey").addEventListener("click", openVault);
 $("vault").addEventListener("click", closeVault);
 
 // ---------- Easter egg: click SECONDS -> Firebolt or Frostbolt. Frost kills fire, fire kills frost, until you mess up ----------
-// drop sprites in here (e.g. "img/fire_elemental.webp") and they replace the emoji placeholders
-const BOLT_IMG = { fire: null, frost: null };
+const BOLT_IMG = { fire: "img/fire_elem.webp", frost: "img/frost_elem.webp" };
+const BOLT_HIT = { fire: "img/fire_elem_hit.webp", frost: "img/frost_elem_hit.webp" };
+Object.values(BOLT_HIT).forEach(src => { new Image().src = src; });
 const BOLT_EMOJI = { fire: "🔥", frost: "❄️" };
 const BOLT_SLOTS = 6;
 let boltOn = false, boltOver = false, boltQ = [], boltScore = 0, boltBest = 0, boltDeadline = 0, boltLimit = 0, boltTimer = null, boltStarted = false;
 try { boltBest = +localStorage.getItem("boltBest") || 0; } catch (e) {}
-const boltX = i => 30 + i * 12.5;   // % from the left for queue slot i
+// first person: slot 0 stands right in front of you, the rest line up behind it towards the horizon
+// (staggered left/right a little, like a real queue, so the ones in the back peek out)
+const boltDepth = i => { const sc = 1 / (1 + i * .55); return { sc, bottom: 3 + (1 - sc) * 72, left: 50 + (i ? (i % 2 ? -1 : 1) * 19 * sc : 0) }; };
 function boltMake(type) {
   const el = document.createElement("div");
   el.className = "belem " + type;
   el.innerHTML = BOLT_IMG[type] ? '<img src="' + BOLT_IMG[type] + '" alt="">' : "<span>" + BOLT_EMOJI[type] + "</span>";
-  el.style.left = boltX(BOLT_SLOTS) + "%"; el.style.opacity = "0";
+  const d = boltDepth(BOLT_SLOTS); el.style.setProperty("--s", d.sc); el.style.bottom = d.bottom + "%"; el.style.left = d.left + "%"; el.style.opacity = "0";
   $("boltlane").appendChild(el);
   return { type, el };
 }
 function boltLayout() {
   boltQ.forEach((b, i) => {
-    b.el.style.left = boltX(i) + "%"; b.el.style.opacity = i === BOLT_SLOTS - 1 ? ".5" : "1";
-    b.el.classList.toggle("front", i === 0);
+    const d = boltDepth(i);
+    b.el.style.setProperty("--s", d.sc); b.el.style.bottom = d.bottom + "%"; b.el.style.left = d.left + "%"; b.el.style.zIndex = 10 - i;
+    b.el.style.opacity = i === BOLT_SLOTS - 1 ? ".4" : "1";
+    b.el.style.filter = i ? "brightness(" + (1 - i * .12) + ")" : "";
   });
 }
 function boltFill() {
@@ -2544,6 +2553,7 @@ function closeBolt() { boltOn = false; clearInterval(boltTimer); $("bolt").class
 function boltSound(spell) {
   if (!ctx || muted) return;
   const t = ctx.currentTime;
+  if (playSfx(spell === "fire" ? "firebolt" : "frostbolt", .8)) return;
   if (spell === "fire") { whoosh(500, 2200, .25); tone(98, "sawtooth", t, .25, .05); }
   else { tone(1760, "sine", t, .25, .04); tone(2637, "sine", t + .04, .22, .03); whoosh(5000, 1800, .22); }
 }
@@ -2559,17 +2569,20 @@ function boltCast(spell) {
   boltSound(spell);
   // the projectile is just for show, the outcome is decided right away so fast players never wait on it
   const p = document.createElement("div"); p.className = "bproj"; p.textContent = spell === "fire" ? "☄️" : "❄️";
-  p.style.left = "12%"; $("boltlane").appendChild(p);
-  setTimeout(() => { p.style.left = (boltX(0) - 4) + "%"; }, 15);
+  $("boltlane").appendChild(p);
+  setTimeout(() => { p.style.bottom = "28%"; p.style.fontSize = "2.2rem"; }, 15);
   setTimeout(() => p.remove(), 180);
   const right = (spell === "frost") === (front.type === "fire");
   if (!right) { boltLose(spell, front); return; }
   boltStarted = true;
   boltScore++; $("boltscore").textContent = boltScore;
   boltQ.shift();
-  setTimeout(() => { front.el.classList.add("die"); if (ctx && !muted) tone(spell === "fire" ? 180 : 520, "triangle", ctx.currentTime, .15, .06); }, 150);
+  setTimeout(() => {
+    const im = front.el.querySelector("img"); if (im) im.src = BOLT_HIT[front.type];
+    setTimeout(() => front.el.classList.add("die"), 120);
+  }, 150);
   setTimeout(() => front.el.remove(), 450);
-  if (boltScore % 10 === 0) boltPop(boltScore + "!", boltX(0), true);
+  if (boltScore % 10 === 0) boltPop(boltScore + "!", 50, true);
   $("boltmsg").textContent = "";
   boltFill();
   // it gets faster: 2s for the first one, down to half a second
@@ -2588,8 +2601,8 @@ function boltLose(why, front) {
   boltOver = true;
   front = front || boltQ[0];
   const lane = $("boltlane");
-  if (why !== "slow") setTimeout(() => { boltPop("Immune", boltX(0)); front.el.classList.add("immune"); }, 160);
-  setTimeout(() => { front.el.classList.add("smash"); front.el.style.left = "12%"; }, why === "slow" ? 0 : 550);
+  if (why !== "slow") setTimeout(() => { boltPop("Immune", 50); front.el.classList.add("immune"); }, 160);
+  setTimeout(() => { front.el.style.bottom = ""; front.el.style.left = "50%"; front.el.classList.add("smash"); }, why === "slow" ? 0 : 550);
   setTimeout(() => {
     lane.classList.remove("shake"); void lane.offsetWidth; lane.classList.add("shake"); boom();
   }, why === "slow" ? 300 : 850);

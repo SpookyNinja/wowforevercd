@@ -277,6 +277,60 @@
   #fishclose { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
   #legendflash { position:fixed; inset:0; z-index:56; pointer-events:none; background:radial-gradient(circle, rgba(255,140,0,.6), transparent 70%); opacity:0; }
   #legendflash.on { animation:fflash 1.6s ease-out; }
+  /* dance: the whole countdown busts a move */
+  body.dancing .unit { animation:dancebounce .5s ease-in-out infinite alternate; }
+  body.dancing .unit:nth-child(3) { animation-delay:.125s; } body.dancing .unit:nth-child(5) { animation-delay:.25s; }
+  body.dancing .unit:nth-child(7) { animation-delay:.375s; }
+  body.dancing .sep { display:inline-block; animation:dancespin .5s linear infinite; }
+  body.dancing h1 { animation:dancewiggle .25s ease-in-out infinite alternate; }
+  @keyframes dancebounce { from { transform:translateY(0) rotate(-6deg); } to { transform:translateY(-14%) rotate(6deg) scale(1.06); } }
+  @keyframes dancespin { to { transform:rotate(360deg); } }
+  @keyframes dancewiggle { from { transform:skewX(-12deg); } to { transform:skewX(12deg); } }
+  /* reload: fake WoW loading screen that never quite finishes */
+  #reload { z-index:57; cursor:pointer; flex-direction:column; justify-content:flex-end;
+            background:radial-gradient(ellipse at 50% 35%, #3b2c17 0%, #120c05 60%, #000 100%); }
+  #reload h2 { position:absolute; top:28%; left:0; right:0; text-align:center; font-family:Georgia,serif; color:var(--gold);
+               font-size:clamp(1.6rem,5vw,3.4rem); letter-spacing:.15em; text-shadow:0 0 25px rgba(245,197,66,.5); }
+  #rltip { color:#ffd100; font-family:Arial,sans-serif; font-size:clamp(.75rem,1.5vw,1rem); text-align:center; margin-bottom:1.2rem; padding:0 6vw; }
+  #rlbar { position:relative; width:min(900px, 88vw); height:22px; margin:0 auto 9vh; background:#0b0b0b; border:2px solid #7a5a1c; }
+  #rlfill { position:absolute; inset:0; width:0; background:linear-gradient(#7fd04b, #2f7d18); }
+  #rlpct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-family:Arial,sans-serif;
+           font-size:.8rem; text-shadow:1px 1px 0 #000; white-space:nowrap; overflow:hidden; }
+  /* duel request */
+  #duel { position:fixed; left:50%; top:14%; transform:translateX(-50%); z-index:40; display:none; width:min(400px, 90vw);
+          background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #7a5a1c; box-shadow:0 0 30px #000; padding:1rem 1.2rem;
+          text-align:center; font-family:Arial,sans-serif; color:#ffd100; }
+  #duel.on { display:block; animation:duelin .4s ease-out; }
+  @keyframes duelin { from { transform:translate(-50%,-30px); opacity:0; } }
+  #duel button { margin:.8rem .3rem 0; background:linear-gradient(#9b1c1c, #4a0808); border:1px solid #c9a14a; color:#ffd100;
+                 font:inherit; font-weight:bold; padding:.4rem 1.1rem; cursor:pointer; }
+  #dueltxt { position:fixed; left:50%; top:38%; transform:translate(-50%,-50%); z-index:41; display:none; white-space:nowrap; pointer-events:none;
+             font-family:Impact,"Arial Black",sans-serif; font-size:clamp(2rem,9vw,6rem); color:#ffd100; -webkit-text-stroke:2px #5a2a00;
+             text-shadow:0 0 25px #ff7a00; }
+  #dueltxt.on { display:block; animation:ftxt .4s cubic-bezier(.2,1.8,.4,1); }
+  #dueltxt.small { font-size:clamp(1.1rem,3.5vw,2.4rem); }
+  /* achievements: toast + list behind the egg counter */
+  #eggcount { cursor:pointer; }
+  #eggcount:hover { border-color:var(--gold); }
+  #achtoast { position:fixed; left:50%; top:1rem; transform:translate(-50%,-160%); z-index:70; display:flex; align-items:center; gap:.8rem;
+              width:min(430px, 92vw); padding:.6rem 1rem; pointer-events:none; transition:transform .5s cubic-bezier(.2,1.3,.4,1);
+              background:linear-gradient(#2a2418, #120e07); border:2px solid #c9a14a; border-radius:8px; box-shadow:0 0 25px rgba(255,200,80,.35); }
+  #achtoast.on { transform:translate(-50%,0); }
+  #achtoast .ico { font-size:2rem; filter:drop-shadow(0 0 6px #ffcc33); }
+  #achtoast small { display:block; color:#ffd100; font-family:Arial,sans-serif; font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; }
+  #achtoast b { display:block; color:#fff; font-family:Georgia,serif; font-size:1.15rem; }
+  #achtoast .pts { margin-left:auto; color:#ffd100; font-family:Georgia,serif; font-size:1.3rem; font-weight:bold; }
+  #achlist { background:rgba(0,0,0,.8); }
+  .abox { position:relative; width:min(640px, 94vw); max-height:88vh; overflow:auto; background:#140f08; border:2px solid #7a5a1c;
+          padding:1rem 1.2rem; font-family:Arial,sans-serif; color:#ddd; text-align:left; }
+  .abox h2 { color:var(--gold); letter-spacing:.2em; text-transform:uppercase; font-size:1.1rem; margin-bottom:.8rem; text-align:center; }
+  .ach { display:flex; gap:.8rem; align-items:center; padding:.55rem .6rem; margin-bottom:.4rem; background:#0c0905; border:1px solid #3a2b14; }
+  .ach .ico { font-size:1.6rem; width:2rem; text-align:center; }
+  .ach b { display:block; color:#ffd100; font-family:Georgia,serif; }
+  .ach span { font-size:.85rem; color:#bbb; }
+  .ach.locked { opacity:.55; }
+  .ach.locked b, .ach.locked span { color:#666; }
+  #achclose { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -299,6 +353,12 @@
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="reload" class="ov"><h2>World of Warcraft</h2><p id="rltip"></p>
+    <div id="rlbar"><div id="rlfill"></div><div id="rlpct"></div></div></div>
+  <div id="duel"><p id="duelq"></p><button id="dueln">Accept</button><button id="duelx">Decline</button></div>
+  <div id="dueltxt"></div>
+  <div id="achtoast"><div class="ico">🏆</div><div><small>Achievement earned</small><b id="achname"></b></div><div class="pts">10</div></div>
+  <div id="achlist" class="ov"><div class="abox"><button id="achclose" aria-label="Close">✕</button><h2 id="achhead">Achievements</h2><div id="achitems"></div></div></div>
   <div id="castbar"><div class="fill"></div><span><em>Hearthstone</em><em id="casttime"></em></span></div>
   <div id="goldshire" class="ov"><div id="gsframe"><div id="gsplayer"></div><div id="gstxt">You return to Goldshire</div></div>
     <div id="gshint">click the border to leave the inn</div></div>
@@ -361,7 +421,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "19";
+const VERSION = "20";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -389,7 +449,8 @@ const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
-const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing"];
+const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
+  "barrens", "dance", "reload", "duel"];
 let eggsFound = new Set();
 try { eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e))); } catch (e) {}
 function renderEggs(pop) {
@@ -403,6 +464,7 @@ function foundEgg(id) {
   eggsFound.add(id);
   try { localStorage.setItem("eggsFound", JSON.stringify([...eggsFound])); } catch (e) {}
   renderEggs(true);
+  achievementToast(id);
 }
 let ctx = null, muted = false, eggOn = false, lastSec = null, finished = false;
 
@@ -578,6 +640,9 @@ addEventListener("keydown", e => {
   else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }
   else if (typed.endsWith("olympus")) { typed = ""; jumpscare(); }
   else if (typed.endsWith("login")) { typed = ""; openQueue(); }
+  else if (typed.endsWith("barrens")) { typed = ""; barrens(); }
+  else if (typed.endsWith("dance")) { typed = ""; dance(); }
+  else if (typed.endsWith("reload")) { typed = ""; openReload(); }
   else if (typed.endsWith("dt")) startDisco(); // Dirty Tactics
 });
 
@@ -1458,6 +1523,154 @@ $("fishclose").addEventListener("click", closeFishing);
 $("fish").addEventListener("click", e => { if (e.target.id === "fish") closeFishing(); });
 $("fishspot").addEventListener("click", openFishing);
 
+// ---------- Achievements: every easter egg is one. Toast when found, list behind the egg counter ----------
+const ACH_NAMES = {
+  forever: "Darude Sandstorm", disco: "Dirty Disco", thunderfury: "Did Someone Say...?", murloc: "Mrglglglgl",
+  raid: "Raid Leader (Allegedly)", olympus: "Do Not Type That Name", fusion: "Fusion HA!", hearth: "Home Sweet Goldshire",
+  login: "Position in Queue: Yes", leeroy: "At Least I Have Chicken", fishing: "Gone Fishin'",
+  barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat"
+};
+let achTimer = null;
+function achievementToast(id) {
+  $("achname").textContent = ACH_NAMES[id] || id;
+  const t = $("achtoast"); t.classList.add("on");
+  clearTimeout(achTimer); achTimer = setTimeout(() => t.classList.remove("on"), 4500);
+  if (ctx && !muted) [[659.3, 0], [784, .1], [987.8, .2], [1318.5, .32]].forEach(([f, d]) => tone(f, "triangle", ctx.currentTime + d, .7, .07));
+}
+function openAchievements() {
+  const list = $("achitems"); list.textContent = "";
+  $("achhead").textContent = "Achievements " + eggsFound.size + " / " + EGGS.length;
+  const hint = Object.fromEntries(HINTS);
+  EGGS.forEach(id => {
+    const got = eggsFound.has(id), row = document.createElement("div"), ico = document.createElement("div"),
+          txt = document.createElement("div"), b = document.createElement("b"), sp = document.createElement("span");
+    row.className = "ach" + (got ? "" : " locked"); ico.className = "ico"; ico.textContent = got ? "🏆" : "🔒";
+    b.textContent = got ? ACH_NAMES[id] : "???"; sp.textContent = got ? hint[id] : "???";
+    txt.append(b, sp); row.append(ico, txt); list.appendChild(row);
+  });
+  $("achlist").classList.add("on");
+}
+$("eggcount").addEventListener("click", openAchievements);
+$("achclose").addEventListener("click", () => $("achlist").classList.remove("on"));
+$("achlist").addEventListener("click", e => { if (e.target.id === "achlist") $("achlist").classList.remove("on"); });
+
+// ---------- Easter egg: type "barrens" -> classic Barrens chat ----------
+const BARRENS_LINES = [
+  "Where is Mankrik's wife?", "Mankrik's wife is in the same place as my motivation: nowhere.", "WTB Mankrik's wife, paying 5g",
+  "Mankrik's wife was last seen near the Crossroads. Running away from Mankrik.", "LF1M Wailing Caverns, need heals, must know where Mankrik's wife is",
+  "Chuck Norris doesn't use a hearthstone. Azeroth moves to him.", "Chuck Norris made a Happy Meal cry.",
+  "Chuck Norris can solo Onyxia. With a fishing pole.", "Chuck Norris doesn't release spirit. The spirit healer releases him.",
+  "Chuck Norris counted to infinity. Twice.", "Chuck Norris's login queue goes down.", "Chuck Norris found Mankrik's wife. She asked him for directions.",
+  "how do i get to the crossroads", "follow the road until it crosses. then you're at the crossroads", "anyone know where Lakeshire is?", "wrong continent mate",
+  "LF group raptor heads, 3/12, been here since launch", "plainstrider beaks drop rate is 1%, change my mind",
+  "Kodo or kodon't?", "my tauren friend got stuck in the barn again. moo.", "Why is it called the Barrens? Because it's barren of anyone who knows where Mankrik's wife is",
+  "harpies stole my lunch again", "Barrens chat > Trade chat, fight me", "Is this the real Barrens? Is this just fantasy?",
+  "who is the crossroads flight master and why does he look so tired", "Did someone say [Thunderfury, Blessed Blade of the Windseeker]?",
+  "lol", "Barrens chat is the reason Blizzard invented /leave", "ok who keeps pulling the centaurs into the Crossroads",
+  "Mankrik: \"Have you seen my wife?\" Me, 400 hours later: \"no\""
+].map(t => [t]);
+function barrens() {
+  const lines = BARRENS_LINES.slice().sort(() => Math.random() - .5).slice(0, 12);
+  if (chatBurst("[1. General - The Barrens]", "#ffc0a0", lines, 650)) foundEgg("barrens");
+}
+
+// ---------- Easter egg: type "dance" -> the countdown dances to a little beat ----------
+let dancing = false;
+function beat(t, kick) {
+  if (kick) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(40, t + .15);
+    g.gain.setValueAtTime(.8, t); g.gain.exponentialRampToValueAtTime(.0001, t + .2);
+    o.connect(g); out(g, false); o.start(t); o.stop(t + .22);
+  }
+  const len = Math.floor(ctx.sampleRate * .05), nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
+  for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
+  const n = ctx.createBufferSource(), hp = ctx.createBiquadFilter(), g2 = ctx.createGain();
+  n.buffer = nb; hp.type = "highpass"; hp.frequency.value = 7000; g2.gain.setValueAtTime(.15, t); g2.gain.exponentialRampToValueAtTime(.0001, t + .05);
+  n.connect(hp).connect(g2); out(g2, false); n.start(t);
+}
+function dance() {
+  if (dancing) return;
+  dancing = true; foundEgg("dance");
+  document.body.classList.add("dancing");
+  if (ctx && !muted) {
+    pauseBg();
+    const t0 = ctx.currentTime + .05, bass = [110, 110, 146.8, 130.8];
+    for (let i = 0; i < 32; i++) {
+      const t = t0 + i * .25; beat(t, i % 2 === 0);
+      if (i % 2 === 0) tone(bass[(i / 2) % 4 | 0], "square", t, .2, .05);
+    }
+  }
+  setTimeout(() => { document.body.classList.remove("dancing"); dancing = false; resumeBg(); }, 8000);
+}
+
+// ---------- Easter egg: type "reload" -> loading screen stuck at 99.999...% ----------
+let rlTimer = null;
+function openReload() {
+  foundEgg("reload");
+  const pct = $("rlpct"), fill = $("rlfill");
+  $("rltip").textContent = "Tip: " + pick(TIPS);
+  $("reload").classList.add("on");
+  let p = 0, nines = 0;
+  clearInterval(rlTimer);
+  rlTimer = setInterval(() => {
+    if (p < 99) {
+      p = Math.min(99, p + 1 + Math.random() * 4);
+      pct.textContent = "Reloading UI... " + Math.floor(p) + "%";
+      fill.style.width = p + "%";
+      if (p >= 99) { clearInterval(rlTimer); rlTimer = setInterval(moreNines, 1500); }
+    }
+  }, 70);
+  function moreNines() {
+    nines++;
+    pct.textContent = "Reloading UI... 99." + "9".repeat(nines) + "%";
+    fill.style.width = (100 - Math.pow(10, -nines)) + "%";
+  }
+}
+$("reload").addEventListener("click", () => { clearInterval(rlTimer); $("reload").classList.remove("on"); });
+
+// ---------- Easter egg: random duel request after a few minutes on the page ----------
+let duelTimer = null, duelHide = null, dueler = "";
+function scheduleDuel() {
+  clearTimeout(duelTimer);
+  duelTimer = setTimeout(duelRequest, (3 + Math.random() * 3) * 60000);
+}
+function duelRequest() {
+  if (anyOverlay() || $("duel").classList.contains("on")) { scheduleDuel(); return; }
+  dueler = pick(GUILD);
+  $("duelq").textContent = dueler + " has challenged you to a duel.";
+  $("duel").classList.add("on");
+  if (ctx && !muted) tone(880, "triangle", ctx.currentTime, .3, .06);
+  clearTimeout(duelHide);
+  duelHide = setTimeout(() => { $("duel").classList.remove("on"); scheduleDuel(); }, 30000);
+}
+function duelText(text, small, ms) {
+  const d = $("dueltxt"); d.textContent = text; d.className = "on" + (small ? " small" : "");
+  setTimeout(() => { if (d.textContent === text) d.className = ""; }, ms);
+}
+$("dueln").addEventListener("click", () => {
+  clearTimeout(duelHide); $("duel").classList.remove("on"); foundEgg("duel");
+  ["3", "2", "1"].forEach((n, i) => setTimeout(() => duelText(n, false, 900), i * 1000));
+  setTimeout(() => duelText("DUEL!", false, 900), 3000);
+  setTimeout(() => {
+    duelText(dueler + " has defeated you in a duel.", true, 4000);
+    if (ctx && !muted) sadTrombone();
+  }, 4200);
+});
+$("duelx").addEventListener("click", () => {
+  clearTimeout(duelHide); $("duel").classList.remove("on"); foundEgg("duel");
+  // the challenger complains in General chat (one line, from them)
+  const who = TF_NAMES.find(([n]) => n === dueler) || [dueler, "#fff"];
+  setTimeout(() => {
+    if (tfOn) return;
+    tfOn = true; $("tfchat").textContent = ""; $("tfchat").classList.add("on");
+    chatLine("[1. General - Stormwind City]", "#ffc0a0",
+      [pick(["you declined my duel. coward.", "scared? thought so.", "declining duels is a sign of weakness. just saying."])], who);
+    setTimeout(() => $("tfchat").classList.remove("on"), 5000);
+    setTimeout(() => { $("tfchat").textContent = ""; tfOn = false; }, 5600);
+  }, 600);
+});
+
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
   clearTimeout(fusionFallback); fusionWaiting = false;
@@ -1590,7 +1803,11 @@ const HINTS = [
   ["hearth", "Every adventurer knows the way home: hold on to time itself and don't move a muscle."],
   ["login", "Remember launch day? Try to log in. Good luck with that."],
   ["leeroy", "Time's up, let's do this. Somebody left their chicken lying around in the dark."],
-  ["fishing", "Something keeps splashing near the bottom of the page. Patient anglers get rewarded."]
+  ["fishing", "Something keeps splashing near the bottom of the page. Patient anglers get rewarded."],
+  ["barrens", "The Barrens chat never sleeps. Just name the place and it wakes up."],
+  ["dance", "This countdown has moves. Tell it what to do."],
+  ["reload", "UI acting weird? Every raider knows the one-word fix."],
+  ["duel", "Stay on the page long enough and somebody will want to fight you."]
 ];
 const TIPS = [
   "Don't stand in the fire.",
@@ -1665,7 +1882,7 @@ setInterval(nextTip, 9000);
 $("eggclose").addEventListener("click", closeEgg);
 $("eggbox").addEventListener("click", e => { if (e.target.id === "eggbox") closeEgg(); });
 
-$("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; });
+$("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; scheduleDuel(); });
 $("mute").addEventListener("click", () => {
   muted = !muted; ensureAudio();
   $("mute").textContent = muted ? "🔇 Ticks off" : "🔊 Ticks on";

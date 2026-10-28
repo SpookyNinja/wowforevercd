@@ -233,10 +233,10 @@
   #fishspot i:nth-child(2) { animation-delay:.6s; } #fishspot i:nth-child(3) { animation-delay:1.2s; }
   @keyframes ripplering { from { transform:scale(.1); opacity:1; } to { transform:scale(1); opacity:0; } }
   #fish { background:rgba(0,0,0,.8); }
-  .fbox { position:relative; width:min(580px, 94vw); max-height:94vh; overflow:auto; background:#140f08; border:2px solid #7a5a1c;
+  .fbox { position:relative; width:min(1100px, 96vw); max-height:96vh; overflow:auto; background:#140f08; border:2px solid #7a5a1c;
           padding:1rem 1.2rem; font-family:Arial,sans-serif; color:#ddd; text-align:center; }
   .fbox h2 { color:var(--gold); letter-spacing:.2em; text-transform:uppercase; font-size:1.1rem; margin-bottom:.6rem; }
-  #pond { position:relative; height:min(42vh, 280px); border-radius:50% / 35%; overflow:hidden; cursor:crosshair;
+  #pond { position:relative; flex:1; min-height:160px; border-radius:50% / 35%; overflow:hidden; cursor:crosshair;
           background:radial-gradient(ellipse at 50% 40%, #3a8cc4, #164f7a 60%, #0b2d4a); box-shadow:inset 0 0 40px #031524; }
   #pond::before { content:""; position:absolute; inset:-20%; opacity:.25; animation:waves 6s linear infinite;
                   background:repeating-radial-gradient(ellipse at 30% 40%, transparent 0 18px, rgba(255,255,255,.35) 19px 20px); }
@@ -253,19 +253,27 @@
   #fishmsg { min-height:2.6em; margin:.7rem 0 .3rem; font-size:.95rem; }
   #fishmsg b { font-size:1.05rem; }
   #fishstats { color:#aaa; font-size:.8rem; }
-  #fishlog { list-style:none; margin-top:.5rem; font-size:.8rem; text-align:left; max-height:7.5em; overflow:auto; }
+  /* three columns of the same height: catch log and journal scroll, the pond never moves */
+  .fgrid { display:grid; grid-template-columns:minmax(150px, 220px) 1fr minmax(200px, 290px); gap:1rem; height:min(64vh, 470px); }
+  .fmain { display:flex; flex-direction:column; min-height:0; }
+  .fcol { display:flex; flex-direction:column; min-height:0; text-align:left; background:#0c0905; border:1px solid #3a2b14; padding:.5rem .6rem; }
+  .fcol > h3 { color:var(--gold); font-size:.75rem; letter-spacing:.15em; text-transform:uppercase; margin-bottom:.4rem; }
+  #fishlog { list-style:none; font-size:.8rem; overflow:auto; flex:1; min-height:0; }
+  @media (max-width:760px) {
+    .fgrid { grid-template-columns:1fr; height:auto; }
+    .fmain { order:-1; }
+    #pond { flex:none; height:34vh; }
+    .fcol { max-height:24vh; }
+  }
   #fishlog li { padding:.1rem 0; border-bottom:1px solid #2a2014; }
-  #fishjournal { display:none; text-align:left; max-height:min(52vh, 360px); overflow:auto; padding:.4rem .2rem; }
-  .fbox.journal #fishjournal { display:block; }
-  .fbox.journal #pond, .fbox.journal #fishmsg, .fbox.journal #fishlog, .fbox.journal #fishcast { display:none; }
+  #fishjournal { overflow:auto; flex:1; min-height:0; }
   #fishjournal h3 { font-size:.8rem; letter-spacing:.15em; text-transform:uppercase; margin:.8rem 0 .3rem; }
   #fishjournal h3:first-child { margin-top:0; }
-  #fishjournal ul { list-style:none; columns:2 200px; column-gap:1rem; font-size:.8rem; }
+  #fishjournal ul { list-style:none; font-size:.8rem; }
   #fishjournal li { padding:.1rem 0; break-inside:avoid; }
   #fishjournal li.missing { color:#4a4a4a; font-style:italic; }
   #jcount { color:var(--gold); font-weight:bold; margin-bottom:.4rem; }
-  #fishjournalbtn { margin-top:.6rem; margin-left:.4rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1.2rem; cursor:pointer; }
-  #fishcast { margin-top:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1.2rem; cursor:pointer; }
+  #fishcast { align-self:center; margin-top:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1.2rem; cursor:pointer; }
   #fishclose { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
   #legendflash { position:fixed; inset:0; z-index:56; pointer-events:none; background:radial-gradient(circle, rgba(255,140,0,.6), transparent 70%); opacity:0; }
   #legendflash.on { animation:fflash 1.6s ease-out; }
@@ -306,12 +314,16 @@
   <div id="fish" class="ov"><div class="fbox">
     <button id="fishclose" aria-label="Close">✕</button>
     <h2>Fishing</h2>
-    <div id="pond"><div id="bob"></div></div>
-    <div id="fishmsg">Click the water (or Cast) to throw your line.</div>
-    <div id="fishstats"></div>
-    <div id="fishjournal"></div>
-    <button id="fishcast">🎣 Cast</button><button id="fishjournalbtn">📖 Journal</button>
-    <ul id="fishlog"></ul>
+    <div class="fgrid">
+      <div class="fcol"><h3>Catch log</h3><ul id="fishlog"></ul></div>
+      <div class="fmain">
+        <div id="pond"><div id="bob"></div></div>
+        <div id="fishmsg">Click the water (or Cast) to throw your line.</div>
+        <div id="fishstats"></div>
+        <button id="fishcast">🎣 Cast</button>
+      </div>
+      <div class="fcol"><h3>📖 Journal</h3><div id="fishjournal"></div></div>
+    </div>
   </div></div>
   <div id="legendflash"></div>
   <div id="fishspot" aria-label="Fishing spot"><i></i><i></i><i></i></div>
@@ -1374,13 +1386,6 @@ function renderJournal() {
     j.append(h, ul);
   }
 }
-function toggleJournal(show) {
-  const box = $("fish").querySelector(".fbox"), open = show === undefined ? !box.classList.contains("journal") : show;
-  box.classList.toggle("journal", open);
-  $("fishjournalbtn").textContent = open ? "🎣 Back to fishing" : "📖 Journal";
-  if (open) renderJournal();
-}
-$("fishjournalbtn").addEventListener("click", () => toggleJournal());
 function fishMsg(html) { $("fishmsg").innerHTML = html; }
 function splashAt(x, y) {
   const p = $("pond"), sp = document.createElement("div");
@@ -1428,7 +1433,7 @@ function fishCatch() {
   if (isNew) $("fishmsg").append(" · New journal entry!");
   const li = document.createElement("li"); li.style.color = RARITY[rar]; li.textContent = item;
   $("fishlog").prepend(li);
-  fishStats();
+  fishStats(); renderJournal();
   const ladder = { poor: 1, common: 2, uncommon: 3, rare: 4, epic: 5, legendary: 6 }[rar];
   if (ctx && !muted) [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", ctx.currentTime + i * .08, .5, .07));
   if (rar === "legendary") { const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on"); }
@@ -1441,7 +1446,7 @@ $("pond").addEventListener("click", () => {
 $("fishcast").addEventListener("click", fishCast);
 function openFishing() {
   foundEgg("fishing");
-  fishState = "idle"; $("bob").className = ""; fishStats(); toggleJournal(false);
+  fishState = "idle"; $("bob").className = ""; fishStats(); renderJournal();
   fishMsg("Click the water (or Cast) to throw your line.");
   $("fish").classList.add("on");
 }

@@ -2371,7 +2371,7 @@ $("mmute").addEventListener("click", () => {
 let eggClicks = 0, eggTimer = null, eggPlayer = null, eggEnd = null;
 function loadRuffle() {
   if (window.RufflePlayer && RufflePlayer.newest) return Promise.resolve();
-  window.RufflePlayer = { config: { autoplay: "on", unmuteOverlay: "hidden", splashScreen: false, contextMenu: "off" } };
+  window.RufflePlayer = { config: { autoplay: "off", unmuteOverlay: "hidden", splashScreen: false, contextMenu: "off" } };
   return new Promise((ok, fail) => {
     const s = document.createElement("script");
     s.src = "https://unpkg.com/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.1/ruffle.js";
@@ -2387,19 +2387,28 @@ function openEgg() {
   $("eggbox").classList.add("on");
   loadRuffle().then(() => {
     if (!eggOn) return;
-    eggPlayer = RufflePlayer.newest().createPlayer();
-    $("eggstage").appendChild(eggPlayer);
-    eggPlayer.addEventListener("loadedmetadata", () => {
-      const m = eggPlayer.metadata;
+    const player = RufflePlayer.newest().createPlayer();
+    eggPlayer = player;
+    $("eggstage").appendChild(player);
+    player.addEventListener("loadedmetadata", () => {
+      // closed while it was still loading? then never start it
+      if (player !== eggPlayer) { silenceRuffle(player); return; }
+      player.play();
+      const m = player.metadata;
       eggEnd = setTimeout(closeEgg, m.numFrames / m.frameRate * 1000 - 60);
     });
-    eggPlayer.load("sandstorm.swf");
+    player.load("sandstorm.swf");
   }).catch(closeEgg);
+}
+function silenceRuffle(player) {
+  try { player.volume = 0; player.pause(); } catch (e) {}
+  try { if (player.destroy) player.destroy(); } catch (e) {}
+  player.remove();
 }
 function closeEgg() {
   if (!eggOn) return;
   clearTimeout(eggEnd);
-  if (eggPlayer) { eggPlayer.remove(); eggPlayer = null; }
+  if (eggPlayer) { silenceRuffle(eggPlayer); eggPlayer = null; }
   $("eggbox").classList.remove("on");
   eggOn = false;
   if (!musicOn) return;

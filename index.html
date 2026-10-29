@@ -277,6 +277,301 @@
   #fishclose { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
   #legendflash { position:fixed; inset:0; z-index:56; pointer-events:none; background:radial-gradient(circle, rgba(255,140,0,.6), transparent 70%); opacity:0; }
   #legendflash.on { animation:fflash 1.6s ease-out; }
+  /* dance: the whole countdown busts a move */
+  body.dancing .unit { animation:dancebounce .5s ease-in-out infinite alternate; }
+  body.dancing .unit:nth-child(3) { animation-delay:.125s; } body.dancing .unit:nth-child(5) { animation-delay:.25s; }
+  body.dancing .unit:nth-child(7) { animation-delay:.375s; }
+  body.dancing .sep { display:inline-block; animation:dancespin .5s linear infinite; }
+  body.dancing h1 { animation:dancewiggle .25s ease-in-out infinite alternate; }
+  @keyframes dancebounce { from { transform:translateY(0) rotate(-6deg); } to { transform:translateY(-14%) rotate(6deg) scale(1.06); } }
+  @keyframes dancespin { to { transform:rotate(360deg); } }
+  @keyframes dancewiggle { from { transform:skewX(-12deg); } to { transform:skewX(12deg); } }
+  /* reload: fake WoW loading screen that never quite finishes */
+  #reload { z-index:57; cursor:pointer; flex-direction:column; justify-content:flex-end;
+            background:radial-gradient(ellipse at 50% 35%, #3b2c17 0%, #120c05 60%, #000 100%); }
+  #reload h2 { position:absolute; top:28%; left:0; right:0; text-align:center; font-family:Georgia,serif; color:var(--gold);
+               font-size:clamp(1.6rem,5vw,3.4rem); letter-spacing:.15em; text-shadow:0 0 25px rgba(245,197,66,.5); }
+  #rltip { color:#ffd100; font-family:Arial,sans-serif; font-size:clamp(.75rem,1.5vw,1rem); text-align:center; margin-bottom:1.2rem; padding:0 6vw; }
+  #rlbar { position:relative; width:min(900px, 88vw); height:22px; margin:0 auto 9vh; background:#0b0b0b; border:2px solid #7a5a1c; }
+  #rlfill { position:absolute; inset:0; width:0; background:linear-gradient(#7fd04b, #2f7d18); }
+  #rlpct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-family:Arial,sans-serif;
+           font-size:.8rem; text-shadow:1px 1px 0 #000; white-space:nowrap; overflow:hidden; }
+  /* duel request */
+  #duel { position:fixed; left:50%; top:14%; transform:translateX(-50%); z-index:40; display:none; width:min(400px, 90vw);
+          background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #7a5a1c; box-shadow:0 0 30px #000; padding:1rem 1.2rem;
+          text-align:center; font-family:Arial,sans-serif; color:#ffd100; }
+  #duel.on { display:block; animation:duelin .4s ease-out; }
+  @keyframes duelin { from { transform:translate(-50%,-30px); opacity:0; } }
+  #duel button { margin:.8rem .3rem 0; background:linear-gradient(#9b1c1c, #4a0808); border:1px solid #c9a14a; color:#ffd100;
+                 font:inherit; font-weight:bold; padding:.4rem 1.1rem; cursor:pointer; }
+  #dueltxt { position:fixed; left:50%; top:38%; transform:translate(-50%,-50%); z-index:41; display:none; white-space:nowrap; pointer-events:none;
+             font-family:Impact,"Arial Black",sans-serif; font-size:clamp(2rem,9vw,6rem); color:#ffd100; -webkit-text-stroke:2px #5a2a00;
+             text-shadow:0 0 25px #ff7a00; }
+  #dueltxt.on { display:block; animation:ftxt .4s cubic-bezier(.2,1.8,.4,1); }
+  #dueltxt.small { font-size:clamp(1.1rem,3.5vw,2.4rem); }
+  /* achievements: toast + list behind the egg counter */
+  #eggcount { cursor:pointer; }
+  #eggcount:hover { border-color:var(--gold); }
+  #achtoast { position:fixed; left:50%; top:.8rem; transform:translate(-50%,-180%); z-index:70; pointer-events:none;
+              width:min(480px, 94vw); aspect-ratio:483/97; background:url(img/ach_banner.webp) center/100% 100% no-repeat;
+              filter:drop-shadow(0 4px 14px rgba(0,0,0,.7)); transition:transform .55s cubic-bezier(.2,1.3,.4,1); }
+  #achtoast.on { transform:translate(-50%,0); }
+  #achname { position:absolute; left:24%; width:52.4%; top:34%; height:31%; display:flex; align-items:center; justify-content:center;
+             color:#fff; font-family:Georgia,"Times New Roman",serif; font-size:clamp(.8rem, 3.4vw, 1.4rem); white-space:nowrap;
+             overflow:hidden; text-shadow:1px 1px 2px #000, 0 0 6px rgba(0,0,0,.8); }
+  #achlist { background:rgba(0,0,0,.8); }
+  .abox { position:relative; width:min(640px, 94vw); max-height:88vh; overflow:auto; background:#140f08; border:2px solid #7a5a1c;
+          padding:1rem 1.2rem; font-family:Arial,sans-serif; color:#ddd; text-align:left; }
+  .abox h2 { color:var(--gold); letter-spacing:.2em; text-transform:uppercase; font-size:1.1rem; margin-bottom:.8rem; text-align:center; }
+  .ach { display:flex; gap:.8rem; align-items:center; padding:.55rem .6rem; margin-bottom:.4rem; background:#0c0905; border:1px solid #3a2b14; }
+  .ach .ico { font-size:1.6rem; width:2rem; text-align:center; }
+  .ach b { display:block; color:#ffd100; font-family:Georgia,serif; }
+  .ach span { font-size:.85rem; color:#bbb; }
+  .ach.locked { opacity:.55; }
+  .ach.locked b, .ach.locked span { color:#666; }
+  #achclose { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  /* Onyxia: click "World of Warcraft:" 3x -> Deep Breath across the screen */
+  #onytrig { user-select:none; cursor:default; }
+  #onyxia { position:fixed; inset:0; z-index:46; pointer-events:none; display:none; overflow:hidden; }
+  #onyxia.on { display:block; }
+  #onyemote { position:absolute; left:0; right:0; top:16%; text-align:center; font-family:Georgia,serif; font-weight:bold;
+              font-size:clamp(1rem,3vw,1.9rem); color:#ff8c1a; text-shadow:2px 2px 0 #000, 0 0 12px #000; opacity:0; transition:opacity .4s; }
+  #onyemote.on { opacity:1; }
+  #onyimg { position:absolute; left:0; top:50%; height:min(62vh, 440px); transform:translate(-110%,-50%); transition:transform 1s cubic-bezier(.2,.9,.3,1); }
+  #onyxia.in #onyimg { transform:translate(-8%,-50%); }
+  #onyfire { position:absolute; height:44vh; transform-origin:0 50%; transform:translateY(-50%) scaleX(0); opacity:0;
+             clip-path:polygon(0 44%, 100% 0, 100% 100%, 0 56%); filter:blur(3px);
+             background:linear-gradient(to right, rgba(255,255,230,.95), #ffe066 10%, #ff9a1f 35%, #ff4a00 65%, rgba(160,20,0,.6) 88%, transparent); }
+  #onyfire.on { opacity:1; transform:translateY(-50%) scaleX(1); transition:transform .35s ease-out; animation:fireflick .09s linear infinite alternate; }
+  #onyfire.out { opacity:0; transition:opacity .6s; }
+  @keyframes fireflick { from { filter:blur(3px) brightness(1); } to { filter:blur(4px) brightness(1.25) hue-rotate(-8deg); } }
+  #onyglow { position:absolute; inset:0; background:radial-gradient(ellipse at 70% 50%, rgba(255,110,0,.45), transparent 70%); opacity:0; transition:opacity .4s; }
+  #onyglow.on { opacity:1; }
+  body.charred .num { color:#2b2522; text-shadow:0 0 8px #ff4500, 0 0 26px #8b1a00; animation:ember .4s ease-in-out infinite alternate; transition:color 1.5s; }
+  @keyframes ember { to { text-shadow:0 0 14px #ff7a1a, 0 0 34px #b02000; } }
+  /* Hogger: wanders past now and then; click him and die */
+  #hogger { position:fixed; bottom:1.5vh; left:0; z-index:5; height:min(22vh, 170px); display:none; cursor:pointer; user-select:none; }
+  #hogger.on { display:block; }
+  #hogger.attack { transform-origin:50% 100%; }
+  #redflash { position:fixed; inset:0; z-index:58; pointer-events:none; background:radial-gradient(circle, rgba(200,0,0,.2), rgba(140,0,0,.75)); opacity:0; }
+  #redflash.on { animation:fflash 1s ease-out; }
+  body.dead > *:not(#deathbox):not(#recap):not(#redflash):not(#corpse):not(#ghostmsg):not(#achtoast) { filter:grayscale(1) brightness(.6); transition:filter 1s; }
+  body.ghost > *:not(#deathbox):not(#recap):not(#corpse):not(#ghostmsg):not(#achtoast) { filter:grayscale(1) brightness(.9) sepia(.3) hue-rotate(170deg) saturate(2); transition:filter 1s; }
+  body.dead { background:#0e0e0e; }
+  body.ghost { background:radial-gradient(ellipse at center, #16323f 0%, #050d12 70%); }
+  #deathbox { position:fixed; left:50%; top:13%; transform:translateX(-50%); z-index:60; display:none; width:min(330px, 92vw);
+              padding:.7rem 1rem .8rem; text-align:center; font-family:Arial,sans-serif; color:#fff; font-size:.95rem; line-height:1.3;
+              background:rgba(8,8,10,.92); border:3px solid #6e6e6e; outline:1px solid #000; box-shadow:0 0 20px #000; }
+  #deathbox.on { display:block; }
+  #deathbox .dbtns { display:flex; gap:.8rem; justify-content:center; margin-top:.6rem; }
+  #deathbox .mbtn { min-width:7.5rem; }
+  #recap { position:fixed; left:50%; top:36%; text-align:left; transform:translateX(-50%); z-index:61; display:none; width:min(330px, 92vw);
+           background:#1a1414; border:3px solid #6e6e6e; outline:1px solid #000; box-shadow:0 0 25px #000; font-family:Arial,sans-serif; }
+  #recap.on { display:block; }
+  #recap .mhead { text-align:left; padding-left:.6rem; }
+  #recaprows { padding:.5rem .4rem; background:radial-gradient(ellipse at 50% 30%, #2a1a1a, #120c0c); }
+  .rrow { display:grid; grid-template-columns:4.6rem 2.4rem 1fr; align-items:center; gap:.5rem; padding:.3rem 0; }
+  .rrow .amt { text-align:right; color:#ff2e2e; font-size:.9rem; }
+  .rrow .ico { width:2.2rem; height:2.2rem; display:flex; align-items:center; justify-content:center; font-size:1.2rem;
+               background:radial-gradient(#4a3a2a, #120c06); border:1px solid #a88a4a; }
+  .rrow b { display:block; color:#ffd100; font-size:.85rem; font-weight:normal; }
+  .rrow small { color:#aaa; font-size:.72rem; }
+  .rrow.kill .amt { font-size:1.35rem; }
+  .rrow.kill .amt::before { content:"🪦"; font-size:1rem; margin-right:.4rem; }
+  #recap .mbar { background:#1a1414; }
+  #corpse { position:fixed; z-index:60; display:none; font-size:2.4rem; transform:translate(-50%,-50%); cursor:pointer;
+            filter:drop-shadow(0 0 10px #9fe7ff); animation:corpse 1.2s ease-in-out infinite alternate; }
+  #corpse.on { display:block; }
+  @keyframes corpse { to { transform:translate(-50%,-60%) scale(1.15); } }
+  #ghostmsg { position:fixed; left:0; right:0; top:12%; z-index:60; display:none; text-align:center; font-family:Georgia,serif;
+              font-size:clamp(1rem,2.6vw,1.6rem); color:#cfefff; text-shadow:0 0 12px #3fb4ff, 2px 2px 0 #000; }
+  #ghostmsg.on { display:block; }
+  /* Mailbox: tiny hidden mailbox -> WoW inbox, letters, a gold seller and a ban */
+  #mailicon { position:fixed; left:1rem; top:1rem; z-index:5; font-size:22px; opacity:.07; cursor:default; user-select:none;
+              filter:grayscale(.5); transition:opacity .4s, filter .4s, transform .2s; }
+  #mailicon:hover { opacity:.95; filter:none; transform:scale(1.15); }
+  #mail { background:rgba(0,0,0,.7); }
+  .mwrap { display:flex; gap:.6rem; align-items:flex-start; flex-wrap:wrap; justify-content:center; max-height:96vh; overflow:auto; padding:.5rem; }
+  .mpanel { width:min(360px, 94vw); background:#1b1b1b; border:3px solid #5d5d5d; outline:1px solid #000; box-shadow:0 0 25px #000;
+            font-family:Arial,Helvetica,sans-serif; font-size:.82rem; color:#fff; }
+  .mhead { position:relative; background:linear-gradient(#3c3c3c, #1c1c1c); border-bottom:2px solid #5d5d5d; padding:.35rem .5rem;
+           text-align:center; color:#ffd100; font-weight:bold; }
+  .mhead button { position:absolute; right:.3rem; top:.2rem; }
+  .mbtn { background:linear-gradient(#a3151b, #5a0a0d); border:1px solid #d6a33a; border-radius:3px; color:#ffd100; font:inherit;
+          font-weight:bold; padding:.25rem .7rem; cursor:pointer; }
+  .mbtn:hover { filter:brightness(1.25); }
+  .mx { background:linear-gradient(#a3151b, #5a0a0d); border:1px solid #d6a33a; color:#ffd100; font-weight:bold; width:1.5rem; height:1.5rem;
+        line-height:1; padding:0; cursor:pointer; }
+  .mbar { display:flex; justify-content:center; gap:.6rem; padding:.4rem; background:#232323; }
+  #mlist { background:linear-gradient(#3b2a14, #24180a); padding:.3rem; }
+  .mrow { display:flex; align-items:center; gap:.45rem; height:46px; padding:0 .3rem; margin-bottom:3px; cursor:pointer;
+          background:linear-gradient(90deg, rgba(120,80,30,.55), rgba(70,45,15,.35)); border:1px solid #4a3418; }
+  .mrow:hover, .mrow.sel { background:linear-gradient(90deg, rgba(170,120,40,.6), rgba(90,60,20,.45)); border-color:#9a7b3a; }
+  .mrow.empty { cursor:default; background:rgba(60,40,15,.35); }
+  .mcheck { width:16px; height:16px; border:1px solid #777; background:#111; flex-shrink:0; }
+  .mico { width:38px; height:38px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+          background:radial-gradient(#4a4a4a, #151515); border:1px solid #8a8a8a; border-radius:3px; }
+  .mtext { flex:1; min-width:0; line-height:1.25; }
+  .mfrom { color:#ffd100; } .msub { color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .mdays { color:#1eff00; font-size:.75rem; align-self:flex-start; margin-top:.4rem; }
+  .mrow.cod .mdays { color:#ff4040; }
+  #mopen .mmeta { display:grid; grid-template-columns:auto 1fr auto; gap:.15rem .5rem; align-items:center; padding:.45rem .6rem; }
+  #mopen .mmeta span:nth-child(2), #mopen .mmeta span:nth-child(5) { color:#ffd100; }
+  #mbody { margin:0 .5rem; height:min(32vh, 220px); overflow:auto; padding:.8rem 1rem; color:#3a2410; font-family:Georgia,serif; font-size:.95rem;
+           line-height:1.45; white-space:pre-wrap; background:radial-gradient(ellipse at 50% 40%, #f1dfb3, #d9bd83 70%, #b8935a); border:1px solid #6b4f24; }
+  #matt { display:flex; align-items:center; gap:.4rem; padding:.5rem .6rem; min-height:56px; flex-wrap:wrap; }
+  #matt .mico { cursor:pointer; position:relative; }
+  #matt .mico small { position:absolute; right:2px; bottom:0; font-size:.65rem; color:#fff; text-shadow:1px 1px 0 #000; }
+  #mcod { color:#ff4040; font-weight:bold; }
+  #uierr { position:fixed; left:0; right:0; top:18%; z-index:66; text-align:center; pointer-events:none; color:#ff2020;
+           font-family:Arial,sans-serif; font-weight:bold; font-size:clamp(.95rem,2.2vw,1.3rem); text-shadow:1px 1px 0 #000; opacity:0; transition:opacity .4s; }
+  #uierr.on { opacity:1; transition:none; }
+  #ban { z-index:68; background:radial-gradient(ellipse at 50% 40%, #1c2a3a, #04070b 75%); }
+  .banbox { width:min(620px, 92vw); padding:1.4rem 1.6rem 1.2rem; text-align:center; background:rgba(10,10,10,.92); border:2px solid #555;
+            box-shadow:0 0 40px #000; font-family:Arial,sans-serif; }
+  .banbox p { color:#ffd100; font-size:clamp(.95rem,2.4vw,1.35rem); line-height:1.4; text-shadow:1px 1px 0 #000; }
+  .banbox p span { color:#1eff00; }
+  .banbox button { margin-top:1rem; width:min(260px, 70%); }
+  /* Gnome punting: a gnome peeks in from the left edge; click him to open the minigame */
+  #gnomepeek { position:fixed; left:0; top:42vh; z-index:5; width:46px; height:120px; overflow:hidden; cursor:pointer; }
+  #gnomepeek img { position:absolute; left:-80px; top:8px; height:110px; transform:rotate(18deg); transition:left .35s cubic-bezier(.3,1.5,.5,1); }
+  #gnomepeek:hover img { left:-30px; }
+  #punt { background:rgba(0,0,0,.8); }
+  .pbox { position:relative; width:min(1100px, 96vw); background:#140f08; border:2px solid #7a5a1c; padding:.8rem 1rem 1rem;
+          font-family:Arial,sans-serif; color:#ddd; text-align:center; }
+  .pbox h2 { color:var(--gold); letter-spacing:.2em; text-transform:uppercase; font-size:1.05rem; margin-bottom:.5rem; }
+  #puntcv { display:block; width:100%; height:min(60vh, 460px); border:1px solid #3a2b14; cursor:pointer; touch-action:manipulation; }
+  #puntclose { position:absolute; top:.55rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  #puntscore { position:absolute; left:50%; top:50%; transform:translate(-50%,-45%); display:none; width:min(380px, 86%);
+               background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #c9a14a; box-shadow:0 0 30px #000; padding:1rem 1.2rem; }
+  #puntscore.on { display:block; animation:duelin .35s ease-out; }
+  #puntscore h3 { color:#ffd100; font-size:1.3rem; margin-bottom:.3rem; }
+  #puntscore .big { font-family:Impact,"Arial Black",sans-serif; font-size:2.6rem; color:#fff; }
+  #puntscore .rec { color:#1eff00; font-weight:bold; min-height:1.2em; }
+  #puntscore p { margin:.3rem 0; }
+  #puntagain { margin-top:.6rem; background:linear-gradient(#9b1c1c, #4a0808); border:1px solid #c9a14a; color:#ffd100; font:inherit; font-weight:bold; padding:.45rem 1.2rem; cursor:pointer; }
+  /* 12 achievements -> "12-Month Subscription Special Offer"; only the price button closes it */
+  #offer { z-index:65; background:rgba(0,0,0,.82); }
+  #offerbox { position:relative; width:min(92vw, calc(88vh * 1568 / 1264), 900px); animation:offerin .6s cubic-bezier(.2,1.4,.4,1); }
+  #offerbox img { display:block; width:100%; border:2px solid #7a5a1c; box-shadow:0 0 50px rgba(255,190,80,.35); }
+  #offerbox.nope { animation:offernope .35s; }
+  @keyframes offerin { from { transform:scale(.6); opacity:0; } }
+  @keyframes offernope { 25% { transform:translateX(-10px) rotate(-1deg); } 75% { transform:translateX(10px) rotate(1deg); } }
+  #offerbuy { position:absolute; left:28.8%; width:43.1%; top:85.4%; height:9.7%; cursor:pointer; border-radius:6px; }
+  #offerbuy:hover { box-shadow:0 0 22px 4px rgba(255,80,40,.75); }
+  #paid { position:fixed; left:50%; top:46%; z-index:66; pointer-events:none; display:none; white-space:nowrap;
+          font-family:Impact,"Arial Black",sans-serif; font-size:clamp(3rem,12vw,8rem); color:#1eff00;
+          -webkit-text-stroke:2px #0a3a00; text-shadow:0 0 25px rgba(30,255,0,.6); }
+  #paid.on { display:block; animation:paid 2.8s ease-out forwards; }
+  @keyframes paid { 0% { transform:translate(-50%,-50%) scale(.6); opacity:0; } 12% { transform:translate(-50%,-50%) scale(1.15); opacity:1; }
+                    35% { transform:translate(-50%,-60%) scale(1); opacity:1; } 100% { transform:translate(-50%,-260%) scale(1); opacity:0; } }
+  /* Saucy vault: hidden keyhole -> sultry slideshow of Great Vault screenshots */
+  #vaultkey { position:fixed; right:2.5vw; top:48vh; z-index:5; font-size:30px; opacity:0; cursor:default; user-select:none;
+              transition:opacity .4s, filter .4s, transform .3s; }
+  #vaultkey:hover { opacity:.95; transform:scale(1.25); filter:drop-shadow(0 0 8px #ff3d9a); }
+  #vault { z-index:56; background:#000; cursor:pointer; overflow:hidden; }
+  #vlight { position:absolute; inset:-20%; opacity:.85; animation:vlight 6s ease-in-out infinite alternate;
+            background:radial-gradient(circle at 25% 30%, rgba(255,20,90,.55), transparent 45%),
+                       radial-gradient(circle at 75% 70%, rgba(150,30,255,.5), transparent 45%),
+                       radial-gradient(circle at 50% 50%, rgba(255,60,120,.25), transparent 70%); }
+  @keyframes vlight { 0% { transform:rotate(0) scale(1); filter:hue-rotate(0); } 100% { transform:rotate(25deg) scale(1.15); filter:hue-rotate(-30deg); } }
+  #vstage { position:relative; width:min(86vw, calc(70vh * 1.6), 1050px); aspect-ratio:1.6; overflow:hidden; border-radius:14px;
+            transition:transform 1.1s cubic-bezier(.3,1.3,.5,1);
+            box-shadow:0 0 50px 10px rgba(255,40,140,.45), 0 0 120px 30px rgba(140,30,255,.3); }
+  #vstage img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.3s ease;
+                filter:saturate(1.15) contrast(1.05); }
+  #vstage img.on { opacity:1; }
+  #vstage img.kb1 { animation:kb1 5.5s ease-in-out forwards; } #vstage img.kb2 { animation:kb2 5.5s ease-in-out forwards; }
+  #vstage img.kb3 { animation:kb3 5.5s ease-in-out forwards; }
+  @keyframes kb1 { from { transform:scale(1.02); } to { transform:scale(1.18) translate(-3%,-2%); } }
+  @keyframes kb2 { from { transform:scale(1.18) translate(3%,2%); } to { transform:scale(1.03); } }
+  @keyframes kb3 { from { transform:scale(1.05) translate(-3%,2%); } to { transform:scale(1.2) translate(3%,-2%); } }
+  #vstage::after { content:""; position:absolute; inset:0; pointer-events:none; box-shadow:inset 0 0 90px 30px rgba(40,0,30,.85);
+                   background:linear-gradient(transparent 60%, rgba(60,0,40,.55)); mix-blend-mode:multiply; }
+  #vcap { position:absolute; left:0; right:0; bottom:9%; text-align:center; pointer-events:none; padding:0 5vw;
+          font-family:"Brush Script MT","Segoe Script",Georgia,serif; font-style:italic; font-size:clamp(1.4rem,3.6vw,2.6rem);
+          color:#ffd6ec; text-shadow:0 0 14px #ff2d95, 0 0 30px #b0207a, 2px 2px 0 #000; opacity:0; transition:opacity .8s; }
+  #vcap.on { opacity:1; }
+  #vhint { position:absolute; bottom:2%; left:0; right:0; text-align:center; color:#a0607e; font-size:.75rem; pointer-events:none; }
+  .vheart { position:absolute; bottom:-40px; pointer-events:none; animation:vfloat 5s ease-in forwards; }
+  @keyframes vfloat { 0% { transform:translateY(0) rotate(0); opacity:0; } 15% { opacity:1; }
+                      100% { transform:translateY(-110vh) rotate(40deg); opacity:0; } }
+  /* Firebolt or Frostbolt: click the SECONDS label, counter each elemental with the opposite spell */
+  #boltlbl { user-select:none; transition:color .4s, text-shadow .4s; }
+  #boltlbl:hover { color:#7fc8ff; text-shadow:0 0 8px rgba(255,120,40,.6), 0 0 14px rgba(80,170,255,.6); }
+  #bolt { background:rgba(0,0,0,.82); }
+  #bolt .pbox { width:min(900px, 96vw); user-select:none; }
+  #bolthud { display:flex; justify-content:space-between; color:#bbb; font-size:.9rem; margin:0 .2rem .35rem; }
+  #bolthud b { color:#ffd100; }
+  #bolttime { height:6px; background:#2a1f0c; border:1px solid #3a2b14; margin-bottom:.4rem; }
+  #bolttime i { display:block; height:100%; width:100%; background:linear-gradient(90deg, #ff3d00, #ffd100); }
+  #boltlane { position:relative; height:min(56vh, 440px); overflow:hidden; border:1px solid #3a2b14;
+              background:linear-gradient(#07060a 0%, #0d0b10 42%, #1b150d 43%, #2b2214 100%); }
+  /* the path the line stands on, running back to the horizon */
+  #boltlane::before { content:""; position:absolute; left:50%; bottom:0; width:70%; height:57%; transform:translateX(-50%);
+                      clip-path:polygon(47% 0, 53% 0, 100% 100%, 0 100%);
+                      background:linear-gradient(rgba(201,161,74,.04), rgba(201,161,74,.18)); }
+  #boltlane.shake { animation:boltshake .45s; }
+  @keyframes boltshake { 20% { transform:translate(-8px,4px); } 40% { transform:translate(7px,-5px); } 60% { transform:translate(-5px,3px); } 80% { transform:translate(4px,-2px); } }
+  .belem { --s:1; position:absolute; left:50%; bottom:3%; transform:translateX(-50%) scale(var(--s)); transform-origin:50% 100%;
+           transition:bottom .2s ease-out, left .2s ease-out, opacity .25s, transform .25s, filter .2s; font-size:clamp(5rem,14vw,9rem); line-height:1; }
+  .belem span, .belem img { display:inline-block; animation:bbob 1.4s ease-in-out infinite alternate; }
+  .belem img { height:min(36vh, 270px); display:block; }
+  .belem.fire span, .belem.fire img { filter:drop-shadow(0 0 14px #ff5a00) drop-shadow(0 0 30px rgba(255,90,0,.5)); }
+  .belem.frost span, .belem.frost img { filter:drop-shadow(0 0 14px #49b6ff) drop-shadow(0 0 30px rgba(73,182,255,.5)); }
+  .belem.die { opacity:0; transform:translateX(-50%) scale(calc(var(--s) * 1.25)); }
+  .belem.immune { transform:translateX(-50%) scale(calc(var(--s) * 1.15)); }
+  /* it walks right into your face */
+  .belem.smash { transition:bottom .3s ease-in, transform .3s ease-in; bottom:-45%; transform:translateX(-50%) scale(2.6); }
+  @keyframes bbob { from { transform:translateY(0); } to { transform:translateY(-8px); } }
+  .bproj { position:absolute; left:50%; bottom:-12%; font-size:4.5rem; transform:translateX(-50%); pointer-events:none; z-index:20;
+           transition:bottom .16s linear, font-size .16s linear; }
+  .bfloat { position:absolute; bottom:62%; transform:translateX(-50%); font:bold 1.6rem Arial,sans-serif; color:#ffd100; z-index:21;
+            text-shadow:2px 2px 0 #000; pointer-events:none; animation:bfloat 1s ease-out forwards; z-index:3; }
+  .bfloat.ok { color:#fff; font-size:1.1rem; }
+  @keyframes bfloat { to { transform:translate(-50%,-50px); opacity:0; } }
+  #boltmsg { min-height:1.3em; margin:.5rem 0 .3rem; color:#ccc; font-size:.9rem; }
+  #boltbtns { display:flex; gap:1rem; justify-content:center; }
+  #boltbtns button { font:bold 1.05rem Arial,sans-serif; padding:.6rem 1.4rem; cursor:pointer; border:2px solid; color:#fff; min-width:11rem; }
+  #bfire { background:linear-gradient(#a52a00, #5a1400); border-color:#ff7a2a !important; }
+  #bfrost { background:linear-gradient(#0c5aa5, #062f5a); border-color:#5ab8ff !important; }
+  #boltbtns button:active { transform:scale(.96); }
+  #boltbtns small { opacity:.65; font-weight:normal; }
+  #boltbtns button { display:inline-flex; align-items:center; gap:.55rem; padding:.35rem 1.2rem .35rem .35rem; }
+  .bicon { width:40px; height:40px; border:1px solid #000; box-shadow:0 0 0 1px #8a6a2a; border-radius:3px; }
+  #boltclose { position:absolute; top:.55rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  #boltover { position:absolute; left:50%; top:50%; transform:translate(-50%,-45%); display:none; width:min(380px, 86%); z-index:5;
+              background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #c9a14a; box-shadow:0 0 30px #000; padding:1rem 1.2rem; }
+  #boltover.on { display:block; animation:duelin .35s ease-out; }
+  #boltover h3 { color:#ff4040; font-size:1.2rem; margin-bottom:.3rem; }
+  #boltover .big { font-family:Impact,"Arial Black",sans-serif; font-size:2.6rem; color:#fff; }
+  #boltover .rec { color:#1eff00; font-weight:bold; min-height:1.2em; }
+  #boltover p { margin:.35rem 0; font-size:.9rem; }
+  #boltover button { margin-top:.5rem; background:#2a1f0c; border:1px solid #c9a14a; color:#ffd100; font:bold .95rem Arial,sans-serif; padding:.45rem 1rem; cursor:pointer; }
+  /* Don't Stand in the Fire: click HOURS, dodge an ever crazier bullet hell */
+  #firelbl { user-select:none; transition:color .4s, text-shadow .4s; }
+  #firelbl:hover { color:#ff8a3d; text-shadow:0 0 8px rgba(255,90,0,.7); }
+  #fire { background:rgba(0,0,0,.85); }
+  #fire .pbox { width:min(860px, 96vw); user-select:none; }
+  #firehud { display:flex; justify-content:space-between; color:#bbb; font-size:.9rem; margin:0 .2rem .35rem; }
+  #firehud b { color:#ffd100; }
+  #firewrap { position:relative; }
+  #firecv { display:block; width:min(100%, calc(64vh * 800 / 560)); aspect-ratio:800 / 560; margin:0 auto; border:1px solid #3a2b14;
+            background:#0a0705; cursor:none; touch-action:none; }
+  #firewarn { position:absolute; left:0; right:0; top:12%; text-align:center; pointer-events:none; opacity:0;
+              font:bold clamp(1.1rem,3vw,1.9rem) Arial,sans-serif; color:#ff7b00; text-shadow:0 0 10px #000, 2px 2px 0 #000; }
+  #firewarn.on { animation:firewarn 3s ease-out forwards; }
+  @keyframes firewarn { 0% { opacity:0; transform:scale(1.4); } 10% { opacity:1; transform:scale(1); } 75% { opacity:1; } 100% { opacity:0; } }
+  #firemsg { min-height:1.3em; margin:.5rem 0 0; color:#999; font-size:.85rem; }
+  #fireclose { position:absolute; top:.55rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  #fireover { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); display:none; width:min(400px, 86%); z-index:5;
+              background:linear-gradient(#1d1d1d, #0b0b0b); border:2px solid #c9a14a; box-shadow:0 0 30px #000; padding:1rem 1.2rem; }
+  #fireover.on { display:block; animation:duelin .35s ease-out; }
+  #fireover h3 { color:#ff4040; font-size:1.3rem; margin-bottom:.3rem; }
+  #fireover .big { font-family:Impact,"Arial Black",sans-serif; font-size:2.6rem; color:#fff; }
+  #fireover .rec { color:#1eff00; font-weight:bold; min-height:1.2em; }
+  #fireover p { margin:.35rem 0; font-size:.9rem; }
+  #fireover button { margin-top:.5rem; background:#2a1f0c; border:1px solid #c9a14a; color:#ffd100; font:bold .95rem Arial,sans-serif; padding:.45rem 1rem; cursor:pointer; }
   #done { display:none; font-size:clamp(2rem,9vw,8rem); color:var(--gold); text-shadow:0 0 40px rgba(245,197,66,.8); }
 </style>
 </head>
@@ -287,18 +582,93 @@
     <input id="vol" type="range" min="0" max="100" value="35" aria-label="Music volume">
     <button id="mute" aria-label="Toggle sound">🔊 Ticks on</button>
   </div>
-  <div id="ytbox"><div id="yt"></div><div id="ytfusion"></div><div id="ytleeroy"></div></div>
-  <h1>World of Warcraft: <span id="egg">Forever</span></h1>
+  <div id="ytbox"><div id="yt"></div><div id="ytfusion"></div><div id="ytleeroy"></div><div id="ytvault"></div></div>
+  <h1><span id="onytrig">World of Warcraft:</span> <span id="egg">Forever</span></h1>
   <div id="clock">
     <div class="unit"><div class="num" id="d">00</div><div class="lbl" id="signup">Days</div></div><div class="sep">:</div>
-    <div class="unit"><div class="num" id="h">00</div><div class="lbl">Hours</div></div><div class="sep">:</div>
+    <div class="unit"><div class="num" id="h">00</div><div class="lbl" id="firelbl">Hours</div></div><div class="sep">:</div>
     <div class="unit"><div class="num" id="m">00</div><div class="lbl">Minutes</div></div><div class="sep">:</div>
-    <div class="unit"><div class="num" id="sec">00</div><div class="lbl">Seconds</div></div>
+    <div class="unit"><div class="num" id="sec">00</div><div class="lbl" id="boltlbl">Seconds</div></div>
   </div>
   <div id="done">IT HAS BEGUN</div>
   <p id="sub"></p>
   <p id="tip"></p>
   <div id="eggcount"></div>
+  <div id="fire" class="ov"><div class="pbox">
+    <button id="fireclose" aria-label="Close">✕</button>
+    <h2>🔥 Don't Stand in the Fire 🔥</h2>
+    <div id="firehud"><span>Time: <b id="firetime">0.0</b>s</span><span>Graze: <b id="firegraze">0</b></span><span>Best: <b id="firebest">0.0</b>s</span></div>
+    <div id="firewrap"><canvas id="firecv" width="800" height="560"></canvas><div id="firewarn"></div>
+      <div id="fireover"><h3>You died.</h3><div class="big" id="firefinal"></div><div class="rec" id="firerec"></div>
+        <p id="fireblame"></p><p id="firecomment"></p><button id="fireagain">Try again</button></div></div>
+    <div id="firemsg">Move with the mouse (or WASD / arrows, hold Shift to move slowly). Only the little dot in the middle can get hit.</div>
+  </div></div>
+  <div id="bolt" class="ov"><div class="pbox">
+    <button id="boltclose" aria-label="Close">✕</button>
+    <h2>🔥 Firebolt or Frostbolt ❄️</h2>
+    <div id="bolthud"><span>Score: <b id="boltscore">0</b></span><span>Best: <b id="boltbest">0</b></span></div>
+    <div id="bolttime"><i></i></div>
+    <div id="boltlane">
+      <div id="boltover"><h3 id="boltwhy"></h3><div class="big" id="boltfinal"></div><div class="rec" id="boltrec"></div>
+        <p id="boltcomment"></p><button id="boltagain">Try again</button></div></div>
+    <div id="boltmsg"></div>
+    <div id="boltbtns"><button id="bfire"><img class="bicon" src="img/firebolt_icon.webp" alt=""> Firebolt <small>[A]</small></button><button id="bfrost"><img class="bicon" src="img/frostbolt_icon.webp" alt=""> Frostbolt <small>[D]</small></button></div>
+  </div></div>
+  <div id="vaultkey" aria-hidden="true">🔐</div>
+  <div id="vault" class="ov"><div id="vlight"></div>
+    <div id="vstage"><img alt=""><img alt=""></div>
+    <div id="vcap"></div><div id="vhint">click anywhere to make it stop</div></div>
+  <div id="offer" class="ov"><div id="offerbox"><img src="img/sub_offer.webp" alt="12-Month Subscription Special Offer: $349.99">
+    <div id="offerbuy" title="Buy now"></div></div></div>
+  <div id="paid">Paid</div>
+  <div id="gnomepeek" aria-label="A gnome"><img src="img/gnome_stand.webp" alt=""></div>
+  <div id="punt" class="ov"><div class="pbox">
+    <button id="puntclose" aria-label="Close">✕</button>
+    <h2>Gnome Punting</h2>
+    <canvas id="puntcv"></canvas>
+    <div id="puntscore"><h3>The gnome has landed</h3><div class="big" id="puntdist"></div><div class="rec" id="puntrec"></div>
+      <p id="puntbest"></p><p id="puntcomment"></p><button id="puntagain">Punt another gnome</button></div>
+  </div></div>
+  <div id="onyxia"><div id="onyglow"></div><img id="onyimg" src="img/onyxia.webp" alt=""><div id="onyfire"></div>
+    <div id="onyemote">Onyxia takes in a deep breath...</div></div>
+  <img id="hogger" src="img/hogger_walk1.webp" alt="Hogger">
+  <div id="redflash"></div>
+  <div id="deathbox"><div id="deathtitle"></div>
+    <div class="dbtns"><button class="mbtn" id="deathbtn">Release Spirit</button><button class="mbtn" id="recapbtn">Recap</button></div></div>
+  <div id="recap"><div class="mhead">Death Recap <button class="mx" id="recapx" aria-label="Close">✕</button></div>
+    <div id="recaprows"></div><div class="mbar"><button class="mbtn" id="recapclose">Close</button></div></div>
+  <div id="corpse" title="Your corpse">💀</div>
+  <div id="ghostmsg">You are a ghost. Return to your corpse to resurrect.</div>
+  <div id="mailicon" aria-hidden="true">📫</div>
+  <div id="mail" class="ov"><div class="mwrap">
+    <div class="mpanel" id="minbox">
+      <div class="mhead">Inbox <button class="mx" id="mclose" aria-label="Close">✕</button></div>
+      <div class="mbar"><button class="mbtn" id="mmark">Mark All</button><button class="mbtn" id="mgetall">Get Attachments</button></div>
+      <div id="mlist"></div>
+      <div class="mbar"><button class="mbtn" id="mprev">Prev</button><button class="mbtn" id="mnext">Next</button></div>
+    </div>
+    <div class="mpanel" id="mopen">
+      <div class="mhead">Open Mail <button class="mx" id="mclose2" aria-label="Close">✕</button></div>
+      <div class="mmeta"><span>From:</span><span id="mfrom"></span><button class="mbtn" id="mspam">Report Spam</button>
+        <span>Subject:</span><span id="msub"></span><span></span></div>
+      <div id="mbody"></div>
+      <div id="matt"></div>
+      <div class="mbar"><button class="mbtn" id="mtake">Take All</button><button class="mbtn" id="mreply">Reply</button>
+        <button class="mbtn" id="mreturn">Return</button><button class="mbtn" id="mclose3">Close</button></div>
+    </div>
+  </div></div>
+  <div id="uierr"></div>
+  <div id="ban" class="ov"><div class="banbox">
+    <p>This World of Warcraft account has been temporarily suspended. The suspension expires in 177 days, 14 hours, 4 minutes.
+      Please go to <span>[http://www.worldofwarcraft.com/misc/banned.html]</span> for further information. (BLZ51900053)</p>
+    <button class="mbtn" id="banok">Okay</button>
+  </div></div>
+  <div id="reload" class="ov"><h2>World of Warcraft</h2><p id="rltip"></p>
+    <div id="rlbar"><div id="rlfill"></div><div id="rlpct"></div></div></div>
+  <div id="duel"><p id="duelq"></p><button id="dueln">Accept</button><button id="duelx">Decline</button></div>
+  <div id="dueltxt"></div>
+  <div id="achtoast"><div id="achname"></div></div>
+  <div id="achlist" class="ov"><div class="abox"><button id="achclose" aria-label="Close">✕</button><h2 id="achhead">Achievements</h2><div id="achitems"></div></div></div>
   <div id="castbar"><div class="fill"></div><span><em>Hearthstone</em><em id="casttime"></em></span></div>
   <div id="goldshire" class="ov"><div id="gsframe"><div id="gsplayer"></div><div id="gstxt">You return to Goldshire</div></div>
     <div id="gshint">click the border to leave the inn</div></div>
@@ -361,7 +731,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "19";
+const VERSION = "20";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -383,15 +753,26 @@ const FUSION_END = 23000;
 const GOLDSHIRE_ID = "siGaJvUTqGI";
 // Leeroy easter egg sound
 const LEEROY_ID = "yOMj7WttkOA";
+// Saucy vault easter egg music
+const VAULT_ID = "izGwDsrQ1eQ";
 // ===================================================================================
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, "0");
 
 // ---------- Easter eggs found counter (remembered per browser) ----------
-const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing"];
+const EGGS = ["forever", "disco", "thunderfury", "murloc", "raid", "olympus", "fusion", "hearth", "login", "leeroy", "fishing",
+  "barrens", "dance", "reload", "duel", "onyxia", "hogger", "mail", "gnome", "offer", "vault", "bolt", "fire"];
+// Bump this when a release should start everyone's egg hunt from 0 again (fishing and gnome records are kept).
+const EGG_SAVE_VERSION = "20";
 let eggsFound = new Set();
-try { eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e))); } catch (e) {}
+try {
+  if (localStorage.getItem("eggsVersion") !== EGG_SAVE_VERSION) {
+    localStorage.removeItem("eggsFound");
+    localStorage.setItem("eggsVersion", EGG_SAVE_VERSION);
+  }
+  eggsFound = new Set(JSON.parse(localStorage.getItem("eggsFound") || "[]").filter(e => EGGS.includes(e)));
+} catch (e) {}
 function renderEggs(pop) {
   const c = $("eggcount");
   c.textContent = "🥚 Easter eggs found: " + eggsFound.size + "/" + EGGS.length;
@@ -403,6 +784,8 @@ function foundEgg(id) {
   eggsFound.add(id);
   try { localStorage.setItem("eggsFound", JSON.stringify([...eggsFound])); } catch (e) {}
   renderEggs(true);
+  achievementToast(id);
+  checkOffer(2600);   // after the achievement banner had its moment
 }
 let ctx = null, muted = false, eggOn = false, lastSec = null, finished = false;
 
@@ -427,8 +810,31 @@ function ensureAudio() {
     // optional custom sample: drop a short "tick.mp3" next to index.html and it replaces the synth thump
     fetch("tick.mp3").then(r => r.ok ? r.arrayBuffer() : Promise.reject())
       .then(b => ctx.decodeAudioData(b)).then(buf => { tickBuf = buf; }).catch(() => {});
+    loadSfx();
   }
   if (ctx.state === "suspended") ctx.resume();
+}
+// official WoW sound effects, decoded once after ENTER
+const SFX = { breath: "sfx/flamebreath.ogg", gnollAggro: "sfx/gnoll_aggro.ogg", gnollAttack: "sfx/gnoll_attack.ogg",
+  achievement: "sfx/achievement.ogg", gnomeKick: "sfx/gnome_kick.ogg", gnomeDeath: "sfx/gnome_death.ogg",
+  gnomePissed1: "sfx/gnome_pissed1.ogg", gnomePissed2: "sfx/gnome_pissed2.ogg", gnomePissed3: "sfx/gnome_pissed3.ogg",
+  gnomePissed4: "sfx/gnome_pissed4.ogg", readyCheck: "sfx/ready_check.ogg", wipe: "sfx/wipe.ogg", murloc: "sfx/murloc.ogg",
+  whelpFlap: "sfx/whelp_flap.ogg", fishCast: "sfx/fish_cast.ogg", fishBite1: "sfx/fish_bite1.ogg", fishBite2: "sfx/fish_bite2.ogg",
+  fishBite3: "sfx/fish_bite3.ogg", menuOpen: "sfx/menu_open.ogg", menuButton: "sfx/menu_button.ogg", coin: "sfx/coin.ogg",
+  countdown: "sfx/countdown.ogg", legendary: "sfx/legendary.ogg",
+  firebolt: "sfx/firebolt.ogg", frostbolt: "sfx/frostbolt.ogg",
+  ragCharge: "sfx/rag_charge.ogg", ragPurge: "sfx/rag_purge.ogg", ragSlay: "sfx/rag_slay.ogg", ragRain: "sfx/rag_rain.ogg" };
+const sfxBuf = {};
+function loadSfx() {
+  Object.entries(SFX).forEach(([k, url]) => fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject())
+    .then(b => ctx.decodeAudioData(b)).then(buf => { sfxBuf[k] = buf; }).catch(() => {}));
+}
+function playSfx(k, gain) {
+  if (!ctx || muted || !sfxBuf[k]) return false;
+  const src = ctx.createBufferSource(), g = ctx.createGain();
+  src.buffer = sfxBuf[k]; g.gain.value = gain;
+  src.connect(g); out(g, false); src.start();
+  return true;
 }
 function out(node, wet) { node.connect(master); if (wet) node.connect(verb); }
 function tone(freq, type, start, dur, vol) {
@@ -442,7 +848,7 @@ function tone(freq, type, start, dur, vol) {
 }
 // Deep cinematic thump: pitch-dropping sub kick + low noise knock + booming tail
 function tick(final) {
-  if (!ctx || muted || eggOn || fusing || inGoldshire) return;
+  if (!ctx || muted || eggOn || fusing || inGoldshire || vaultOn || fireOn) return;
   const t = ctx.currentTime, k = final ? 1 : 0.8;
   if (tickBuf) {
     const src = ctx.createBufferSource(), g = ctx.createGain();
@@ -538,6 +944,11 @@ function startYouTube() {
       playerVars: { controls: 0, playsinline: 1, rel: 0, origin: location.origin },
       events: { onReady: () => { leeroyReady = true; } }
     });
+    vaultYt = new YT.Player("ytvault", {
+      width: "200", height: "200", videoId: VAULT_ID,
+      playerVars: { controls: 0, playsinline: 1, rel: 0, origin: location.origin },
+      events: { onReady: () => { vaultReady = true; }, onError: () => { vaultReady = false; } }
+    });
   };
   const tag = document.createElement("script");
   tag.src = "https://www.youtube.com/iframe_api";
@@ -572,12 +983,15 @@ function stopDisco() {
 }
 let typed = "";
 addEventListener("keydown", e => {
-  if (!ctx || e.key.length !== 1) return;
+  if (!ctx || e.key.length !== 1 || boltOn || fireOn) return;
   typed = (typed + e.key.toLowerCase()).slice(-11);
   if (typed.endsWith("thunderfury")) { typed = ""; thunderfury(); }
   else if (typed.endsWith("murloc") || typed.endsWith("mrgl")) { typed = ""; murlocs(); }
   else if (typed.endsWith("olympus")) { typed = ""; jumpscare(); }
   else if (typed.endsWith("login")) { typed = ""; openQueue(); }
+  else if (typed.endsWith("barrens")) { typed = ""; barrens(); }
+  else if (typed.endsWith("dance")) { typed = ""; dance(); }
+  else if (typed.endsWith("reload")) { typed = ""; openReload(); }
   else if (typed.endsWith("dt")) startDisco(); // Dirty Tactics
 });
 
@@ -673,7 +1087,7 @@ function gurgle(when) {
 }
 function murlocs() {
   const lines = MURLOC_LINES.slice().sort(() => Math.random() - .5).slice(0, 10);
-  if (chatBurst("[1. General - Stormwind City]", "#ffc0a0", lines, 650, i => { if (i % 2 === 0) gurgle(0); })) foundEgg("murloc");
+  if (chatBurst("[1. General - Stormwind City]", "#ffc0a0", lines, 650, i => { if (i % 2 === 0 && !playSfx("murloc", .55)) gurgle(0); })) foundEgg("murloc");
 }
 
 // ---------- Easter egg: type "raid" -> DT Raid Manager. Every ready check is rigged; you always wipe. ----------
@@ -1097,7 +1511,8 @@ function raidReady() {
     setTimeout(() => {
       raidLog(text, cls, names || [], pts);
       if (pts) { raidScore += pts; $("raidscore").textContent = raidScore; }
-      if (cls === "wipe") sadTrombone();
+      if (i === 0) playSfx("readyCheck", .6);
+      if (cls === "wipe" && !playSfx("wipe", .7)) sadTrombone();
       if (i === S.length - 1) { raidBusy = false; $("raidready").disabled = false; }
     }, at);
     at += cls === "score" ? 450 : 800;
@@ -1206,7 +1621,7 @@ function interruptCast() {
   setTimeout(() => { if (!castFrom) bar.className = ""; }, 1200);
 }
 $("clock").addEventListener("pointerdown", e => {
-  if (e.target.id === "signup" || castFrom || anyOverlay()) return;
+  if (e.target.id === "signup" || e.target.id === "boltlbl" || e.target.id === "firelbl" || castFrom || anyOverlay()) return;
   holdFrom = { x: e.clientX, y: e.clientY };
   holdTimer = setTimeout(() => { holdTimer = null; startCast(holdFrom.x, holdFrom.y); }, 1500);
 });
@@ -1256,6 +1671,7 @@ function openQueue() {
   const draw = () => { $("qpos").textContent = fmt(qPos); $("qtime").textContent = qMin + " min"; };
   draw();
   $("queue").classList.add("on");
+  playSfx("menuOpen", .6);
   clearInterval(qTimer);
   qTimer = setInterval(() => {
     qPos += 3 + Math.floor(Math.random() * 60);
@@ -1264,8 +1680,9 @@ function openQueue() {
   }, 1000);
 }
 function closeQueue() { clearInterval(qTimer); $("queue").classList.remove("on"); }
-$("qcancel").addEventListener("click", closeQueue);
+$("qcancel").addEventListener("click", () => { playSfx("menuButton", .6); closeQueue(); });
 $("qrealm").addEventListener("click", () => {
+  playSfx("menuButton", .6);
   qPos += 500 + Math.floor(Math.random() * 1500); qMin += 5 + Math.floor(Math.random() * 10);
   $("qpos").textContent = fmt(qPos); $("qtime").textContent = qMin + " min";
   $("qnote").textContent = pick(Q_NOTES);
@@ -1309,6 +1726,8 @@ function leeroy() {
       { duration: 2500 + Math.random() * 3500, delay: Math.random() * Math.max(2500, total - 6500), easing: "ease-in-out", fill: "both" });
   }
   if (!withClip) for (let i = 0; i < 24; i++) chirp(i * 0.22 + Math.random() * 0.15);
+  const flaps = setInterval(() => playSfx("whelpFlap", .35 + Math.random() * .25), 280);
+  setTimeout(() => clearInterval(flaps), total - 2500);
   setTimeout(() => { txt.className = "calm"; txt.textContent = "At least I have chicken."; }, total - 3000);
   setTimeout(() => {
     box.classList.remove("on"); box.querySelectorAll(".whelp").forEach(w => w.remove()); leeroyOn = false;
@@ -1318,39 +1737,48 @@ function leeroy() {
 $("chicken").addEventListener("click", leeroy);
 
 // ---------- Easter egg: fishing. A ripple shows up now and then near the bottom; click it to fish ----------
-const RARITY = { poor: "#9d9d9d", common: "#ffffff", uncommon: "#1eff00", rare: "#0070dd", epic: "#a335ee", legendary: "#ff8000" };
+const RARITY = { poor: "#9d9d9d", common: "#ffffff", uncommon: "#1eff00", rare: "#0070dd", epic: "#a335ee", legendary: "#ff8000",
+  artifact: "#e6cc80" };
+// the ultimate fish: only ever caught once every other item is in the journal
+const ULTIMATE_FISH = "Jacob, get a life";
 const RARITY_WEIGHT = { poor: 28, common: 30, uncommon: 22, rare: 12, epic: 6, legendary: 2 };
 const LOOT = {
   poor: ["Old Boot", "Waterlogged Sock", "Rusty Hook", "Soggy Bread", "Broken Fishing Pole", "Torn Map of Westfall", "Empty Bottle",
     "Clump of Seaweed", "Slimy Rock", "Half a Murloc Fin", "Wet Paperwork", "A Single Lost Shoe", "Rotten Kaj Cake", "Unpaid Repair Bill",
     "Someone's Dentures", "A Very Ordinary Stick", "Pine Cone (it's a tree, technically)", "Expired Mana Potion", "Cracked Hearthstone",
     "Gnome Sock (still warm)", "Grey Item That Sells for 1 Copper", "Moldy Cheese", "Tangled Fishing Line", "Soggy Discord Invite",
-    "Lost Raid Strategy (illegible)", "Broken Keyboard Key (W)", "Duck Feather", "Chewed Pencil", "Damp Matches", "Leeroy's Lunchbox (empty)"],
+    "Lost Raid Strategy (illegible)", "Broken Keyboard Key (W)", "Duck Feather", "Chewed Pencil", "Damp Matches", "Leeroy's Lunchbox (empty)",
+    "Soggy Quest Log", "Half-Eaten Murloc Sandwich", "Rusty Gnome Gear", "Water-Damaged Hearthstone Manual", "Wet Gold Seller Flyer", "Lost Arrow (not even yours)", "Broken Lute", "Leaky Bucket", "Old Raid Invite (expired 2004)", "Tangled Bowstring", "Mushy Apple", "Waterlogged Tabard", "Very Small Pebble", "Moist Bread Crust", "Kobold Candle (unlit, wet)", "Torn Bag (0 slots)", "Defias Bandana (smells)", "Abandoned Fishing Bobber"],
   common: ["Raw Brilliant Smallfish", "Raw Longjaw Mud Snapper", "Raw Bristle Whisker Catfish", "Raw Rainbow Fin Albacore", "Raw Rockscale Cod",
     "Raw Mithril Head Trout", "Raw Spotted Yellowtail", "Raw Glossy Mightfish", "Raw Whitescale Salmon", "Raw Nightfin Snapper",
     "Raw Sunscale Salmon", "Raw Redgill", "Oily Blackmouth", "Firefin Snapper", "Stonescale Eel", "Deviate Fish", "Raw Slitherskin Mackerel",
     "A Perfectly Normal Fish", "Fish That Looks Like Andre", "Bucket of Water", "Murloc Scale", "Handful of Shrimp", "Jar of Pickled Eyes",
     "Very Wet Cat", "Fresh Danish", "Kaj Cake (slightly damp)", "Healthstone (someone forgot it)", "Bag of Copper Coins",
-    "Stormwind Tourist Map", "Linen Bandage"],
+    "Stormwind Tourist Map", "Linen Bandage",
+    "Raw Loch Frenzy", "Raw Sagefish", "Raw Greater Sagefish", "Raw Summer Bass", "Winter Squid", "Raw Spinefin Halibut", "Darkclaw Lobster", "Large Raw Mightfish", "Lightning Eel", "Blackmouth Oil", "Fire Oil", "Shiny Fish Scales", "Big-Mouth Clam", "Thick-Shelled Clam", "Tender Crab Meat", "Murloc Eye", "Crawler Claw", "A Fish That Owes You Money", "Suspiciously Square Fish", "Fish Wearing Sunglasses", "Gnome-Shaped Fish", "A Fish That Has Seen Things"],
   uncommon: ["Lucky Fishing Hat", "Bright Baubles", "Aquadynamic Fish Attractor", "Murloc Fin Soup", "Waterlogged Crate", "Battered Chest",
     "Gøj's Missing Intellect", "Alt Account Login (#638)", "Feral Druid Guide (it just says \"Feral is great\")", "A Pair of White Lines",
     "Bloodlust Button (pressed)", "Paladeeeeeeeeen Plushie", "Kat's Danish", "Esports' Stream Snacks", "A Fully Erected Eye",
     "Lyra's Explanation", "Ulaw's Intellect Meter (empty)", "Sab's Spare Moustache", "13th Account Authenticator", "Noah's \"I Got You\" Medal",
     "Andre's Trust (fragile)", "Johny's Lost Headset", "Esports' Ring Light", "Raid Leader's Patience (dented)",
     "Sealed Envelope: \"Do Not Open Until Launch\"", "Bag of Murloc Eggs", "Goblin Fishing Pole (it explodes sometimes)",
-    "Waterproof Keyboard", "A Fish With Better Gear Than You", "Kybris' Lost Loot Roll"],
+    "Waterproof Keyboard", "A Fish With Better Gear Than You", "Kybris' Lost Loot Roll",
+    "Iridescent Pearl", "Small Barnacled Clam", "Sealed Crate", "Waterlogged Envelope (contains: your dignity)", "Murloc Tadpole Plushie", "Hogger's Bath Toy", "Thunderfury Replica (plastic)", "Wanted Poster: Hogger", "Map to Mankrik's Wife (inaccurate)", "Chuck Norris Fan Club Card", "Raid Leader's Whistle", "Spare Ready Check", "Gnomish Flotation Device", "Defias Treasure Map", "Discord Nitro (expired)", "Duel Trophy (participation)", "Gold Seller's Business Card", "Login Queue Ticket #4,231"],
   rare: ["Big Iron Fishing Pole", "Mr. Pinchy (he grants wishes)", "Sea Turtle (sadly not a mount)", "Speckled Tastyfish",
     "Savory Deviate Delight", "Dirty Tactics Guild Tabard", "Golden Kaj Cake", "Raid Strategy That Actually Works (wet)",
     "Onyxia Scale Cloak", "Free Action Potion", "Greater Stoneshield Potion (not a regular stone)", "Ancient Murloc Crown",
     "The Raid Manager's Missing Brain Cells", "Signed Photo of Hogger", "Golden Chicken (still cooked)", "Flask of the Titans",
-    "Rumsey Rum Black Label", "Nat Pagle's Business Card", "Deed to the Goldshire Inn", "Jacob's Sock Collection (no feet involved)"],
+    "Rumsey Rum Black Label", "Nat Pagle's Business Card", "Deed to the Goldshire Inn", "Jacob's Sock Collection (no feet involved)",
+    "Golden Pearl", "Black Pearl", "Shiny Bauble of Truth", "Crate of Kaj Cakes", "Onyxia's Toothbrush", "Hogger's Lucky Paw", "Gnome Cannonball Helmet", "Pocket Edition Raid Manager", "Leeroy's Spare Chicken", "Sparkling Turd (Collector's Edition)", "Barrens Chat Transcript (unabridged)", "Paladin Bubble in a Bottle"],
   epic: ["Arcanite Fishing Pole", "Nat Pagle's Extreme Angler FC-5000", "Hook of the Master Angler", "Sulfuras Fishing Rod",
     "Mount: Murloc on a Stick", "Dirty Nagatics Plushie (cursed)", "Onyxia's Lost Whelp (it bites)", "Gøj's Intellect (restored!)",
     "A Login Queue That Goes Down", "A Perfectly Timed Ready Check", "The Tank Who Never Pulls Early", "Hearthstone Without a Cooldown",
-    "Alisha's Secret Raid Notes", "Kaelisra's Lucky Dice (always 100)"],
+    "Alisha's Secret Raid Notes", "Kaelisra's Lucky Dice (always 100)",
+    "Fishing Pole of the Endless Bite", "Mount: Swift Flying Murloc", "Ring of Infinite Kaj Cakes", "Onyxia's Spare Head", "Gold Seller's Entire Inventory (bannable)", "Cloak of Never Standing in Fire", "Flask of Perfect Raid Attendance"],
   legendary: ["[Thunderfury, Blessed Blade of the Windseeker]", "[Bindings of the Windseeker] (left)", "[Bindings of the Windseeker] (right)",
     "[Sulfuras, Hand of Ragnaros]", "[Atiesh, Greatstaff of the Guardian]", "[Eye of C'Thun] (it's looking at you)",
-    "World First Kill (Dirty Tactics)", "The Mythical Fish That Is Also a Murloc", "Olympus Guild Invite (do not accept)"]
+    "World First Kill (Dirty Tactics)", "The Mythical Fish That Is Also a Murloc", "Olympus Guild Invite (do not accept)",
+    "[Ashbringer]", "[Mankrik's Wife] (finally found)", "[Hogger's Crown, King of Elwynn]"]
 };
 const TOO_EARLY = ["You pulled too early. The fish is laughing at you.", "Nothing was biting. Your line comes back with a confused snail.",
   "Patience, young angler. That was just a wave.", "You yanked the rod so hard you scared every fish in Azeroth."];
@@ -1366,12 +1794,14 @@ try {
 } catch (e) {}
 function fishStats() {
   $("fishstats").textContent = "Fishing skill: " + fishSkill + "/300 · Total catches: " + fishCaught +
-    " · Journal: " + fishJournal.size + "/" + LOOT_TOTAL;
+    " · Journal: " + journalCount() + "/" + LOOT_TOTAL;
 }
+const journalCount = () => Object.values(LOOT).flat().filter(i => fishJournal.has(i)).length;
 function renderJournal() {
   const j = $("fishjournal"); j.textContent = "";
   const c = document.createElement("div"); c.id = "jcount";
-  c.textContent = "Collected " + fishJournal.size + " / " + LOOT_TOTAL + " · " + (LOOT_TOTAL - fishJournal.size) + " missing";
+  const got = journalCount();
+  c.textContent = "Collected " + got + " / " + LOOT_TOTAL + " · " + (LOOT_TOTAL - got) + " missing";
   j.appendChild(c);
   for (const [rar, items] of Object.entries(LOOT)) {
     const h = document.createElement("h3"), ul = document.createElement("ul");
@@ -1385,13 +1815,17 @@ function renderJournal() {
     });
     j.append(h, ul);
   }
+  const h = document.createElement("h3"), ul = document.createElement("ul"), li = document.createElement("li"), has = fishJournal.has(ULTIMATE_FISH);
+  h.style.color = RARITY.artifact; h.textContent = "ultimate (" + (has ? 1 : 0) + "/1)";
+  if (has) { li.textContent = ULTIMATE_FISH; li.style.color = RARITY.artifact; } else { li.textContent = "???"; li.className = "missing"; }
+  ul.appendChild(li); j.append(h, ul);
 }
 function fishMsg(html) { $("fishmsg").innerHTML = html; }
-function splashAt(x, y) {
+function splashAt(x, y, quiet) {
   const p = $("pond"), sp = document.createElement("div");
   sp.className = "splash"; sp.style.left = x + "%"; sp.style.top = y + "%"; p.appendChild(sp);
   setTimeout(() => sp.remove(), 800);
-  if (!ctx || muted) return;
+  if (quiet || !ctx || muted) return;
   const t = ctx.currentTime, len = Math.floor(ctx.sampleRate * .35), nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
   for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
   const n = ctx.createBufferSource(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
@@ -1405,10 +1839,11 @@ function fishCast() {
   clearTimeout(fishMissT);
   bobX = 20 + Math.random() * 60; bobY = 25 + Math.random() * 50;
   const b = $("bob"); b.style.left = bobX + "%"; b.style.top = bobY + "%"; b.className = "on";
-  splashAt(bobX, bobY);
+  splashAt(bobX, bobY, playSfx("fishCast", .7));
   fishState = "waiting"; fishMsg("Waiting for a bite...");
   fishBiteT = setTimeout(() => {
-    fishState = "bite"; $("bob").className = "on bite"; splashAt(bobX, bobY); fishMsg("<b>!!!</b>");
+    fishState = "bite"; $("bob").className = "on bite";
+    splashAt(bobX, bobY, playSfx("fishBite" + (1 + Math.floor(Math.random() * 3)), .8)); fishMsg("<b>!!!</b>");
     fishMissT = setTimeout(() => { fishState = "idle"; $("bob").className = ""; fishMsg(pick(TOO_LATE)); }, 1100);
   }, 2000 + Math.random() * 7000);
 }
@@ -1420,7 +1855,9 @@ function rollLoot() {
 function fishCatch() {
   clearTimeout(fishMissT);
   fishState = "idle"; $("bob").className = "";
-  const [rar, item] = rollLoot();
+  let [rar, item] = rollLoot();
+  const ultimate = journalCount() === LOOT_TOTAL && !fishJournal.has(ULTIMATE_FISH);
+  if (ultimate) [rar, item] = ["artifact", ULTIMATE_FISH];
   fishCaught++; if (fishSkill < 300) fishSkill = Math.min(300, fishSkill + 1 + (Math.random() < .3 ? 1 : 0));
   const isNew = !fishJournal.has(item);
   fishJournal.add(item);
@@ -1430,13 +1867,17 @@ function fishCatch() {
   } catch (e) {}
   const b = document.createElement("b"); b.style.color = RARITY[rar]; b.textContent = item;
   $("fishmsg").textContent = "You caught: "; $("fishmsg").appendChild(b);
-  if (isNew) $("fishmsg").append(" · New journal entry!");
+  if (ultimate) $("fishmsg").append(" · ULTIMATE CATCH! You have fished up literally everything.");
+  else if (isNew) $("fishmsg").append(" · New journal entry!");
   const li = document.createElement("li"); li.style.color = RARITY[rar]; li.textContent = item;
   $("fishlog").prepend(li);
   fishStats(); renderJournal();
   const ladder = { poor: 1, common: 2, uncommon: 3, rare: 4, epic: 5, legendary: 6 }[rar];
+  if (rar === "legendary" || rar === "artifact") {
+    const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
+    if (playSfx("legendary", .6)) return;
+  }
   if (ctx && !muted) [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", ctx.currentTime + i * .08, .5, .07));
-  if (rar === "legendary") { const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on"); }
 }
 $("pond").addEventListener("click", () => {
   if (fishState === "idle") fishCast();
@@ -1457,6 +1898,983 @@ function closeFishing() {
 $("fishclose").addEventListener("click", closeFishing);
 $("fish").addEventListener("click", e => { if (e.target.id === "fish") closeFishing(); });
 $("fishspot").addEventListener("click", openFishing);
+
+// ---------- Achievements: every easter egg is one. Toast when found, list behind the egg counter ----------
+const ACH_NAMES = {
+  forever: "Darude Sandstorm", disco: "Dirty Disco", thunderfury: "Did Someone Say...?", murloc: "Mrglglglgl",
+  raid: "Raid Leader (Allegedly)", olympus: "Do Not Type That Name", fusion: "Fusion HA!", hearth: "Home Sweet Goldshire",
+  login: "Position in Queue: Yes", leeroy: "At Least I Have Chicken", fishing: "Gone Fishin'",
+  barrens: "Where Is Mankrik's Wife?", dance: "The Floor Is Yours", reload: "99.999...%", duel: "Honorable Defeat",
+  onyxia: "Deep Breath", hogger: "Hogger-Tier", mail: "You've Got Mail", gnome: "Gnomeregan Air Force",
+  offer: "Best Value Ever", vault: "Saucy Vault", bolt: "Elementary, My Dear Mage", fire: "Fire Resistance Is Futile"
+};
+let achTimer = null;
+function achievementToast(id) {
+  $("achname").textContent = ACH_NAMES[id] || id;
+  const t = $("achtoast"); t.classList.add("on");
+  clearTimeout(achTimer); achTimer = setTimeout(() => t.classList.remove("on"), 4500);
+  if (!playSfx("achievement", .3) && ctx && !muted)
+    [[659.3, 0], [784, .1], [987.8, .2], [1318.5, .32]].forEach(([f, d]) => tone(f, "triangle", ctx.currentTime + d, .7, .07));
+}
+function openAchievements() {
+  const list = $("achitems"); list.textContent = "";
+  $("achhead").textContent = "Achievements " + eggsFound.size + " / " + EGGS.length;
+  const hint = Object.fromEntries(HINTS);
+  EGGS.forEach(id => {
+    const got = eggsFound.has(id), row = document.createElement("div"), ico = document.createElement("div"),
+          txt = document.createElement("div"), b = document.createElement("b"), sp = document.createElement("span");
+    row.className = "ach" + (got ? "" : " locked"); ico.className = "ico"; ico.textContent = got ? "🏆" : "🔒";
+    b.textContent = got ? ACH_NAMES[id] : "???"; sp.textContent = got ? hint[id] : "???";
+    txt.append(b, sp); row.append(ico, txt); list.appendChild(row);
+  });
+  $("achlist").classList.add("on");
+}
+$("eggcount").addEventListener("click", openAchievements);
+$("achclose").addEventListener("click", () => $("achlist").classList.remove("on"));
+$("achlist").addEventListener("click", e => { if (e.target.id === "achlist") $("achlist").classList.remove("on"); });
+
+// ---------- Easter egg: type "barrens" -> classic Barrens chat ----------
+const BARRENS_LINES = [
+  "Where is Mankrik's wife?", "Mankrik's wife is in the same place as my motivation: nowhere.", "WTB Mankrik's wife, paying 5g",
+  "Mankrik's wife was last seen near the Crossroads. Running away from Mankrik.", "LF1M Wailing Caverns, need heals, must know where Mankrik's wife is",
+  "Chuck Norris doesn't use a hearthstone. Azeroth moves to him.", "Chuck Norris made a Happy Meal cry.",
+  "Chuck Norris can solo Onyxia. With a fishing pole.", "Chuck Norris doesn't release spirit. The spirit healer releases him.",
+  "Chuck Norris counted to infinity. Twice.", "Chuck Norris's login queue goes down.", "Chuck Norris found Mankrik's wife. She asked him for directions.",
+  "how do i get to the crossroads", "follow the road until it crosses. then you're at the crossroads", "anyone know where Lakeshire is?", "wrong continent mate",
+  "LF group raptor heads, 3/12, been here since launch", "plainstrider beaks drop rate is 1%, change my mind",
+  "Kodo or kodon't?", "my tauren friend got stuck in the barn again. moo.", "Why is it called the Barrens? Because it's barren of anyone who knows where Mankrik's wife is",
+  "harpies stole my lunch again", "Barrens chat > Trade chat, fight me", "Is this the real Barrens? Is this just fantasy?",
+  "who is the crossroads flight master and why does he look so tired", "Did someone say [Thunderfury, Blessed Blade of the Windseeker]?",
+  "lol", "Barrens chat is the reason Blizzard invented /leave", "ok who keeps pulling the centaurs into the Crossroads",
+  "Mankrik: \"Have you seen my wife?\" Me, 400 hours later: \"no\""
+].map(t => [t]);
+function barrens() {
+  const lines = BARRENS_LINES.slice().sort(() => Math.random() - .5).slice(0, 12);
+  if (chatBurst("[1. General - The Barrens]", "#ffc0a0", lines, 650)) foundEgg("barrens");
+}
+
+// ---------- Easter egg: type "dance" -> the countdown dances to a little beat ----------
+let dancing = false;
+function beat(t, kick) {
+  if (kick) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(40, t + .15);
+    g.gain.setValueAtTime(.8, t); g.gain.exponentialRampToValueAtTime(.0001, t + .2);
+    o.connect(g); out(g, false); o.start(t); o.stop(t + .22);
+  }
+  const len = Math.floor(ctx.sampleRate * .05), nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
+  for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
+  const n = ctx.createBufferSource(), hp = ctx.createBiquadFilter(), g2 = ctx.createGain();
+  n.buffer = nb; hp.type = "highpass"; hp.frequency.value = 7000; g2.gain.setValueAtTime(.15, t); g2.gain.exponentialRampToValueAtTime(.0001, t + .05);
+  n.connect(hp).connect(g2); out(g2, false); n.start(t);
+}
+function dance() {
+  if (dancing) return;
+  dancing = true; foundEgg("dance");
+  document.body.classList.add("dancing");
+  if (ctx && !muted) {
+    pauseBg();
+    const t0 = ctx.currentTime + .05, bass = [110, 110, 146.8, 130.8];
+    for (let i = 0; i < 32; i++) {
+      const t = t0 + i * .25; beat(t, i % 2 === 0);
+      if (i % 2 === 0) tone(bass[(i / 2) % 4 | 0], "square", t, .2, .05);
+    }
+  }
+  setTimeout(() => { document.body.classList.remove("dancing"); dancing = false; resumeBg(); }, 8000);
+}
+
+// ---------- Easter egg: type "reload" -> loading screen stuck at 99.999...% ----------
+let rlTimer = null;
+function openReload() {
+  foundEgg("reload");
+  const pct = $("rlpct"), fill = $("rlfill");
+  $("rltip").textContent = "Tip: " + pick(TIPS);
+  $("reload").classList.add("on");
+  let p = 0, nines = 0;
+  clearInterval(rlTimer);
+  rlTimer = setInterval(() => {
+    if (p < 99) {
+      p = Math.min(99, p + 1 + Math.random() * 4);
+      pct.textContent = "Reloading UI... " + Math.floor(p) + "%";
+      fill.style.width = p + "%";
+      if (p >= 99) { clearInterval(rlTimer); rlTimer = setInterval(moreNines, 1500); }
+    }
+  }, 70);
+  function moreNines() {
+    nines++;
+    pct.textContent = "Reloading UI... 99." + "9".repeat(nines) + "%";
+    fill.style.width = (100 - Math.pow(10, -nines)) + "%";
+  }
+}
+$("reload").addEventListener("click", () => { clearInterval(rlTimer); $("reload").classList.remove("on"); });
+
+// ---------- Easter egg: random duel request after a few minutes on the page ----------
+let duelTimer = null, duelHide = null, dueler = "";
+function scheduleDuel() {
+  clearTimeout(duelTimer);
+  duelTimer = setTimeout(duelRequest, (3 + Math.random() * 3) * 60000);
+}
+function duelRequest() {
+  if (anyOverlay() || $("duel").classList.contains("on")) { scheduleDuel(); return; }
+  dueler = pick(GUILD);
+  $("duelq").textContent = dueler + " has challenged you to a duel.";
+  $("duel").classList.add("on");
+  if (ctx && !muted) tone(880, "triangle", ctx.currentTime, .3, .06);
+  clearTimeout(duelHide);
+  duelHide = setTimeout(() => { $("duel").classList.remove("on"); scheduleDuel(); }, 30000);
+}
+function duelText(text, small, ms) {
+  const d = $("dueltxt"); d.textContent = text; d.className = "on" + (small ? " small" : "");
+  setTimeout(() => { if (d.textContent === text) d.className = ""; }, ms);
+}
+$("dueln").addEventListener("click", () => {
+  clearTimeout(duelHide); $("duel").classList.remove("on"); foundEgg("duel");
+  ["3", "2", "1"].forEach((n, i) => setTimeout(() => { duelText(n, false, 900); playSfx("countdown", .7); }, i * 1000));
+  setTimeout(() => duelText("DUEL!", false, 900), 3000);
+  setTimeout(() => {
+    duelText(dueler + " has defeated you in a duel.", true, 4000);
+    if (ctx && !muted) sadTrombone();
+  }, 4200);
+});
+$("duelx").addEventListener("click", () => {
+  clearTimeout(duelHide); $("duel").classList.remove("on"); foundEgg("duel");
+  // the challenger complains in General chat (one line, from them)
+  const who = TF_NAMES.find(([n]) => n === dueler) || [dueler, "#fff"];
+  setTimeout(() => {
+    if (tfOn) return;
+    tfOn = true; $("tfchat").textContent = ""; $("tfchat").classList.add("on");
+    chatLine("[1. General - Stormwind City]", "#ffc0a0",
+      [pick(["you declined my duel. coward.", "scared? thought so.", "declining duels is a sign of weakness. just saying."])], who);
+    setTimeout(() => $("tfchat").classList.remove("on"), 5000);
+    setTimeout(() => { $("tfchat").textContent = ""; tfOn = false; }, 5600);
+  }, 600);
+});
+
+// ---------- Easter egg: click "World of Warcraft:" 3x -> Onyxia's Deep Breath ----------
+let onyClicks = 0, onyClickT = null, onyBusy = false;
+$("onytrig").addEventListener("click", () => {
+  clearTimeout(onyClickT); onyClickT = setTimeout(() => { onyClicks = 0; }, 1500);
+  if (++onyClicks >= 3) { onyClicks = 0; deepBreath(); }
+});
+function deepBreath() {
+  if (onyBusy) return;
+  onyBusy = true; foundEgg("onyxia");
+  const box = $("onyxia"), img = $("onyimg"), fire = $("onyfire"), emote = $("onyemote"), glow = $("onyglow");
+  box.className = "on"; emote.classList.add("on");
+  setTimeout(() => box.classList.add("in"), 300);
+  setTimeout(() => {
+    // the fire starts at her mouth (about 87% across, 56% down the image) and runs to the right edge
+    const r = img.getBoundingClientRect(), mx = r.left + r.width * .87, my = r.top + r.height * .56;
+    fire.style.left = mx + "px"; fire.style.top = my + "px"; fire.style.width = (innerWidth - mx + 80) + "px";
+    fire.className = "on"; glow.classList.add("on"); emote.classList.remove("on");
+    if (!playSfx("breath", .7)) whoosh(200, 3000, 2.5);
+  }, 1700);
+  setTimeout(() => document.body.classList.add("charred"), 2100);
+  setTimeout(() => { fire.className = "out"; glow.classList.remove("on"); box.classList.remove("in"); }, 4700);
+  setTimeout(() => { box.className = ""; fire.className = ""; onyBusy = false; }, 5900);
+  setTimeout(() => document.body.classList.remove("charred"), 8500);
+}
+
+// ---------- Easter egg: Hogger wanders along the bottom every few minutes; click him and he kills you ----------
+let hogTimer = null, hogWalk = null, hogFrame = null, hogX = 0, hogDead = false;
+function scheduleHogger(ms) {
+  clearTimeout(hogTimer);
+  hogTimer = setTimeout(hoggerWalk, ms || (2 + Math.random() * 3) * 60000);
+}
+function hoggerWalk() {
+  const h = $("hogger");
+  if (anyOverlay() || hogDead || document.hidden) { scheduleHogger(); return; }
+  h.src = "img/hogger_walk1.webp"; h.style.transform = ""; h.classList.add("on");
+  hogX = innerWidth + 20; let f = 0, last = performance.now();
+  clearInterval(hogFrame);
+  hogFrame = setInterval(() => { f ^= 1; h.src = f ? "img/hogger_walk2.webp" : "img/hogger_walk1.webp"; }, 260);
+  clearInterval(hogWalk);
+  hogWalk = setInterval(() => {
+    const now = performance.now(); hogX -= (now - last) * .07; last = now;   // ~70 px per second, right to left
+    h.style.left = hogX + "px";
+    if (hogX < -h.offsetWidth - 20) hoggerGone();
+  }, 30);
+}
+function hoggerGone() {
+  clearInterval(hogWalk); clearInterval(hogFrame);
+  $("hogger").classList.remove("on");
+  scheduleHogger();
+}
+$("hogger").addEventListener("click", () => {
+  if (hogDead) return;
+  hogDead = true;
+  clearInterval(hogWalk); clearInterval(hogFrame);
+  const h = $("hogger");
+  playSfx("gnollAggro", .7);
+  h.src = "img/hogger_attack.webp"; h.style.transform = "scaleX(-1)";   // the attack pose faces right; mirror it to face the player
+  setTimeout(() => {
+    if (!playSfx("gnollAttack", .8) && ctx && !muted) beat(ctx.currentTime, true);
+    const rf = $("redflash"); rf.classList.remove("on"); void rf.offsetWidth; rf.classList.add("on");
+  }, 550);
+  setTimeout(() => {
+    h.classList.remove("on");
+    foundEgg("hogger");
+    document.body.classList.add("dead");
+    $("deathtitle").textContent = "You have died. Release spirit to enter Ghost Mode.";
+    $("deathbtn").textContent = "Release Spirit"; $("recapbtn").style.display = "";
+    buildRecap();
+    $("deathbox").classList.add("on");
+    if (!playSfx("wipe", .6) && ctx && !muted) sadTrombone();
+  }, 1300);
+});
+// Death Recap: the last 5 hits that killed you (the last one is the killing blow)
+const RECAP_HITS = [
+  ["🗡️", "Melee", "Hogger"], ["🦷", "Bite", "Hogger"], ["🐾", "Melee", "Riverpaw Gnoll"], ["💢", "Hogger Smash", "Hogger"],
+  ["🤗", "Hogger Hug", "Hogger"], ["🍖", "Thrown Ham", "Hogger"], ["😤", "Disrespect", "Hogger"], ["🐕", "Bite", "Riverpaw Mongrel"],
+  ["🥾", "Kick", "Hogger"], ["🌲", "Existential Dread", "Elwynn Forest"], ["📣", "Battle Shout (very loud)", "Hogger"],
+  ["🪵", "Stick", "Riverpaw Gnoll"]
+];
+const RECAP_KILL = [["💀", "HOGGER!", "Hogger"], ["⚔️", "Hogger Takes Your Lunch", "Hogger"], ["🔥", "Ultimate Hogger Combo", "Hogger"],
+  ["👑", "Elwynn Forest Supremacy", "Hogger"]];
+function buildRecap() {
+  const rows = $("recaprows"); rows.textContent = "";
+  shuffle(RECAP_HITS).slice(0, 4).map(h => [h, false]).concat([[pick(RECAP_KILL), true]]).forEach(([[ico, name, src], kill]) => {
+    const r = document.createElement("div"), a = document.createElement("div"), i = document.createElement("div"), t = document.createElement("div"),
+          b = document.createElement("b"), sm = document.createElement("small");
+    r.className = "rrow" + (kill ? " kill" : ""); a.className = "amt"; i.className = "ico";
+    a.textContent = "-" + (kill ? 2400 + Math.floor(Math.random() * 7000) : 900 + Math.floor(Math.random() * 1100));
+    i.textContent = ico; b.textContent = name; sm.textContent = src;
+    t.append(b, sm); r.append(a, i, t); rows.appendChild(r);
+  });
+}
+$("recapbtn").addEventListener("click", () => $("recap").classList.toggle("on"));
+["recapx", "recapclose"].forEach(id => $(id).addEventListener("click", () => $("recap").classList.remove("on")));
+$("deathbtn").addEventListener("click", () => {
+  $("recap").classList.remove("on");
+  if (document.body.classList.contains("ghost")) {   // second dialog: resurrect
+    $("deathbox").classList.remove("on");
+    document.body.classList.remove("ghost", "dead");
+    $("corpse").classList.remove("on"); $("ghostmsg").classList.remove("on");
+    if (ctx && !muted) [523.3, 659.3, 784, 1046.5].forEach((f, i) => tone(f, "sine", ctx.currentTime + i * .12, 1.2, .08));
+    hogDead = false; scheduleHogger();
+    return;
+  }
+  // release spirit: become a ghost and run back to the corpse
+  $("deathbox").classList.remove("on");
+  document.body.classList.remove("dead"); document.body.classList.add("ghost");
+  const c = $("corpse"); c.style.left = (15 + Math.random() * 70) + "vw"; c.style.top = (30 + Math.random() * 50) + "vh"; c.classList.add("on");
+  $("ghostmsg").classList.add("on");
+});
+function reachCorpse() {
+  if (!$("corpse").classList.contains("on") || $("deathbox").classList.contains("on")) return;
+  $("corpse").classList.remove("on"); $("ghostmsg").classList.remove("on");
+  $("deathtitle").textContent = "Resurrect now? Hogger is still out there.";
+  $("deathbtn").textContent = "Accept"; $("recapbtn").style.display = "none"; $("deathbox").classList.add("on");
+}
+$("corpse").addEventListener("click", reachCorpse);
+addEventListener("pointermove", e => {
+  const c = $("corpse");
+  if (!c.classList.contains("on")) return;
+  const r = c.getBoundingClientRect();
+  if (Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2)) < 45) reachCorpse();
+});
+
+// ---------- Easter egg: tiny hidden mailbox -> inbox with 3-4 letters plus a gold seller on top ----------
+const LETTERS = [
+  { from: "Kat", sub: "Danish delivery", ico: "🥐", body: "Here is the danish I promised.\n\nDo not ask where it has been.\n\n- Kat", att: [["🥐", 1]] },
+  { from: "Esports", sub: "Stream snacks", ico: "🍿", body: "These snacks were on stream.\nThat makes them collector's items now.\n\nCOD is non-negotiable.", att: [["🍿", 3]], cod: 500 },
+  { from: "Andre", sub: "Raid strategy v17 (final) (final2)", ico: "📜", body: "Stand where I told you.\n\nNo, the other where.\n\nActually just stand next to me and do what I do.", att: [["📜", 1]] },
+  { from: "Gøj", sub: "my intellect", ico: "✉️", body: "has anyone seen my intellect\n\nlast seen when i grouped with Ulaw\n\nreward: 1 copper" },
+  { from: "Ulaw", sub: "re: my intellect", ico: "✉️", body: "No." },
+  { from: "Noah", sub: "I got you!", ico: "✉️", body: "I got you!\n\n(I did not get you.)" },
+  { from: "Chi", sub: "Your loot from last raid", ico: "🪨", body: "Here's your loot from last raid.\n\nI took a small handling fee of 100%.\nWhat's left is attached.", att: [["🪨", 1]] },
+  { from: "Amy", sub: "Paladeeeeeeeeen", ico: "🛡️", body: "Paladeeeeeeeeeeeeeeeeeeen.", att: [["🛡️", 1]] },
+  { from: "Jacob", sub: "Your socks", ico: "🧦", body: "Returning your socks.\n\nNot because of feet.\nI swear.", att: [["🧦", 2]] },
+  { from: "Alisha", sub: "Raid notes", ico: "📜", body: "Notes from last raid:\n\n- wiped\n- wiped\n- wiped\n- pizza\n- wiped\n- called it", att: [["📜", 1]] },
+  { from: "Johny", sub: "Found your headset", ico: "🎧", body: "Found your headset in Goldshire.\nIt was playing tavern music all by itself.\n\nSpooky.", att: [["🎧", 1]] },
+  { from: "Andy", sub: "One (1) Kaj cake", ico: "🍰", body: "One Kaj cake, freshly baked in 2019.\n\nStill good. Probably.", att: [["🍰", 1]], cod: 5000 },
+  { from: "Avemae", sub: "Yellow", ico: "🟡", body: "Yellow is a good number.\n\nAttached: more yellow.", att: [["🟡", 7]] },
+  { from: "Dre", sub: "Repair bill", ico: "🧾", body: "You owe the guild bank 243g for the Onyxia wipe.\n\nI did the math. It's 243.\nI did the math twice.", att: [["🧾", 1]], cod: 243 },
+  { from: "Yil", sub: "Look what I caught", ico: "🐟", body: "Caught this in Elwynn Forest.\n\nIt looks like Andre.", att: [["🐟", 1]] },
+  { from: "Kybris", sub: "about your mail", ico: "✉️", body: "I rolled Need on your mail.\n\nSorry.\n\nThis is all that's left." },
+  { from: "Levi", sub: "Got you a mount!", ico: "🐢", body: "Bought you a mount!\n\nIt's a turtle.\nIt's very slow. Like your DPS.", att: [["🐢", 1]] },
+  { from: "Joe", sub: "hi from account 13", ico: "✉️", body: "Logging in on my 13th account just to say hi.\n\nHi.\n\n(Account 14 says hi too.)" },
+  { from: "Kaelisra", sub: "Lucky dice", ico: "🎲", body: "These dice always roll 100.\n\nUse them wisely. Preferably on my loot.", att: [["🎲", 2]] },
+  { from: "Sab", sub: "Moustache (borrowed)", ico: "🥸", body: "Lent you my spare moustache for the raid.\n\nPlease return it washed.", att: [["🥸", 1]] },
+  { from: "Hogger", sub: "HOGGER HUNGRY", ico: "🍖", body: "HOGGER HUNGRY.\n\nSEND FOOD.\n\nOR HOGGER COME TO YOU.", cod: 1 },
+  { from: "Mankrik", sub: "Have you seen my wife?", ico: "✉️", body: "Still looking.\n\nShe said she was going to the Crossroads.\nThat was in 2004.\n\nPlease write back." },
+  { from: "Leeroy Jenkins", sub: "Chicken", ico: "🍗", body: "At least I have chicken.\n\nNow you do too.", att: [["🍗", 1]] },
+  { from: "Blizzard Entertainment", sub: "Your login position", ico: "✉️", body: "Dear adventurer,\n\nyour position in queue is 4,231.\nEstimated time: 7 years.\n\nThank you for your patience." }
+];
+let mailItems = [], mailSel = null, errT = null;
+function uiError(text) {
+  const e = $("uierr"); e.textContent = text; e.classList.add("on");
+  clearTimeout(errT); errT = setTimeout(() => e.classList.remove("on"), 2200);
+  if (ctx && !muted) tone(220, "square", ctx.currentTime, .15, .04);
+}
+function goldSeller() {
+  const name = "Xk" + Math.random().toString(36).slice(2, 7) + "zq";
+  return { from: name.charAt(0).toUpperCase() + name.slice(1), sub: "CHEAP GOLD 100% SAFE!!! FREE SAMPLE", ico: "💰", seller: true,
+    body: "W0W G0LD 4 SALE!!!\n\n10.000g only 5$ !!!\n100% SAFE, NO BAN, FAST DELIVERY 5 MIN\n\nvisit w w w . g0ldf4st . c0m\n\nFREE SAMPLE ATTACHED, ENJOY!!!",
+    att: [["💰", "5000g"]] };
+}
+function openMail() {
+  foundEgg("mail");
+  mailItems = [goldSeller()].concat(LETTERS.slice().sort(() => Math.random() - .5).slice(0, 3 + Math.floor(Math.random() * 2)));
+  const list = $("mlist"); list.textContent = "";
+  mailItems.forEach((m, i) => {
+    const row = document.createElement("div"), ck = document.createElement("div"), ico = document.createElement("div"),
+          tx = document.createElement("div"), fr = document.createElement("div"), sb = document.createElement("div"), dy = document.createElement("div");
+    row.className = "mrow" + (m.cod ? " cod" : ""); ck.className = "mcheck"; ico.className = "mico"; ico.textContent = m.ico;
+    tx.className = "mtext"; fr.className = "mfrom"; fr.textContent = m.from; sb.className = "msub"; sb.textContent = m.sub;
+    dy.className = "mdays"; dy.textContent = m.cod ? "COD" : (m.seller ? "3 Days" : "30 Days");
+    tx.append(fr, sb); row.append(ck, ico, tx, dy);
+    row.addEventListener("click", () => showLetter(i));
+    list.appendChild(row);
+  });
+  for (let i = mailItems.length; i < 7; i++) { const e = document.createElement("div"); e.className = "mrow empty"; list.appendChild(e); }
+  showLetter(0);
+  $("mail").classList.add("on");
+  if (ctx && !muted) tone(1046.5, "triangle", ctx.currentTime, .3, .05);
+}
+function showLetter(i) {
+  mailSel = mailItems[i];
+  [...$("mlist").children].forEach((r, k) => r.classList.toggle("sel", k === i));
+  $("mfrom").textContent = mailSel.from; $("msub").textContent = mailSel.sub; $("mbody").textContent = mailSel.body;
+  const att = $("matt"); att.textContent = "";
+  if (mailSel.cod) { const c = document.createElement("span"); c.id = "mcod"; c.textContent = "COD: " + mailSel.cod.toLocaleString("en-US") + "g"; att.appendChild(c); }
+  (mailSel.att || []).forEach(([ico, n]) => {
+    const a = document.createElement("div"), sm = document.createElement("small");
+    a.className = "mico"; a.textContent = ico; sm.textContent = n; a.appendChild(sm);
+    a.addEventListener("click", takeAttachments); att.appendChild(a);
+  });
+  if (!mailSel.att && !mailSel.cod) { const n = document.createElement("span"); n.style.color = "#888"; n.textContent = "No attachments."; att.appendChild(n); }
+}
+function takeAttachments() {
+  if (!mailSel) return;
+  if (mailSel.seller) { playSfx("coin", .8); setTimeout(banned, 700); return; }
+  if (mailSel.cod) { uiError("You can't afford this. You have 3 copper."); return; }
+  if (!mailSel.att) { uiError("There's nothing to take."); return; }
+  uiError("Inventory is full.");
+}
+function banned() {
+  $("mail").classList.remove("on");
+  $("ban").classList.add("on");
+  pauseBg();
+  if (ctx && !muted) [196, 185, 175, 147].forEach((f, i) => tone(f, "sawtooth", ctx.currentTime + i * .35, .5, .06));
+}
+const closeMail = () => $("mail").classList.remove("on");
+$("mailicon").addEventListener("click", openMail);
+["mclose", "mclose2", "mclose3"].forEach(id => $(id).addEventListener("click", closeMail));
+$("mail").addEventListener("click", e => { if (e.target.id === "mail" || e.target.classList.contains("mwrap")) closeMail(); });
+$("mtake").addEventListener("click", takeAttachments);
+$("mgetall").addEventListener("click", () => { mailSel = mailItems[0]; showLetter(0); takeAttachments(); });
+$("mmark").addEventListener("click", () => uiError("Marked all as read. Nobody cares."));
+$("mreply").addEventListener("click", () => uiError("Reply sent. They will not read it."));
+$("mreturn").addEventListener("click", () => uiError("Returned to sender. They're offended now."));
+$("mspam").addEventListener("click", () => uiError("Reported. Nothing will happen."));
+$("mprev").addEventListener("click", () => uiError("You are already on the first page."));
+$("mnext").addEventListener("click", () => uiError("There is no next page. You have no friends."));
+$("banok").addEventListener("click", () => { $("ban").classList.remove("on"); resumeBg(); });
+
+// ---------- Easter egg: gnome punting minigame ----------
+// Click to lock the swinging angle, click again to lock the power, the orc kicks. Mines and jetpack goblins keep him going.
+const PUNT_IMG = {};
+["gnome_stand", "gnome_fly", "gnome_lying", "orc_idle", "orc_kick", "goblin_jetpack", "mine"].forEach(n => {
+  const im = new Image(); im.src = "img/" + n + ".webp"; PUNT_IMG[n] = im;
+});
+const PUNT_COMMENTS = [[50, "That's not a punt, that's a nudge."], [150, "The gnome is mildly inconvenienced."],
+  [300, "Respectable. The gnome disagrees."], [600, "Gnomeregan Air Force wants to recruit him."], [1e9, "He's still filing the complaint."]];
+let pcv, pc, PW = 0, PH = 0, pState = "off", pT = 0, pAngle = 45, pPower = .5, pLast = 0, pRaf = null;
+let pG = null, pOrcKick = 0, pBoost = [], pFx = [], pMsg = "", pMsgT = 0, pCarry = 0, pCarrier = null, pBest = 0;
+try { pBest = +localStorage.getItem("gnomeBest") || 0; } catch (e) {}
+const GROUND = () => PH - 46;
+const yards = px => Math.max(0, Math.round(px / 10));
+function puntSize() {
+  const dpr = window.devicePixelRatio || 1, r = pcv.getBoundingClientRect();
+  PW = r.width; PH = r.height; pcv.width = PW * dpr; pcv.height = PH * dpr; pc.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+function puntReset() {
+  pState = "angle"; pT = 0; pOrcKick = 0; pCarry = 0; pCarrier = null; pFx = []; pMsg = "";
+  pG = { x: 150, y: GROUND(), vx: 0, vy: 0, rot: 0, start: 150 };
+  // boosters along the track: mines on the ground, jetpack goblins in the air
+  pBoost = [];
+  for (let x = 700; x < 60000; x += 650 + Math.random() * 900) pBoost.push({ t: "mine", x, y: GROUND(), used: false });
+  for (let x = 1100; x < 60000; x += 1100 + Math.random() * 1600) pBoost.push({ t: "goblin", x, y: GROUND() - 110 - Math.random() * 170, used: false, ph: Math.random() * 6 });
+  $("puntscore").classList.remove("on");
+}
+function openPunt() {
+  foundEgg("gnome");
+  $("punt").classList.add("on");
+  pcv = $("puntcv"); pc = pcv.getContext("2d");
+  puntSize(); puntReset();
+  pLast = performance.now(); cancelAnimationFrame(pRaf); pRaf = requestAnimationFrame(puntLoop);
+}
+function closePunt() { $("punt").classList.remove("on"); pState = "off"; cancelAnimationFrame(pRaf); }
+function puntFlash(text) { pMsg = text; pMsgT = 1600; }
+function boom() {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+  o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(30, t + .5);
+  g.gain.setValueAtTime(1, t); g.gain.exponentialRampToValueAtTime(.0001, t + .6);
+  o.connect(g); out(g, true); o.start(t); o.stop(t + .65);
+  whoosh(3000, 300, .6);
+}
+function puntClick() {
+  if (pState === "angle") { pState = "power"; pT = 0; }
+  else if (pState === "power") {
+    // kick! power 0..1 maps to launch speed, angle in degrees above the ground
+    pState = "fly"; pOrcKick = 450;
+    const v = 7 + pPower * 23, a = pAngle * Math.PI / 180;
+    pG.vx = v * Math.cos(a); pG.vy = -v * Math.sin(a); pG.y -= 2;
+    if (!playSfx("gnomeKick", .8) && ctx && !muted) beat(ctx.currentTime, true);
+  }
+}
+function puntLand() {
+  pState = "land";
+  setTimeout(() => {
+    if (pState !== "land") return;
+    pState = "done";
+    const d = yards(pG.x - pG.start), rec = d > pBest;
+    if (rec) { pBest = d; try { localStorage.setItem("gnomeBest", d); } catch (e) {} }
+    $("puntdist").textContent = d + " yards";
+    $("puntrec").textContent = rec ? "New personal record!" : "";
+    $("puntbest").textContent = "Personal best: " + pBest + " yards";
+    $("puntcomment").textContent = PUNT_COMMENTS.find(([lim]) => d < lim)[1];
+    $("puntscore").classList.add("on");
+    playSfx("gnomePissed" + (1 + Math.floor(Math.random() * 4)), .8);
+  }, 900);
+}
+function puntStep(dt) {
+  pT += dt;
+  if (pState === "angle") pAngle = 10 + 70 * (.5 + .5 * Math.sin(pT * .045));
+  if (pState === "power") pPower = Math.abs(((pT * .022) % 2) - 1);        // triangle wave 0..1..0
+  if (pOrcKick > 0) pOrcKick -= dt * 16.7;
+  if (pState === "fly") {
+    const g = pG, gy = GROUND();
+    if (pCarry > 0) {                         // a jetpack goblin is carrying him
+      pCarry -= dt * 16.7;
+      g.vx = 13; g.vy = Math.sin(pT * .1) * .6 - .4;
+      if (pCarry <= 0) { g.vx = 12; g.vy = -6; pCarrier = null; }
+    } else {
+      g.vy += .33 * dt; g.vx *= Math.pow(.999, dt);
+    }
+    g.x += g.vx * dt; g.y += g.vy * dt; g.rot += g.vx * .02 * dt;
+    if (pCarrier) { pCarrier.x = g.x; pCarrier.y = g.y - 55; }
+    for (const b of pBoost) {
+      if (b.used || Math.abs(b.x - g.x) > 60) continue;
+      if (b.t === "mine" && g.y > gy - 30 && Math.abs(b.x - g.x) < 34) {
+        b.used = true; g.vy = -(11 + Math.random() * 6); g.vx += 5; puntFlash("BOOM! Goblin land mine!"); boom();
+        for (let i = 0; i < 30; i++) pFx.push({ x: b.x, y: gy - 10, vx: (Math.random() - .5) * 9, vy: -Math.random() * 9, life: 40 + Math.random() * 30 });
+      }
+      if (b.t === "goblin" && pCarry <= 0 && Math.hypot(b.x - g.x, b.y - (g.y - 30)) < 60) {
+        b.used = true; pCarry = 1500; pCarrier = b; puntFlash("Goblin taxi! Hold on tight!"); whoosh(400, 1400, 1.4);
+      }
+    }
+    if (g.y >= gy) {                           // bounce, then roll out
+      g.y = gy;
+      if (g.vy > 3) { g.vy = -g.vy * .42; g.vx *= .72; }
+      else {
+        if (!g.thud) { g.thud = true; playSfx("gnomeDeath", .8); }
+        g.vy = 0; g.vx *= Math.pow(.9, dt);
+      }
+      if (g.vy === 0 && g.vx < .3) puntLand();
+    }
+  }
+  pFx = pFx.filter(p => (p.life -= dt) > 0);
+  pFx.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.vy += .3 * dt; });
+  if (pMsgT > 0) pMsgT -= dt * 16.7;
+}
+function drawImg(name, x, y, h, rot) {      // x,y = bottom centre of the sprite
+  const im = PUNT_IMG[name]; if (!im.complete || !im.naturalWidth) return;
+  const w = h * im.naturalWidth / im.naturalHeight;
+  pc.save(); pc.translate(x, y - h / 2); if (rot) pc.rotate(rot); pc.drawImage(im, -w / 2, -h / 2, w, h); pc.restore();
+}
+function puntDraw() {
+  const gy = GROUND(), camX = Math.max(0, pG.x - PW * .35);
+  const sky = pc.createLinearGradient(0, 0, 0, PH);
+  sky.addColorStop(0, "#1b2a4a"); sky.addColorStop(.7, "#6a4a5a"); sky.addColorStop(1, "#c9845a");
+  pc.fillStyle = sky; pc.fillRect(0, 0, PW, PH);
+  // far mountains (parallax)
+  pc.fillStyle = "#2b2f45"; pc.beginPath(); pc.moveTo(0, gy);
+  for (let sx = 0; sx <= PW + 40; sx += 40) {
+    const wx = sx + camX * .3; pc.lineTo(sx, gy - 70 - 45 * Math.sin(wx * .006) - 25 * Math.sin(wx * .017));
+  }
+  pc.lineTo(PW, gy); pc.fill();
+  // ground with yard markers every 50 yards
+  pc.fillStyle = "#4a6b2a"; pc.fillRect(0, gy, PW, 8); pc.fillStyle = "#5a3b1e"; pc.fillRect(0, gy + 8, PW, PH - gy);
+  pc.fillStyle = "#e8d9b0"; pc.font = "12px Arial"; pc.textAlign = "center";
+  for (let m = Math.floor((camX - pG.start) / 500) * 500; m < camX + PW; m += 500) {
+    const sx = m + pG.start - camX; if (m <= 0) continue;
+    pc.fillRect(sx - 1, gy, 2, 14); pc.fillText(yards(m) + " yd", sx, gy + 30);
+  }
+  pc.save(); pc.translate(-camX, 0);
+  for (const b of pBoost) {
+    if (b.x < camX - 100 || b.x > camX + PW + 100) continue;
+    if (b.t === "mine" && !b.used) drawImg("mine", b.x, gy + 4, 34);
+    if (b.t === "goblin" && b !== pCarrier && !b.used) drawImg("goblin_jetpack", b.x, b.y + Math.sin(pT * .06 + b.ph) * 8, 70);
+  }
+  drawImg(pOrcKick > 0 ? "orc_kick" : "orc_idle", 70, gy, 150);
+  if (pCarrier) drawImg("goblin_jetpack", pCarrier.x, pCarrier.y + 10, 70);
+  if (pState === "angle" || pState === "power") {
+    drawImg("gnome_stand", pG.x, gy, 70);
+    // aim arrow
+    const a = pAngle * Math.PI / 180, len = 50 + (pState === "power" ? pPower : .4) * 90, ox = pG.x + 10, oy = gy - 40;
+    pc.strokeStyle = "#ffd100"; pc.lineWidth = 4; pc.beginPath(); pc.moveTo(ox, oy);
+    pc.lineTo(ox + Math.cos(a) * len, oy - Math.sin(a) * len); pc.stroke();
+  } else if (pState === "fly") drawImg("gnome_fly", pG.x, pG.y, 70, pG.rot);
+  else drawImg("gnome_lying", pG.x, gy + 6, 34);
+  pFx.forEach(p => { pc.fillStyle = `rgba(255,${120 + (p.life * 2 | 0)},0,${Math.min(1, p.life / 40)})`; pc.beginPath(); pc.arc(p.x, p.y, 4, 0, 7); pc.fill(); });
+  pc.restore();
+  // HUD
+  pc.textAlign = "left"; pc.font = "bold 16px Arial"; pc.fillStyle = "#fff"; pc.shadowColor = "#000"; pc.shadowBlur = 4;
+  pc.fillText("Distance: " + yards(pG.x - pG.start) + " yd", 14, 26); pc.fillText("Best: " + pBest + " yd", 14, 48);
+  pc.textAlign = "center"; pc.font = "bold 18px Arial"; pc.fillStyle = "#ffd100";
+  if (pState === "angle") pc.fillText("Click to set the ANGLE", PW / 2, 30);
+  if (pState === "power") {
+    pc.fillText("Click to set the POWER", PW / 2, 30);
+    pc.fillStyle = "#000"; pc.fillRect(PW / 2 - 110, 42, 220, 14);
+    pc.fillStyle = pPower > .85 ? "#ff3b1f" : "#ffd100"; pc.fillRect(PW / 2 - 110, 42, 220 * pPower, 14);
+  }
+  if (pMsgT > 0) { pc.font = "bold 24px Impact, Arial"; pc.fillStyle = "#ff9a1f"; pc.fillText(pMsg, PW / 2, 80); }
+  pc.shadowBlur = 0;
+}
+function puntLoop(now) {
+  if (pState === "off") return;
+  const dt = Math.min(50, now - pLast) / 16.7; pLast = now;
+  puntStep(dt); puntDraw();
+  pRaf = requestAnimationFrame(puntLoop);
+}
+$("gnomepeek").addEventListener("click", openPunt);
+$("puntcv").addEventListener("pointerdown", e => { e.preventDefault(); puntClick(); });
+addEventListener("keydown", e => { if (pState !== "off" && (e.key === " " || e.key === "Enter")) { e.preventDefault(); puntClick(); } });
+$("puntagain").addEventListener("click", puntReset);
+$("puntclose").addEventListener("click", closePunt);
+$("punt").addEventListener("click", e => { if (e.target.id === "punt") closePunt(); });
+addEventListener("resize", () => { if (pState !== "off") puntSize(); });
+
+// ---------- 12 achievements: the 12-Month Subscription Special Offer. Only the price button closes it ----------
+let offerShown = false;
+function checkOffer(delay) {
+  if (offerShown || eggsFound.has("offer") || eggsFound.size < 12) return;
+  offerShown = true;
+  setTimeout(() => { $("offer").classList.add("on"); playSfx("menuOpen", .6); }, delay);
+}
+$("offerbuy").addEventListener("click", e => {
+  e.stopPropagation();
+  $("offer").classList.remove("on");
+  if (!playSfx("coin", .9) && ctx && !muted) tone(1318.5, "triangle", ctx.currentTime, .4, .08);
+  const p = $("paid"); p.classList.remove("on"); void p.offsetWidth; p.classList.add("on");
+  setTimeout(() => { p.classList.remove("on"); foundEgg("offer"); }, 2800);
+});
+// clicking anywhere else does nothing except a little "no"
+$("offer").addEventListener("click", () => {
+  const b = $("offerbox"); b.classList.remove("nope"); void b.offsetWidth; b.classList.add("nope");
+  if (ctx && !muted) tone(180, "square", ctx.currentTime, .12, .04);
+});
+
+// ---------- Easter egg: hidden keyhole -> saucy Great Vault slideshow ----------
+const VAULT_PICS = [1, 2, 3, 4, 5, 6, 7, 8].map(n => "img/vault" + n + ".webp");
+const VAULT_CAPS = ["Oh my... look at that item level 😳", "Three rows of pure temptation", "Alluring Bubbleband... again 😏",
+  "Don't tell the raid leader about this one", "Is it hot in here or is it the 318s?", "Every slot unlocked. Shameless.",
+  "\"You may only select ONE\"... such a tease", "Mmm, Preyhunter's everything", "Select reward? Not yet. Let me look a little longer",
+  "Those green checkmarks though ✔✔✔", "Item Level 279... we don't talk about that one", "Collect x6? No thanks, I'm here for the view"];
+const VAULT_SLIDE = 3800;
+let vaultOn = false, vaultYt = null, vaultReady = false, vaultTimers = [], vaultHearts = null, vaultWithSong = false, vaultLoop = null;
+function loungeLoop() {
+  // fallback when the song can't play: a slow, smoky two-chord synth vamp
+  if (!ctx || muted) return;
+  const chords = [[146.8, 174.6, 220, 261.6], [196, 246.9, 293.7, 349.2]];
+  let k = 0;
+  const play = () => { const t = ctx.currentTime; chords[k++ % 2].forEach(f => tone(f, "triangle", t, 2.2, .035)); tone(73.4 + (k % 2) * 24.6, "sine", t, 2, .12); };
+  play(); vaultLoop = setInterval(play, 2000);
+}
+function openVault() {
+  if (vaultOn) return;
+  vaultOn = true; foundEgg("vault");
+  pauseBg();
+  const box = $("vault"), imgs = $("vstage").querySelectorAll("img"), cap = $("vcap");
+  box.classList.add("on");
+  vaultWithSong = vaultReady && !muted;
+  if (vaultWithSong) { vaultYt.setVolume(Math.max(vol(), 60)); vaultYt.seekTo(0, true); vaultYt.playVideo(); }
+  else loungeLoop();
+  const pics = shuffle(VAULT_PICS), caps = shuffle(VAULT_CAPS), at = (ms, fn) => vaultTimers.push(setTimeout(fn, ms));
+  pics.forEach((src, i) => at(i * VAULT_SLIDE, () => {
+    const img = imgs[i % 2], other = imgs[(i + 1) % 2];
+    img.src = src; img.className = "on kb" + (1 + i % 3);
+    // a little tilt now and then, like photos lying askew on a table
+    $("vstage").style.transform = "rotate(" + pick([-5, -3.5, -2, 0, 0, 2, 3.5, 5]) + "deg)";
+    other.classList.remove("on");
+    cap.classList.remove("on");
+    at(700, () => { cap.textContent = caps[i]; cap.classList.add("on"); });
+  }));
+  at(pics.length * VAULT_SLIDE, () => { imgs.forEach(im => im.classList.remove("on")); cap.textContent = "Same time next week? 😘"; });
+  at(pics.length * VAULT_SLIDE + 3500, closeVault);
+  const EMO = ["💋", "❤️", "✨", "💜", "🔥", "💕"];
+  vaultHearts = setInterval(() => {
+    const h = document.createElement("span"); h.className = "vheart"; h.textContent = pick(EMO);
+    h.style.left = Math.random() * 100 + "vw"; h.style.fontSize = (16 + Math.random() * 26) + "px";
+    box.appendChild(h); setTimeout(() => h.remove(), 5200);
+  }, 260);
+}
+function closeVault() {
+  if (!vaultOn) return;
+  vaultTimers.forEach(clearTimeout); vaultTimers = [];
+  clearInterval(vaultHearts); clearInterval(vaultLoop);
+  if (vaultWithSong && vaultYt && vaultYt.pauseVideo) vaultYt.pauseVideo();
+  const box = $("vault"); box.classList.remove("on"); box.querySelectorAll(".vheart").forEach(h => h.remove());
+  $("vstage").querySelectorAll("img").forEach(im => { im.className = ""; });
+  $("vstage").style.transform = "";
+  $("vcap").classList.remove("on");
+  vaultOn = false;
+  resumeBg();
+}
+$("vaultkey").addEventListener("click", openVault);
+$("vault").addEventListener("click", closeVault);
+
+// ---------- Easter egg: click SECONDS -> Firebolt or Frostbolt. Frost kills fire, fire kills frost, until you mess up ----------
+const BOLT_IMG = { fire: "img/fire_elem.webp", frost: "img/frost_elem.webp" };
+const BOLT_HIT = { fire: "img/fire_elem_hit.webp", frost: "img/frost_elem_hit.webp" };
+Object.values(BOLT_HIT).forEach(src => { new Image().src = src; });
+const BOLT_EMOJI = { fire: "🔥", frost: "❄️" };
+const BOLT_SLOTS = 6;
+let boltOn = false, boltOver = false, boltQ = [], boltScore = 0, boltBest = 0, boltDeadline = 0, boltLimit = 0, boltTimer = null, boltStarted = false;
+try { boltBest = +localStorage.getItem("boltBest") || 0; } catch (e) {}
+// first person: slot 0 stands right in front of you, the rest line up behind it towards the horizon
+// (staggered left/right a little, like a real queue, so the ones in the back peek out)
+const boltDepth = i => { const sc = 1 / (1 + i * .55); return { sc, bottom: 3 + (1 - sc) * 72, left: 50 + (i ? (i % 2 ? -1 : 1) * 19 * sc : 0) }; };
+function boltMake(type) {
+  const el = document.createElement("div");
+  el.className = "belem " + type;
+  el.innerHTML = BOLT_IMG[type] ? '<img src="' + BOLT_IMG[type] + '" alt="">' : "<span>" + BOLT_EMOJI[type] + "</span>";
+  const d = boltDepth(BOLT_SLOTS); el.style.setProperty("--s", d.sc); el.style.bottom = d.bottom + "%"; el.style.left = d.left + "%"; el.style.opacity = "0";
+  $("boltlane").appendChild(el);
+  return { type, el };
+}
+function boltLayout() {
+  boltQ.forEach((b, i) => {
+    const d = boltDepth(i);
+    b.el.style.setProperty("--s", d.sc); b.el.style.bottom = d.bottom + "%"; b.el.style.left = d.left + "%"; b.el.style.zIndex = 10 - i;
+    b.el.style.opacity = i === BOLT_SLOTS - 1 ? ".4" : "1";
+    b.el.style.filter = i ? "brightness(" + (1 - i * .12) + ")" : "";
+  });
+}
+function boltFill() {
+  while (boltQ.length < BOLT_SLOTS) {
+    // mostly random, but never more than 4 of a kind in a row so it doesn't feel broken
+    const last = boltQ.slice(-4), same = last.length === 4 && last.every(b => b.type === last[0].type);
+    boltQ.push(boltMake(same ? (last[0].type === "fire" ? "frost" : "fire") : (Math.random() < .5 ? "fire" : "frost")));
+  }
+  setTimeout(boltLayout, 20);   // a beat later so new ones slide in from the right
+}
+function boltReset() {
+  boltQ.forEach(b => b.el.remove()); boltQ = [];
+  $("boltlane").querySelectorAll(".bproj, .bfloat").forEach(n => n.remove());
+  boltScore = 0; boltOver = false; boltStarted = false; boltLimit = 2000;
+  $("boltscore").textContent = "0"; $("boltbest").textContent = boltBest;
+  $("boltover").classList.remove("on");
+  $("bolttime").firstElementChild.style.width = "100%";
+  $("boltmsg").textContent = "Frost puts out fire elementals, fire melts frost elementals. Cast to start.";
+  boltFill();
+}
+function openBolt() {
+  if (boltOn) return;
+  boltOn = true; foundEgg("bolt");
+  $("bolt").classList.add("on"); playSfx("menuOpen", .6);
+  boltReset();
+  clearInterval(boltTimer);
+  boltTimer = setInterval(() => {
+    if (!boltStarted || boltOver) return;
+    const left = boltDeadline - performance.now();
+    $("bolttime").firstElementChild.style.width = Math.max(0, left / boltLimit * 100) + "%";
+    if (left <= 0) boltLose("slow");
+  }, 30);
+}
+function closeBolt() { boltOn = false; clearInterval(boltTimer); $("bolt").classList.remove("on"); }
+function boltSound(spell) {
+  if (!ctx || muted) return;
+  const t = ctx.currentTime;
+  if (playSfx(spell === "fire" ? "firebolt" : "frostbolt", .8)) return;
+  if (spell === "fire") { whoosh(500, 2200, .25); tone(98, "sawtooth", t, .25, .05); }
+  else { tone(1760, "sine", t, .25, .04); tone(2637, "sine", t + .04, .22, .03); whoosh(5000, 1800, .22); }
+}
+function boltPop(text, x, ok) {
+  const f = document.createElement("div"); f.className = "bfloat" + (ok ? " ok" : ""); f.textContent = text;
+  f.style.left = x + "%"; $("boltlane").appendChild(f); setTimeout(() => f.remove(), 1000);
+}
+function boltCast(spell) {
+  if (!boltOn) return;
+  if (boltOver) return;
+  const front = boltQ[0];
+  if (!front) return;
+  boltSound(spell);
+  // the projectile is just for show, the outcome is decided right away so fast players never wait on it
+  const p = document.createElement("div"); p.className = "bproj"; p.textContent = spell === "fire" ? "☄️" : "❄️";
+  $("boltlane").appendChild(p);
+  setTimeout(() => { p.style.bottom = "28%"; p.style.fontSize = "2.2rem"; }, 15);
+  setTimeout(() => p.remove(), 180);
+  const right = (spell === "frost") === (front.type === "fire");
+  if (!right) { boltLose(spell, front); return; }
+  boltStarted = true;
+  boltScore++; $("boltscore").textContent = boltScore;
+  boltQ.shift();
+  setTimeout(() => {
+    const im = front.el.querySelector("img"); if (im) im.src = BOLT_HIT[front.type];
+    setTimeout(() => front.el.classList.add("die"), 120);
+  }, 150);
+  setTimeout(() => front.el.remove(), 450);
+  if (boltScore % 10 === 0) boltPop(boltScore + "!", 50, true);
+  $("boltmsg").textContent = "";
+  boltFill();
+  // it gets faster: 2s for the first one, down to half a second
+  boltLimit = Math.max(500, 2000 - boltScore * 30);
+  boltDeadline = performance.now() + boltLimit;
+}
+const BOLT_WHY = {
+  fire: ["You cast Firebolt on a Fire Elemental. It said thanks.", "Fire Elemental absorbed your Firebolt and got bigger. Great job.",
+         "Fire on fire. Bold strategy."],
+  frost: ["You cast Frostbolt on a Frost Elemental. It is now even colder. And angrier.", "Frost Elemental absorbed your Frostbolt. Refreshing.",
+          "Ice on ice. Bold strategy."],
+  slow: ["Too slow. The elemental gave you a very warm (or very cold) hug.", "You stood there. The elemental did not.",
+         "Casting... casting... dead."]
+};
+function boltLose(why, front) {
+  boltOver = true;
+  front = front || boltQ[0];
+  const lane = $("boltlane");
+  if (why !== "slow") setTimeout(() => { boltPop("Immune", 50); front.el.classList.add("immune"); }, 160);
+  setTimeout(() => { front.el.style.bottom = ""; front.el.style.left = "50%"; front.el.classList.add("smash"); }, why === "slow" ? 0 : 550);
+  setTimeout(() => {
+    lane.classList.remove("shake"); void lane.offsetWidth; lane.classList.add("shake"); boom();
+  }, why === "slow" ? 300 : 850);
+  setTimeout(() => {
+    const rec = boltScore > boltBest;
+    if (rec) { boltBest = boltScore; try { localStorage.setItem("boltBest", boltBest); } catch (e) {} }
+    $("boltbest").textContent = boltBest;
+    $("boltwhy").textContent = pick(BOLT_WHY[why]);
+    $("boltfinal").textContent = boltScore + (boltScore === 1 ? " elemental" : " elementals");
+    $("boltrec").textContent = rec && boltScore > 0 ? "New personal best!" : "";
+    const s = boltScore;
+    $("boltcomment").textContent = s === 0 ? "Zero. Did you even read the tooltip?"
+      : s < 5 ? "Even a level 1 mage would be disappointed."
+      : s < 15 ? "Respectable. For a warlock."
+      : s < 30 ? "Solid. You may now spam Frostbolt in raid."
+      : s < 50 ? "Archmage material. Jaina is getting nervous."
+      : "Unreal. Go outside, it's almost launch.";
+    $("boltover").classList.add("on");
+  }, why === "slow" ? 1100 : 1600);
+}
+$("boltlbl").addEventListener("click", openBolt);
+$("boltclose").addEventListener("click", closeBolt);
+$("boltagain").addEventListener("click", boltReset);
+$("bfire").addEventListener("click", () => boltCast("fire"));
+$("bfrost").addEventListener("click", () => boltCast("frost"));
+addEventListener("keydown", e => {
+  if (!boltOn) return;
+  const k = e.key.toLowerCase();
+  if (k === "a" || k === "arrowleft") { e.preventDefault(); if (!e.repeat) boltCast("fire"); }
+  else if (k === "d" || k === "arrowright") { e.preventDefault(); if (!e.repeat) boltCast("frost"); }
+  else if ((k === " " || k === "enter") && boltOver && $("boltover").classList.contains("on")) { e.preventDefault(); boltReset(); }
+  else if (k === "escape") closeBolt();
+});
+
+// ---------- Easter egg: click HOURS -> Don't Stand in the Fire, a bullet hell that starts tame and goes completely nuts ----------
+const FW = 800, FH = 560, F_HIT = 3, F_GRAZE = 16;
+// [second, raid warning] - each one also unlocks the next kind of hazard
+const FIRE_PHASES = [[0, "Don't stand in the fire."], [14, "Sulfuras is charging..."], [26, "BY FIRE BE PURGED!"],
+  [38, "Raid leader: SPREAD OUT!"], [50, "Raid leader: no wait, STACK!"], [64, "It's raining fire."],
+  [80, "Touhou mode enabled. Good luck."], [100, "Seriously, how are you still alive?"]];
+// Ragnaros has something to say at some of the phases (index into FIRE_PHASES)
+const FIRE_VOICE = { 1: "ragCharge", 2: "ragPurge", 4: "ragSlay", 5: "ragRain" };
+const fireBoss = new Image(); fireBoss.src = "img/ragnaros.webp";
+let fireOn = false, fireOver = false, fireRaf = null, fireLast = 0, fireT = 0, fireBest = 0, fireGraze = 0, firePhase = 0;
+let fP = null, fAim = null, fKeys = {}, fHaz = [], fBul = [], fSpawn = {}, fSpin = 0, fDeadBy = "";
+try { fireBest = +localStorage.getItem("fireBest") || 0; } catch (e) {}
+const fRand = (a, b) => a + Math.random() * (b - a);
+function fireReset() {
+  fireT = 0; fireGraze = 0; firePhase = 0; fireOver = false; fHaz = []; fBul = []; fSpin = 0;
+  fP = { x: FW / 2, y: FH - 70 }; fAim = null;
+  fSpawn = { zone: .8, beam: 0, spiral: 0, ring: 0, fan: 0, rain: 0 };
+  $("fireover").classList.remove("on");
+  $("firebest").textContent = fireBest.toFixed(1);
+  fireWarn(FIRE_PHASES[0][1]);
+}
+function fireWarn(text) {
+  const w = $("firewarn"); w.textContent = text; w.classList.remove("on"); void w.offsetWidth; w.classList.add("on");
+  if (firePhase > 0 && !playSfx(FIRE_VOICE[firePhase] || "readyCheck", FIRE_VOICE[firePhase] ? 1 : .5) && ctx && !muted)
+    tone(880, "square", ctx.currentTime, .15, .03);
+}
+function openFire() {
+  if (fireOn) return;
+  fireOn = true; foundEgg("fire");
+  $("fire").classList.add("on"); playSfx("menuOpen", .6);
+  fireReset();
+  fireLast = performance.now(); cancelAnimationFrame(fireRaf); fireRaf = requestAnimationFrame(fireLoop);
+}
+function closeFire() { fireOn = false; cancelAnimationFrame(fireRaf); $("fire").classList.remove("on"); fKeys = {}; }
+function fireLoop(now) {
+  if (!fireOn) return;
+  const dt = Math.min(.05, (now - fireLast) / 1000); fireLast = now;
+  fireStep(dt); fireDraw();
+  fireRaf = requestAnimationFrame(fireLoop);
+}
+function fireBullet(x, y, ang, speed, r, col) { fBul.push({ x, y, vx: Math.cos(ang) * speed, vy: Math.sin(ang) * speed, r, col, grazed: false }); }
+// the hazards, in the order they join the party
+function fireSpawn(dt) {
+  const t = fireT, S = fSpawn, boss = { x: FW / 2, y: 70 };
+  // fire patches on the floor: a warning circle, then it burns for a while. Later some land right on you
+  if ((S.zone -= dt) <= 0) {
+    S.zone = Math.max(.28, 1.9 - t * .03);
+    const aimed = t > 8 && Math.random() < .35;
+    fHaz.push({ k: "zone", x: aimed ? fP.x : fRand(40, FW - 40), y: aimed ? fP.y : fRand(150, FH - 30), r: fRand(30, 55 + Math.min(40, t)),
+                warn: 1.1, life: fRand(2.5, 4.5), t: 0 });
+  }
+  // breath lines across the whole room
+  if (t > 14 && (S.beam -= dt) <= 0) {
+    S.beam = Math.max(1.1, 4.5 - (t - 14) * .06);
+    const vert = Math.random() < .5;
+    fHaz.push({ k: "beam", vert, pos: vert ? (Math.random() < .5 ? fP.x : fRand(40, FW - 40)) : fRand(160, FH - 40),
+                w: fRand(40, 70), warn: 1.0, life: .7, t: 0 });
+  }
+  // the boss starts spinning out spirals of fireballs
+  if (t > 26 && (S.spiral -= dt) <= 0) {
+    S.spiral = Math.max(.045, .14 - (t - 26) * .0015);
+    const arms = t > 80 ? 4 : t > 50 ? 3 : 2;
+    fSpin += .23;
+    for (let a = 0; a < arms; a++) fireBullet(boss.x, boss.y, fSpin + a * Math.PI * 2 / arms, 110 + t * 1.2, 6, "#ff9a2e");
+  }
+  // full rings
+  if (t > 38 && (S.ring -= dt) <= 0) {
+    S.ring = Math.max(.9, 3.2 - (t - 38) * .04);
+    const n = Math.min(40, 14 + Math.floor(t / 6)), off = Math.random() * 7;
+    for (let i = 0; i < n; i++) fireBullet(boss.x, boss.y, off + i * Math.PI * 2 / n, 90 + t, 7, "#ff4d2e");
+  }
+  // aimed fans straight at you
+  if (t > 50 && (S.fan -= dt) <= 0) {
+    S.fan = Math.max(.6, 1.8 - (t - 50) * .02);
+    const base = Math.atan2(fP.y - boss.y, fP.x - boss.x), n = t > 80 ? 9 : 5;
+    for (let i = 0; i < n; i++) fireBullet(boss.x, boss.y, base + (i - (n - 1) / 2) * .13, 200 + t, 5, "#ffe066");
+  }
+  // meteor rain from the top
+  if (t > 64 && (S.rain -= dt) <= 0) {
+    S.rain = Math.max(.04, .16 - (t - 64) * .002);
+    fireBullet(fRand(0, FW), -10, Math.PI / 2 + fRand(-.25, .25), fRand(140, 240 + t), fRand(4, 9), "#ff6a00");
+  }
+}
+function fireStep(dt) {
+  if (fireOver) return;
+  fireT += dt;
+  if (firePhase + 1 < FIRE_PHASES.length && fireT >= FIRE_PHASES[firePhase + 1][0]) { firePhase++; fireWarn(FIRE_PHASES[firePhase][1]); }
+  // movement: keys if held, otherwise glide after the mouse (fast, but no teleporting)
+  let mx = (fKeys.right ? 1 : 0) - (fKeys.left ? 1 : 0), my = (fKeys.down ? 1 : 0) - (fKeys.up ? 1 : 0);
+  if (mx || my) {
+    const sp = (fKeys.slow ? 130 : 290) / Math.hypot(mx, my);
+    fP.x += mx * sp * dt; fP.y += my * sp * dt; fAim = null;
+  } else if (fAim) {
+    const dx = fAim.x - fP.x, dy = fAim.y - fP.y, d = Math.hypot(dx, dy), step = 520 * dt;
+    if (d <= step) { fP.x = fAim.x; fP.y = fAim.y; } else { fP.x += dx / d * step; fP.y += dy / d * step; }
+  }
+  fP.x = Math.max(8, Math.min(FW - 8, fP.x)); fP.y = Math.max(8, Math.min(FH - 8, fP.y));
+  fireSpawn(dt);
+  let hit = "";
+  fHaz.forEach(h => {
+    h.t += dt;
+    if (h.t < h.warn) return;
+    if (h.k === "zone" && Math.hypot(fP.x - h.x, fP.y - h.y) < h.r - 4) hit = "fire";
+    if (h.k === "beam" && Math.abs((h.vert ? fP.x : fP.y) - h.pos) < h.w / 2) hit = "breath";
+  });
+  fHaz = fHaz.filter(h => h.t < h.warn + h.life);
+  fBul.forEach(b => {
+    b.x += b.vx * dt; b.y += b.vy * dt;
+    const d = Math.hypot(fP.x - b.x, fP.y - b.y);
+    if (d < b.r + F_HIT) hit = "fireball";
+    else if (!b.grazed && d < b.r + F_GRAZE) { b.grazed = true; fireGraze++; }
+  });
+  fBul = fBul.filter(b => b.x > -30 && b.x < FW + 30 && b.y > -30 && b.y < FH + 30);
+  $("firetime").textContent = fireT.toFixed(1); $("firegraze").textContent = fireGraze;
+  if (hit) fireDie(hit);
+}
+const FIRE_BLAME = ["{n} pulled the boss onto you.", "{n} said \"go left\". {n} meant right.", "{n} stacked on you with the bomb debuff.",
+  "{n} was in the fire first and you followed for moral support.", "{n} body-pulled the next pack mid-fight.",
+  "{n} was busy linking Thunderfury.", "{n} healed everyone except you. Personal reasons.", "{n} called \"safe spot!\". It was not."];
+const FIRE_HOW = { fire: "Stood in the fire", breath: "Ate a Deep Breath", fireball: "Caught a fireball with the face" };
+function fireDie(how) {
+  fireOver = true; fDeadBy = how;
+  boom();
+  const rec = fireT > fireBest;
+  if (rec) { fireBest = fireT; try { localStorage.setItem("fireBest", fireBest.toFixed(1)); } catch (e) {} }
+  $("firebest").textContent = fireBest.toFixed(1);
+  const n = pick(GUILD);
+  $("firefinal").textContent = fireT.toFixed(1) + "s";
+  $("firerec").textContent = rec ? "New personal best!" : "";
+  $("fireblame").textContent = FIRE_HOW[how] + ". " + pick(FIRE_BLAME).split("{n}").join(n);
+  const t = fireT;
+  $("firecomment").textContent = t < 10 ? "You stood in the fire. The fire won."
+    : t < 25 ? "Classic. The healers saw that coming."
+    : t < 45 ? "Not bad. You'd survive a raid night with DT."
+    : t < 70 ? "Impressive. The fire is starting to respect you."
+    : t < 100 ? "Raid leader material. Please never lead a raid."
+    : "Gensokyo is calling. Go play Touhou.";
+  setTimeout(() => { if (fireOver && fireOn) $("fireover").classList.add("on"); }, 700);
+}
+function fireDraw() {
+  const c = $("firecv").getContext("2d"), t = fireT;
+  c.clearRect(0, 0, FW, FH);
+  // floor + heat shimmer that gets angrier over time
+  const heat = Math.min(1, t / 90);
+  const g = c.createRadialGradient(FW / 2, 60, 20, FW / 2, 60, FH);
+  g.addColorStop(0, "rgba(" + (60 + heat * 60 | 0) + ",18,8,1)"); g.addColorStop(1, "#0a0705");
+  c.fillStyle = g; c.fillRect(0, 0, FW, FH);
+  // Ragnaros rises at the top just before he starts charging Sulfuras
+  if (t > 11 && fireBoss.complete && fireBoss.naturalWidth) {
+    const pulse = 1 + Math.sin(performance.now() / 180) * .04, a = Math.min(1, (t - 11) / 3);
+    const h = 150 * pulse, w = h * fireBoss.naturalWidth / fireBoss.naturalHeight, rise = (1 - a) * 60;
+    c.globalAlpha = a; c.shadowColor = "#ff4000"; c.shadowBlur = 40;
+    c.drawImage(fireBoss, FW / 2 - w / 2, 72 - h * .45 - rise, w, h);
+    c.shadowBlur = 0; c.globalAlpha = 1;
+  }
+  fHaz.forEach(h => {
+    const warn = h.t < h.warn, fade = warn ? .35 + .35 * Math.sin(h.t * 20) : Math.min(1, (h.warn + h.life - h.t) * 3);
+    if (h.k === "zone") {
+      if (warn) { c.strokeStyle = "rgba(255,60,30," + fade + ")"; c.lineWidth = 2; c.setLineDash([6, 5]);
+                  c.beginPath(); c.arc(h.x, h.y, h.r, 0, 7); c.stroke(); c.setLineDash([]); }
+      else { const zg = c.createRadialGradient(h.x, h.y, 2, h.x, h.y, h.r);
+             zg.addColorStop(0, "rgba(255,230,120," + fade + ")"); zg.addColorStop(.5, "rgba(255,110,0," + fade * .9 + ")");
+             zg.addColorStop(1, "rgba(160,20,0,0)");
+             c.fillStyle = zg; c.beginPath(); c.arc(h.x, h.y, h.r * (1 + Math.sin(h.t * 9) * .04), 0, 7); c.fill(); }
+    } else {
+      const x = h.vert ? h.pos - h.w / 2 : 0, y = h.vert ? 0 : h.pos - h.w / 2, w = h.vert ? h.w : FW, hh = h.vert ? FH : h.w;
+      if (warn) { c.fillStyle = "rgba(255,60,30," + fade * .25 + ")"; c.fillRect(x, y, w, hh); }
+      else { const bg = h.vert ? c.createLinearGradient(x, 0, x + w, 0) : c.createLinearGradient(0, y, 0, y + hh);
+             bg.addColorStop(0, "rgba(255,80,0,0)"); bg.addColorStop(.5, "rgba(255,240,170," + fade + ")"); bg.addColorStop(1, "rgba(255,80,0,0)");
+             c.fillStyle = bg; c.fillRect(x, y, w, hh); }
+    }
+  });
+  fBul.forEach(b => {
+    c.fillStyle = b.col; c.shadowColor = b.col; c.shadowBlur = 10;
+    c.beginPath(); c.arc(b.x, b.y, b.r, 0, 7); c.fill();
+    c.shadowBlur = 0; c.fillStyle = "#fff8e0"; c.beginPath(); c.arc(b.x, b.y, b.r * .45, 0, 7); c.fill();
+  });
+  // you: a little adventurer with the tiny Touhou hitbox in the middle
+  if (!fireOver || Math.floor(performance.now() / 120) % 2) {
+    c.fillStyle = "rgba(120,180,255,.25)"; c.beginPath(); c.arc(fP.x, fP.y, 13, 0, 7); c.fill();
+    c.strokeStyle = "#9fd0ff"; c.lineWidth = 2; c.beginPath(); c.arc(fP.x, fP.y, 13, 0, 7); c.stroke();
+    c.fillStyle = "#fff"; c.beginPath(); c.arc(fP.x, fP.y, F_HIT, 0, 7); c.fill();
+  }
+}
+function fireAimFrom(e) {
+  const r = $("firecv").getBoundingClientRect();
+  fAim = { x: (e.clientX - r.left) / r.width * FW, y: (e.clientY - r.top) / r.height * FH };
+}
+$("firecv").addEventListener("pointermove", fireAimFrom);
+$("firecv").addEventListener("pointerdown", e => { e.preventDefault(); fireAimFrom(e); });
+$("firelbl").addEventListener("click", openFire);
+$("fireclose").addEventListener("click", closeFire);
+$("fireagain").addEventListener("click", fireReset);
+const FIRE_KEYS = { a: "left", arrowleft: "left", d: "right", arrowright: "right", w: "up", arrowup: "up", s: "down", arrowdown: "down", shift: "slow" };
+addEventListener("keydown", e => {
+  if (!fireOn) return;
+  const k = e.key.toLowerCase();
+  if (FIRE_KEYS[k]) { e.preventDefault(); fKeys[FIRE_KEYS[k]] = true; }
+  else if ((k === " " || k === "enter") && fireOver && $("fireover").classList.contains("on")) { e.preventDefault(); fireReset(); }
+  else if (k === "escape") closeFire();
+});
+addEventListener("keyup", e => { const k = FIRE_KEYS[e.key.toLowerCase()]; if (k) fKeys[k] = false; });
 
 function endFusion() {
   fusionTimers.forEach(clearTimeout); fusionTimers = [];
@@ -1527,7 +2945,7 @@ $("mmute").addEventListener("click", () => {
 let eggClicks = 0, eggTimer = null, eggPlayer = null, eggEnd = null;
 function loadRuffle() {
   if (window.RufflePlayer && RufflePlayer.newest) return Promise.resolve();
-  window.RufflePlayer = { config: { autoplay: "on", unmuteOverlay: "hidden", splashScreen: false, contextMenu: "off" } };
+  window.RufflePlayer = { config: { autoplay: "off", unmuteOverlay: "hidden", splashScreen: false, contextMenu: "off" } };
   return new Promise((ok, fail) => {
     const s = document.createElement("script");
     s.src = "https://unpkg.com/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.1/ruffle.js";
@@ -1543,19 +2961,28 @@ function openEgg() {
   $("eggbox").classList.add("on");
   loadRuffle().then(() => {
     if (!eggOn) return;
-    eggPlayer = RufflePlayer.newest().createPlayer();
-    $("eggstage").appendChild(eggPlayer);
-    eggPlayer.addEventListener("loadedmetadata", () => {
-      const m = eggPlayer.metadata;
+    const player = RufflePlayer.newest().createPlayer();
+    eggPlayer = player;
+    $("eggstage").appendChild(player);
+    player.addEventListener("loadedmetadata", () => {
+      // closed while it was still loading? then never start it
+      if (player !== eggPlayer) { silenceRuffle(player); return; }
+      player.play();
+      const m = player.metadata;
       eggEnd = setTimeout(closeEgg, m.numFrames / m.frameRate * 1000 - 60);
     });
-    eggPlayer.load("sandstorm.swf");
+    player.load("sandstorm.swf");
   }).catch(closeEgg);
+}
+function silenceRuffle(player) {
+  try { player.volume = 0; player.pause(); } catch (e) {}
+  try { if (player.destroy) player.destroy(); } catch (e) {}
+  player.remove();
 }
 function closeEgg() {
   if (!eggOn) return;
   clearTimeout(eggEnd);
-  if (eggPlayer) { eggPlayer.remove(); eggPlayer = null; }
+  if (eggPlayer) { silenceRuffle(eggPlayer); eggPlayer = null; }
   $("eggbox").classList.remove("on");
   eggOn = false;
   if (!musicOn) return;
@@ -1590,7 +3017,19 @@ const HINTS = [
   ["hearth", "Every adventurer knows the way home: hold on to time itself and don't move a muscle."],
   ["login", "Remember launch day? Try to log in. Good luck with that."],
   ["leeroy", "Time's up, let's do this. Somebody left their chicken lying around in the dark."],
-  ["fishing", "Something keeps splashing near the bottom of the page. Patient anglers get rewarded."]
+  ["fishing", "Something keeps splashing near the bottom of the page. Patient anglers get rewarded."],
+  ["barrens", "The Barrens chat never sleeps. Just name the place and it wakes up."],
+  ["dance", "This countdown has moves. Tell it what to do."],
+  ["reload", "UI acting weird? Every raider knows the one-word fix."],
+  ["duel", "Stay on the page long enough and somebody will want to fight you."],
+  ["onyxia", "A dragon sleeps inside the title. Knock on the World three times."],
+  ["hogger", "Hogger roams these lands from time to time. Say hi if you see him."],
+  ["mail", "Every adventurer checks their mailbox. Look in the corner, it's tiny."],
+  ["gnome", "Something small keeps peeking in from the left edge of the screen. Give it a warm welcome."],
+  ["offer", "Collect 12 achievements and you'll get an offer you can't refuse."],
+  ["vault", "Some treasures are kept behind a keyhole. Check the right side of the page."],
+  ["bolt", "A mage counts every second until launch. Pay the seconds a visit."],
+  ["fire", "Some people have been standing in the fire for hours."]
 ];
 const TIPS = [
   "Don't stand in the fire.",
@@ -1665,7 +3104,7 @@ setInterval(nextTip, 9000);
 $("eggclose").addEventListener("click", closeEgg);
 $("eggbox").addEventListener("click", e => { if (e.target.id === "eggbox") closeEgg(); });
 
-$("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; });
+$("gate").addEventListener("click", () => { ensureAudio(); startYouTube(); $("gate").style.display = "none"; scheduleDuel(); scheduleHogger(); checkOffer(1500); });
 $("mute").addEventListener("click", () => {
   muted = !muted; ensureAudio();
   $("mute").textContent = muted ? "🔇 Ticks off" : "🔊 Ticks on";

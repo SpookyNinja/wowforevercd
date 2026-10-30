@@ -285,42 +285,67 @@
   .fpbtns button:hover { box-shadow:0 0 14px rgba(255,209,0,.35); }
   .fpbtns small { display:block; color:#bbb; font-weight:normal; font-size:.78rem; }
   .fpbtns .new { color:#1eff00; font-size:.7rem; letter-spacing:.15em; }
-  /* Fishing v2 */
-  #fish2 { background:rgba(0,0,0,.82); }
-  .f2box { width:min(1180px, 97vw); }
-  #f2zones { display:flex; gap:.35rem; justify-content:center; flex-wrap:wrap; margin-bottom:.6rem; }
-  #f2zones button { background:#1b140a; border:1px solid #4a3818; color:#bbb; font:.78rem Arial,sans-serif; padding:.3rem .6rem; cursor:pointer; }
-  #f2zones button small { color:#888; margin-left:.3rem; }
-  #f2zones button.low small { color:#ff5050; }
-  #f2zones button.on { border-color:#ffd100; color:#ffd100; background:#2a1f0c; }
-  .f2grid { display:grid; grid-template-columns:minmax(190px, 235px) 1fr minmax(240px, 300px); gap:.9rem; height:min(70vh, 560px); }
-  #f2pond canvas.f2gl { position:absolute; inset:0; width:100%; height:100%; display:block; }
-  #f2pond.gl { border-radius:8px; background:#000; box-shadow:none; }
-  #f2pond.gl::before, #f2pond.gl #f2bob, #f2pond.gl #f2school { display:none; }
-  #f2pond.gl::after { content:""; position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:8px; box-shadow:inset 0 0 70px rgba(0,0,0,.55); }
-  #f2hud { position:absolute; left:8px; top:6px; z-index:3; font-size:.74rem; color:#fff; text-shadow:1px 1px 2px #000, 0 0 4px #000; text-align:left;
-           pointer-events:none; line-height:1.45; }
-  #f2ev { position:absolute; right:8px; top:6px; z-index:3; display:none; background:rgba(0,0,0,.6); border:1px solid #c9a14a; padding:.3rem .55rem;
-          font-size:.72rem; text-align:left; pointer-events:none; line-height:1.4; }
-  #f2ev.on { display:block; }
-  #f2ev b { color:#ffd100; }
-  .f2grid .fcol { overflow:auto; font-size:.8rem; }
-  .f2grid .fcol h3 { color:var(--gold); font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; margin:.6rem 0 .3rem; }
-  .f2grid .fcol h3:first-child { margin-top:0; }
-  #f2gold { font-size:.95rem; margin-bottom:.3rem; }
-  .cg { color:#ffd100; } .cs { color:#c7c7cf; } .cc { color:#c47a3c; }
-  #f2skillbar { height:12px; background:#0a0a0a; border:1px solid #444; position:relative; margin:.2rem 0 .1rem; }
-  #f2skillbar i { position:absolute; inset:0 auto 0 0; background:linear-gradient(#3c8f2a, #1f5a14); }
-  #f2skilltxt { font-size:.75rem; color:#ccc; }
-  .f2slot { display:flex; justify-content:space-between; gap:.4rem; padding:.12rem 0; border-bottom:1px solid #2a2014; }
-  .f2slot span:first-child { color:#888; text-transform:capitalize; flex:none; }
-  .f2slot span:last-child { text-align:right; }
-  #f2stats { color:#aaa; margin-top:.3rem; line-height:1.5; }
-  #f2quest { color:#ddd; line-height:1.45; }
-  #f2quest .qbar { height:8px; background:#0a0a0a; border:1px solid #444; margin:.25rem 0; position:relative; }
-  #f2quest .qbar i { position:absolute; inset:0 auto 0 0; background:#c9a14a; }
-  .f2btn { background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:.75rem Arial,sans-serif; padding:.18rem .5rem; cursor:pointer; }
+  /* Fishing v2: dark leather and gold, WoW-style frames */
+  #fish2 { background:rgba(0,0,0,.84); }
+  .f2box { width:min(1220px, 98vw); padding:.7rem .9rem .9rem; background:radial-gradient(ellipse at 50% 0%, #2a1e10, #120c06 70%);
+           border:2px solid #9a7630; box-shadow:inset 0 0 0 1px #000, inset 0 0 0 3px #3a2a12, inset 0 0 60px rgba(0,0,0,.7), 0 0 40px #000; border-radius:6px; }
+  .f2top { display:flex; align-items:center; gap:1rem; margin:0 2.4rem .6rem 0; }
+  .f2top h2 { margin:0; flex:none; font:bold 1.25rem "Palatino Linotype", "Book Antiqua", Georgia, serif; letter-spacing:.12em; text-transform:uppercase;
+              background:linear-gradient(#fff2b0, #e0a83a 55%, #8a5a14); -webkit-background-clip:text; background-clip:text; color:transparent;
+              filter:drop-shadow(0 2px 2px #000); }
+  #f2zones { display:flex; gap:.3rem; flex-wrap:wrap; flex:1; }
+  #f2zones button { display:flex; align-items:center; gap:.3rem; background:linear-gradient(#2a2012, #15100a); border:1px solid #5a4318; border-radius:4px;
+                    color:#c8b890; font:.76rem Arial,sans-serif; padding:.28rem .55rem; cursor:pointer; box-shadow:inset 0 1px 0 rgba(255,220,150,.12); }
+  #f2zones button:hover { border-color:#c9a14a; color:#fff; }
+  #f2zones button .zi { font-size:.95rem; }
+  #f2zones button small { color:#9a8a6a; background:rgba(0,0,0,.4); border-radius:3px; padding:0 .25rem; }
+  #f2zones button.low small { color:#ff5a4a; }
+  #f2zones button.on { border-color:#ffd100; color:#ffd100; background:linear-gradient(#4a3510, #241a08); box-shadow:0 0 10px rgba(255,209,0,.25), inset 0 1px 0 rgba(255,230,150,.25); }
+  .f2boatbar { display:flex; align-items:center; gap:.6rem; color:#9fe0ff; font-size:.85rem; background:linear-gradient(90deg, rgba(20,60,90,.6), transparent);
+               border:1px solid #2a6a8a; border-radius:4px; padding:.3rem .6rem; }
+  .f2grid { display:grid; grid-template-columns:minmax(210px, 250px) 1fr minmax(260px, 310px); gap:.7rem; height:min(72vh, 580px); }
+  .f2panel { display:flex; flex-direction:column; min-height:0; background:linear-gradient(#1a130b, #0d0906); border:1px solid #5a4318; border-radius:5px;
+             box-shadow:inset 0 0 0 1px #000, inset 0 0 25px rgba(0,0,0,.6); padding:.55rem; text-align:left; font-size:.8rem; color:#d8ccb0; }
+  .f2side { overflow:auto; gap:.55rem; }
+  .f2card { background:rgba(0,0,0,.28); border:1px solid #3a2c12; border-radius:4px; padding:.45rem .5rem; }
+  .f2title { font:bold .72rem "Palatino Linotype", Georgia, serif; letter-spacing:.16em; text-transform:uppercase; color:#e8c060; margin-bottom:.35rem;
+             padding-bottom:.25rem; border-bottom:1px solid; border-image:linear-gradient(90deg, #8a6a2a, transparent) 1; }
+  #f2gold { display:flex; align-items:center; gap:.5rem; font-size:.95rem; margin-bottom:.4rem; }
+  .cg, .cs, .cc { font-weight:bold; }
+  .cg { color:#ffd100; } .cs { color:#d8d8e0; } .cc { color:#d08040; }
+  .cg::after, .cs::after, .cc::after { content:""; display:inline-block; width:.62em; height:.62em; border-radius:50%; margin-left:.12em; vertical-align:-.02em; }
+  .cg::after { background:radial-gradient(circle at 35% 35%, #fff6a0, #e0a800 60%, #8a5a00); }
+  .cs::after { background:radial-gradient(circle at 35% 35%, #fff, #a8a8b8 60%, #5a5a6a); }
+  .cc::after { background:radial-gradient(circle at 35% 35%, #ffc890, #b0602a 60%, #5a2a0a); }
+  .f2troph, .f2picks { font-size:.78rem; color:#c8b890; background:rgba(0,0,0,.35); border-radius:3px; padding:0 .3rem; }
+  #f2skillbar { position:relative; height:18px; background:#0a0806; border:1px solid #6a5020; border-radius:3px; overflow:hidden; box-shadow:inset 0 1px 3px #000; }
+  #f2skillbar i { position:absolute; inset:0 auto 0 0; background:linear-gradient(#4a8ae0, #1a4a9a 55%, #12306a); }
+  #f2skilltxt { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:.72rem; color:#fff; text-shadow:1px 1px 1px #000; }
+  .f2gslot { display:flex; align-items:center; gap:.45rem; padding:.16rem 0; }
+  .f2ico { flex:none; display:inline-flex; align-items:center; justify-content:center; position:relative; width:30px; height:30px; font-size:17px;
+           background:radial-gradient(circle at 50% 35%, #2a2418, #0a0806); border:1px solid #3a3020; border-radius:4px; box-shadow:inset 0 0 6px #000; }
+  .f2ico.sm { width:26px; height:26px; font-size:15px; }
+  .f2gtxt { display:flex; flex-direction:column; min-width:0; line-height:1.2; }
+  .f2gtxt .sl { color:#7a6a4a; font-size:.66rem; text-transform:uppercase; letter-spacing:.1em; }
+  .none { color:#5a5040; font-style:italic; }
+  #f2buffs { display:flex; flex-wrap:wrap; gap:.3rem; margin:.4rem 0 .3rem; }
+  .f2buff { position:relative; display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; font-size:17px; background:#0a0806;
+            border:1px solid; border-radius:4px; box-shadow:inset 0 0 6px #000, 0 0 6px rgba(255,255,255,.08); }
+  .f2buff b { position:absolute; right:1px; bottom:-1px; font-size:.62rem; color:#fff; text-shadow:1px 1px 0 #000, -1px -1px 0 #000; }
+  #f2stats { display:flex; flex-wrap:wrap; gap:.25rem; }
+  #f2stats span:not(.none) { background:rgba(0,0,0,.4); border:1px solid #3a2c12; border-radius:10px; padding:0 .4rem; font-size:.74rem; }
+  #f2quest { line-height:1.45; }
+  .qbar { position:relative; height:12px; background:#0a0806; border:1px solid #5a4318; border-radius:3px; margin:.3rem 0; overflow:hidden; }
+  .qbar i { position:absolute; inset:0 auto 0 0; background:linear-gradient(#e8c060, #9a6a14); }
+  .qbar span { position:absolute; inset:0; text-align:center; font-size:.62rem; line-height:12px; color:#fff; text-shadow:1px 1px 0 #000; }
+  .qrow { display:flex; justify-content:space-between; align-items:center; gap:.3rem; }
+  .f2btn { background:linear-gradient(#3a2a10, #1a1208); border:1px solid #8a6a2a; border-radius:3px; color:#ffd100; font:.72rem Arial,sans-serif; padding:.2rem .5rem;
+           cursor:pointer; box-shadow:inset 0 1px 0 rgba(255,220,150,.15); white-space:nowrap; }
+  .f2btn:hover:not(:disabled) { border-color:#ffd100; box-shadow:0 0 6px rgba(255,209,0,.35); }
+  .f2btn.buy { background:linear-gradient(#8a1a10, #4a0a06); border-color:#e0a63a; }
   .f2btn:disabled { opacity:.4; cursor:default; }
+  /* the pond frame */
+  .f2grid .fmain { display:flex; flex-direction:column; min-height:0; }
   #f2pond { position:relative; flex:1; min-height:170px; border-radius:50% / 35%; overflow:hidden; cursor:crosshair; touch-action:none;
             background:radial-gradient(ellipse at 50% 40%, #3a8cc4, #164f7a 60%, #0b2d4a); box-shadow:inset 0 0 40px #031524; }
   #f2pond::before { content:""; position:absolute; inset:-20%; opacity:.25; animation:waves 6s linear infinite; pointer-events:none;
@@ -332,6 +357,10 @@
   #f2pond[data-z="mc"] { background:radial-gradient(ellipse at 50% 40%, #ffb03a, #d0400f 55%, #5a0f05); box-shadow:inset 0 0 50px #2a0500; }
   #f2pond[data-z="mc"]::before { opacity:.35; animation-duration:3s;
                                  background:repeating-radial-gradient(ellipse at 40% 50%, transparent 0 14px, rgba(255,240,150,.5) 15px 17px); }
+  #f2pond.gl { border-radius:6px; background:#000; border:2px solid #6a5020; box-shadow:0 0 0 1px #000, 0 4px 18px rgba(0,0,0,.6); }
+  #f2pond canvas.f2gl { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  #f2pond.gl::before, #f2pond.gl #f2bob, #f2pond.gl #f2school { display:none; }
+  #f2pond.gl::after { content:""; position:absolute; inset:0; z-index:2; pointer-events:none; box-shadow:inset 0 0 70px rgba(0,0,0,.55); }
   #f2bob { position:absolute; width:20px; height:20px; border-radius:50%; transform:translate(-50%,-50%); display:none; z-index:2;
            background:linear-gradient(#e53935 50%, #fafafa 50%); box-shadow:0 2px 6px rgba(0,0,0,.6); }
   #f2bob.on { display:block; animation:bobbing 1.6s ease-in-out infinite; }
@@ -346,35 +375,99 @@
   #f2school i:nth-child(4) { animation-delay:-1.9s; top:45%; animation-direction:reverse; }
   @keyframes f2swim { 0% { left:10%; top:40%; } 25% { left:50%; top:15%; } 50% { left:85%; top:45%; } 75% { left:50%; top:80%; } 100% { left:10%; top:40%; } }
   #f2schooltag { position:absolute; left:50%; top:-14px; transform:translateX(-50%); white-space:nowrap; font-size:.68rem; color:#fff; text-shadow:1px 1px 0 #000; }
-  #f2reel { display:none; margin-top:.5rem; }
+  #f2hud { position:absolute; left:8px; top:6px; z-index:3; font-size:.74rem; color:#fff; text-shadow:1px 1px 2px #000, 0 0 4px #000; text-align:left;
+           pointer-events:none; line-height:1.45; background:linear-gradient(90deg, rgba(0,0,0,.45), transparent); padding:.15rem .5rem .15rem .4rem; border-radius:4px; }
+  #f2ev { position:absolute; right:8px; top:6px; z-index:3; display:none; background:rgba(10,8,4,.8); border:1px solid #c9a14a; border-radius:4px;
+          padding:.3rem .55rem; font-size:.72rem; text-align:left; pointer-events:none; line-height:1.4; }
+  #f2ev.on { display:block; }
+  #f2ev b { color:#ffd100; }
+  #f2reel { display:none; margin-top:.45rem; }
   #f2reel.on { display:block; }
-  #f2track { position:relative; height:22px; background:linear-gradient(90deg, #5a1010, #3a2a10 35%, #3a2a10 65%, #5a1010); border:1px solid #7a5a1c; }
-  #f2green { position:absolute; top:0; bottom:0; background:rgba(60,200,60,.45); border-left:1px solid #6f6; border-right:1px solid #6f6; }
-  #f2needle { position:absolute; top:-4px; bottom:-4px; width:4px; margin-left:-2px; background:#fff; box-shadow:0 0 6px #fff; }
-  #f2prog { height:8px; background:#0a0a0a; border:1px solid #444; margin-top:.3rem; position:relative; }
+  #f2track { position:relative; height:22px; background:linear-gradient(90deg, #6a1010, #2a2010 30%, #2a2010 70%, #6a1010); border:1px solid #8a6a2a; border-radius:3px; }
+  #f2green { position:absolute; top:0; bottom:0; background:linear-gradient(rgba(90,230,90,.55), rgba(30,140,30,.45)); border-left:1px solid #8f8; border-right:1px solid #8f8; }
+  #f2needle { position:absolute; top:-4px; bottom:-4px; width:4px; margin-left:-2px; background:#fff; box-shadow:0 0 8px #fff; border-radius:2px; }
+  #f2prog { height:8px; background:#0a0806; border:1px solid #5a4318; margin-top:.3rem; position:relative; border-radius:3px; overflow:hidden; }
   #f2prog i { position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg, #c9a14a, #ffd100); }
-  #f2reeltxt { font-size:.75rem; color:#bbb; margin-top:.2rem; }
-  #f2msg { min-height:2.6em; margin:.6rem 0 .3rem; font-size:.92rem; }
-  #f2msg .err { color:#ff3030; font-weight:bold; }
-  #f2cast { align-self:center; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1.2rem; cursor:pointer; user-select:none; touch-action:none; }
-  #f2tabs { display:flex; gap:.3rem; margin-bottom:.5rem; flex:none; }
-  #f2tabs button { flex:1; background:#1b140a; border:1px solid #4a3818; color:#bbb; font:.78rem Arial,sans-serif; padding:.3rem; cursor:pointer; }
-  #f2tabs button.on { border-color:#ffd100; color:#ffd100; }
-  #f2panel { overflow:auto; flex:1; min-height:0; }
-  .f2row { display:flex; align-items:center; justify-content:space-between; gap:.4rem; padding:.18rem 0; border-bottom:1px solid #2a2014; }
+  #f2reeltxt { font-size:.72rem; color:#bbb; margin-top:.2rem; }
+  .f2bar { display:flex; gap:.6rem; align-items:stretch; margin-top:.45rem; }
+  #f2msg { flex:1; height:5.4em; overflow:hidden; text-align:left; font-size:.78rem; line-height:1.35; padding:.3rem .5rem; color:#e8e0c8;
+           background:linear-gradient(rgba(0,0,0,.15), rgba(0,0,0,.55)); border:1px solid #3a2c12; border-radius:4px; display:flex; flex-direction:column; justify-content:flex-end; }
+  #f2msg > div { animation:f2in .3s ease-out; }
+  #f2msg > div:nth-last-child(n+4) { opacity:.55; }
+  @keyframes f2in { from { opacity:0; transform:translateY(4px); } }
+  #f2msg .err, #lkinfo .err { color:#ff3a2a; font-weight:bold; }
+  #f2cast { flex:none; min-width:8.5rem; background:linear-gradient(#b3251a, #6a0d07 60%, #4a0805); border:1px solid #e0a63a; border-radius:4px; color:#ffd100;
+            font:bold .95rem "Palatino Linotype", Georgia, serif; letter-spacing:.05em; text-shadow:1px 1px 1px #000; cursor:pointer; user-select:none; touch-action:none;
+            box-shadow:inset 0 1px 0 rgba(255,200,150,.35), 0 2px 6px rgba(0,0,0,.6); }
+  #f2cast:hover { filter:brightness(1.15); }
+  #f2cast:active { transform:translateY(1px); }
+  /* right panel: tabs, bag grid, vendor, camp, journal */
+  #f2tabs { display:flex; gap:.25rem; margin-bottom:.45rem; flex:none; }
+  #f2tabs button { flex:1; background:linear-gradient(#241a0c, #120d06); border:1px solid #4a3818; border-radius:4px 4px 2px 2px; color:#a8987a; font:.74rem Arial,sans-serif;
+                   padding:.32rem .1rem; cursor:pointer; }
+  #f2tabs button.on { border-color:#c9a14a; color:#ffd100; background:linear-gradient(#4a3510, #1e1608); box-shadow:inset 0 1px 0 rgba(255,230,150,.2); }
+  #f2panel { overflow:auto; flex:1; min-height:0; padding-right:.15rem; }
+  .f2head { display:flex; justify-content:space-between; align-items:center; gap:.3rem; margin-bottom:.4rem; color:#e8c060; font-weight:bold; }
+  .f2hint { color:#7a6a4a; font-size:.7rem; margin:.3rem 0; font-weight:normal; }
+  .f2baggrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(40px, 1fr)); gap:4px; }
+  .f2bslot { position:relative; aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:21px; cursor:pointer; user-select:none;
+             background:radial-gradient(circle at 50% 35%, #2a2418, #0a0806); border:1px solid var(--rc, #2a2216); border-radius:4px;
+             box-shadow:inset 0 0 8px #000, inset 0 0 6px color-mix(in srgb, var(--rc, #000) 35%, transparent); }
+  .f2bslot.empty { cursor:default; background:#0a0806; border-color:#221a0e; }
+  .f2bslot:not(.empty):hover { filter:brightness(1.3); }
+  .f2bslot.sel { outline:2px solid #ffd100; outline-offset:1px; }
+  .f2bslot b { position:absolute; right:2px; bottom:0; font-size:.66rem; color:#fff; text-shadow:1px 1px 0 #000, -1px -1px 0 #000; }
+  .f2det { display:flex; gap:.5rem; align-items:center; margin-top:.4rem; padding:.4rem; background:rgba(0,0,0,.35); border:1px solid #3a2c12; border-radius:4px; }
+  .f2det .f2btn { margin-top:.3rem; }
+  .f2row { display:flex; align-items:center; gap:.45rem; padding:.28rem .2rem; border-bottom:1px solid #241a0c; }
+  .f2row:hover { background:rgba(255,209,0,.04); }
   .f2row .nm { flex:1; min-width:0; }
-  .f2row .st { display:block; color:#8a8a8a; font-size:.7rem; }
+  .f2row .st { display:block; color:#8a7a5a; font-size:.68rem; }
   .f2row .pr { flex:none; font-size:.72rem; text-align:right; }
-  .f2head { display:flex; justify-content:space-between; align-items:center; gap:.3rem; margin-bottom:.3rem; color:var(--gold); }
+  .f2row select { margin-top:.2rem; max-width:100%; background:#0a0806; color:#ddd; border:1px solid #5a4318; font-size:.72rem; }
+  #f2panel h4 { font:bold .68rem "Palatino Linotype", Georgia, serif; letter-spacing:.14em; text-transform:uppercase; color:#c9a14a; margin:.65rem 0 .2rem; }
   #f2panel ul { list-style:none; }
-  #f2panel li.missing { color:#4a4a4a; font-style:italic; }
-  #f2panel h4 { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; margin:.6rem 0 .2rem; }
-  #f2close { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
-  @media (max-width:860px) {
+  #f2panel li { padding:.08rem 0; display:flex; align-items:center; gap:.3rem; }
+  #f2panel li .ji { width:1.3em; text-align:center; flex:none; }
+  #f2panel li .rec { color:#8a7a5a; font-size:.68rem; margin-left:auto; }
+  #f2panel li.missing { color:#4a4030; font-style:italic; }
+  #f2close { position:absolute; top:.55rem; right:.6rem; z-index:5; background:linear-gradient(#8a1a10, #4a0a06); border:1px solid #e0a63a; border-radius:3px; color:#ffd100;
+             font:bold .85rem Arial,sans-serif; padding:.15rem .5rem; cursor:pointer; }
+  /* tooltip */
+  #f2tip { position:fixed; z-index:90; display:none; max-width:270px; pointer-events:none; text-align:left; font:.76rem Arial,sans-serif; color:#fff; line-height:1.4;
+           background:rgba(8,10,28,.95); border:1px solid #9a9ab0; border-radius:4px; padding:.4rem .55rem; box-shadow:0 2px 10px #000; }
+  #f2tip .tn { font-weight:bold; font-size:.85rem; }
+  #f2tip .tk { color:#ffd100; }
+  #f2tip .tv { color:#ddd; margin-top:.15rem; }
+  /* modals inside the fishing window: lockpicking, boat destinations */
+  .f2modal { position:absolute; inset:0; z-index:20; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.65); border-radius:6px; }
+  .f2modal.on { display:flex; }
+  .f2mbox { background:linear-gradient(#22180c, #0e0a06); border:2px solid #9a7630; border-radius:6px; padding:1rem 1.2rem; text-align:center; min-width:min(420px, 90%);
+            box-shadow:inset 0 0 0 1px #000, 0 0 30px #000; color:#ddd; }
+  .f2mbox h3 { font:bold 1.05rem "Palatino Linotype", Georgia, serif; margin-bottom:.7rem; color:#e8c060; }
+  #lkpins { display:flex; gap:10px; justify-content:center; margin:.4rem 0 .8rem; cursor:pointer; }
+  .lkslot { position:relative; width:34px; height:150px; background:linear-gradient(90deg, #111, #2a2a2a 50%, #111); border:1px solid #555; border-radius:5px;
+            box-shadow:inset 0 0 8px #000; }
+  .lkslot.cur { border-color:#ffd100; box-shadow:inset 0 0 8px #000, 0 0 10px rgba(255,209,0,.45); }
+  .lkslot.snap { animation:offernope .3s; border-color:#f33; }
+  .lkband { position:absolute; left:2px; right:2px; background:rgba(255,209,0,.22); border-top:1px solid #ffd100; border-bottom:1px solid #ffd100; }
+  .lkpin { position:absolute; left:18%; right:18%; height:12px; border-radius:3px; background:linear-gradient(#eee, #888); box-shadow:0 1px 3px #000; }
+  .lkslot.set .lkpin { background:linear-gradient(#8f8, #2a8a2a); }
+  .lkslot.set .lkband { background:rgba(30,255,0,.2); border-color:#1eff00; }
+  #lkinfo { min-height:2.6em; font-size:.82rem; margin-bottom:.6rem; }
+  .f2mbtns { display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; }
+  #f2destbtns { display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap; margin-bottom:.7rem; }
+  .f2dest { width:150px; padding:.7rem .5rem; background:linear-gradient(#1a3048, #0a1624); border:1px solid #4a8ab0; border-radius:6px; color:#d8f0ff; cursor:pointer;
+            font:bold .85rem Arial,sans-serif; display:flex; flex-direction:column; align-items:center; gap:.25rem; }
+  .f2dest span { font-size:1.8rem; }
+  .f2dest small { font-weight:normal; color:#9ab8cc; font-size:.7rem; }
+  .f2dest:hover { border-color:#9fe0ff; box-shadow:0 0 12px rgba(120,200,255,.4); }
+  @media (max-width:900px) {
+    .f2top { flex-direction:column; align-items:flex-start; gap:.4rem; }
     .f2grid { grid-template-columns:1fr; height:auto; }
     .f2grid .fmain { order:-1; }
-    #f2pond { flex:none; height:32vh; }
-    .f2grid .fcol { max-height:32vh; }
+    #f2pond { flex:none; height:40vh; }
+    .f2panel { max-height:40vh; }
   }
   #legendflash { position:fixed; inset:0; z-index:56; pointer-events:none; background:radial-gradient(circle, rgba(255,140,0,.6), transparent 70%); opacity:0; }
   #legendflash.on { animation:fflash 1.6s ease-out; }
@@ -800,27 +893,31 @@
   <div id="fishspot" aria-label="Fishing spot"><i></i><i></i><i></i></div>
   <div id="fishpick" class="ov"><div class="fpbox"><h2>🎣 Gone Fishin'</h2>
     <div class="fpbtns"><button id="fp1">Fishing Classic<small>The original. Cast, wait, click, catch.</small></button>
-      <button id="fp2"><span class="new">NEW</span><br>Fishing v2<small>Now in 3D: real water, zones, gear, weather, day and night, cooking and the DT Extravaganza</small></button></div></div></div>
+      <button id="fp2"><span class="new">NEW</span><br>Fishing v2<small>Now in 3D: real water, zones, gear, weather, cooking, bait, treasure chests, boat trips and the DT Extravaganza</small></button></div></div></div>
   <div id="fish2" class="ov"><div class="fbox f2box">
     <button id="f2close" aria-label="Close">✕</button>
-    <h2>Fishing v2</h2>
-    <div id="f2zones"></div>
+    <div class="f2top"><h2>🎣 Fishing</h2><div id="f2zones"></div></div>
     <div class="f2grid">
-      <div class="fcol"><h3>Angler</h3><div id="f2gold"></div>
-        <div id="f2skillbar"><i></i></div><div id="f2skilltxt"></div>
-        <h3>Gear</h3><div id="f2gear"></div><div id="f2stats"></div>
-        <h3>Nat Pagle wants</h3><div id="f2quest"></div></div>
+      <div class="f2panel f2side">
+        <div class="f2card"><div class="f2title">Angler</div><div id="f2gold"></div><div id="f2skillbar"><i></i><span id="f2skilltxt"></span></div></div>
+        <div class="f2card"><div class="f2title">Equipment</div><div id="f2gear"></div><div id="f2buffs"></div><div id="f2stats"></div></div>
+        <div class="f2card"><div class="f2title">📜 Nat Pagle wants</div><div id="f2quest"></div></div>
+      </div>
       <div class="fmain">
         <div id="f2pond"><div id="f2hud"></div><div id="f2ev"></div><div id="f2school"><span id="f2schooltag"></span><i></i><i></i><i></i><i></i></div><div id="f2bob"></div></div>
         <div id="f2reel"><div id="f2track"><div id="f2green"></div><div id="f2needle"></div></div><div id="f2prog"><i></i></div>
           <div id="f2reeltxt">Hold the mouse (or Space) to reel. Keep the needle in the green.</div></div>
-        <div id="f2msg"></div>
-        <button id="f2cast">🎣 Cast</button>
+        <div class="f2bar"><div id="f2msg"></div><button id="f2cast">🎣 Cast</button></div>
       </div>
-      <div class="fcol"><div id="f2tabs"><button data-t="bag" class="on">🎒 Bag</button><button data-t="shop">🛒 Vendor</button><button data-t="cook">🔥 Cook</button><button data-t="journal">📖 Journal</button></div>
+      <div class="f2panel"><div id="f2tabs"><button data-t="bag" class="on">🎒 Bag</button><button data-t="shop">🛒 Vendor</button><button data-t="camp">🔥 Camp</button><button data-t="journal">📖 Journal</button></div>
         <div id="f2panel"></div></div>
     </div>
+    <div id="f2lock" class="f2modal"><div class="f2mbox"><h3 id="lktitle"></h3><div id="lkpins"></div><div id="lkinfo"></div>
+      <div class="f2mbtns"><button class="f2btn buy" id="lkpick">🔓 Set pin (Space)</button><button class="f2btn" id="lksmash">🔨 Smash it open</button><button class="f2btn" id="lkleave">Leave it</button></div></div></div>
+    <div id="f2dest" class="f2modal"><div class="f2mbox"><h3>⛵ Where should Captain Grief take you?</h3><div id="f2destbtns"></div>
+      <button class="f2btn" id="f2destx">Not now</button></div></div>
   </div></div>
+  <div id="f2tip"></div>
   <button id="fusionbtn" aria-label="Fusion">FUSION</button>
   <div id="fusion">
     <img class="fl" id="fl-naga" src="naga.webp" alt="Naga">
@@ -2031,6 +2128,7 @@ $("fp2").addEventListener("click", () => { $("fishpick").classList.remove("on");
 
 // ---------- Fishing v2, 3D pond: three.js scene + a real-time wave simulation on a height grid ----------
 // Pond coordinates are the same percent space the game uses: x 0..100 left to right, y 0..100 far to near.
+// Out on a boat pass you fish with up to three lines at once, all from the same rod; every line has its own bobber and state.
 function makePond3D(T, host, hooks) {
   const RX = 9, RZ = 5.6, NX = 160, NZ = 100, W = RX * 2.06, D = RZ * 2.06, DX = W / (NX - 1), DZ = D / (NZ - 1);
   const renderer = new T.WebGLRenderer({ antialias: true });
@@ -2054,10 +2152,12 @@ function makePond3D(T, host, hooks) {
   }
   const rng = seed => () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-  // the basin: an elliptical bowl, a shore rising around it, gentle hills in the back
+  // the basin: an elliptical bowl, a shore rising around it, gentle hills in the back. Out at sea there's no shore at all
+  let flat = false;
   function ground(x, z) {
     const e = Math.hypot(x / RX, z / RZ), n = vnoise(x * .35, z * .35);
     if (e < 1) return -1.75 * Math.pow(1 - e * e, .6) + .12 + n * .05 * (1 - e);
+    if (flat) return -.05;
     let y = .12 + (e - 1) * .9 + n * .4 * Math.min(1, (e - 1) * 2) + vnoise(x * 1.3, z * 1.3) * .06 * Math.min(1, (e - 1) * 4);
     if (z < -RZ) y += Math.min(1.6, Math.max(0, -z - RZ - 2) * .14) + vnoise(x * .12, z * .12) * .5 * Math.min(1, Math.max(0, -z - RZ) / 6);
     return y;
@@ -2068,7 +2168,7 @@ function makePond3D(T, host, hooks) {
   const U = {
     uTime: { value: 0 }, uSkyTop: { value: col(0x4f8fd9) }, uSkyBot: { value: col(0xcfe6ff) }, uSunDir: { value: new T.Vector3(-.5, .8, -.4).normalize() },
     uSunCol: { value: col(0xffffff) }, uLight: { value: 1 }, uDeep: { value: col(0x0d3b5c) }, uShallow: { value: col(0x3f9fb8) },
-    uShore: { value: col(0x4f8a2e) }, uSand: { value: col(0xb8a36a) }, uRock: { value: col(0x6d6a62) }, uLava: { value: 0 },
+    uShore: { value: col(0x4f8a2e) }, uSand: { value: col(0xb8a36a) }, uRock: { value: col(0x6d6a62) }, uLava: { value: 0 }, uIndoor: { value: 0 }, uSea: { value: 0 },
     uRX: { value: RX }, uRZ: { value: RZ }, uFogCol: { value: col(0xcfe6ff) }, uFogNear: { value: 32 }, uFogFar: { value: 95 },
     uCloud: { value: .3 }, uNight: { value: 0 }, tRefl: { value: null }, uTexM: { value: new T.Matrix4() }
   };
@@ -2079,27 +2179,28 @@ function makePond3D(T, host, hooks) {
       return mix(mix(hsh(i), hsh(i + vec2(1., 0.)), f.x), mix(hsh(i + vec2(0., 1.)), hsh(i + vec2(1., 1.)), f.x), f.y); }
     float fbm(vec2 p) { float v = 0., a = .5; for (int i = 0; i < 5; i++) { v += a * vn(p); p = p * 2.03 + 17.1; a *= .5; } return v; }`;
 
-  // ---- sky: gradient, sun or moon, drifting clouds
+  // ---- sky: gradient, sun or moon, drifting clouds (caves and lava get a dark void instead)
   const sky = new T.Mesh(new T.SphereGeometry(200, 32, 16), new T.ShaderMaterial({
     uniforms: U, side: T.BackSide, depthWrite: false, fog: false,
     vertexShader: "varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }",
-    fragmentShader: `uniform vec3 uSkyTop, uSkyBot, uSunDir, uSunCol; uniform float uTime, uCloud, uNight, uLava, uLight; varying vec3 vD; ${NOISE}
+    fragmentShader: `uniform vec3 uSkyTop, uSkyBot, uSunDir, uSunCol; uniform float uTime, uCloud, uNight, uLava, uIndoor, uLight; varying vec3 vD; ${NOISE}
       void main(){
         vec3 d = normalize(vD);
         vec3 c = mix(uSkyBot, uSkyTop, smoothstep(-.05, .5, d.y));
-        if (uLava < .5) {
+        if (uIndoor < .5) {
           vec3 sd = normalize(uSunDir); float s = max(dot(d, sd), 0.);
           vec3 disc = mix(uSunCol * 1.6, vec3(.92, .95, 1.), uNight);
           c += disc * smoothstep(.9985, .9992, s) + uSunCol * pow(s, 60.) * .35 * (1. - uNight) + uSunCol * pow(s, 8.) * .12 * (1. - uNight);
-          // clouds on a flat layer above
           vec2 uv = d.xz / max(d.y, .06) * .55 + vec2(uTime * .006, uTime * .002);
           float n = fbm(uv * 1.6);
           float cov = smoothstep(1. - uCloud, 1.15 - uCloud * .6, n) * smoothstep(.02, .2, d.y);
           vec3 cc = mix(vec3(1.), uSkyBot, .35) * (.45 + .55 * uLight) + uSunCol * pow(s, 4.) * .25;
           cc = mix(cc, vec3(.12, .14, .2), uNight * .8);
           c = mix(c, cc, cov * .9);
-        } else {
+        } else if (uLava > .5) {
           c += vec3(.5, .08, 0.) * (1. - smoothstep(-.1, .35, d.y)) * .8;
+        } else {
+          c += vec3(.02, .08, .1) * fbm(d.xz * 6. + uTime * .02);
         }
         gl_FragColor = vec4(c, 1.);
       }`
@@ -2126,30 +2227,40 @@ function makePond3D(T, host, hooks) {
   // ---- terrain with per-vertex colour variation
   const tg = new T.PlaneGeometry(110, 70, 170, 110); tg.rotateX(-Math.PI / 2); tg.translate(0, 0, -16);
   const tp = tg.attributes.position, shade = new Float32Array(tp.count);
-  for (let i = 0; i < tp.count; i++) {
-    const x = tp.getX(i), z = tp.getZ(i);
-    tp.setY(i, ground(x, z)); shade[i] = .9 + .12 * vnoise(x * .9, z * .9) + .06 * vnoise(x * 3.1, z * 3.1);
+  function shapeTerrain() {
+    for (let i = 0; i < tp.count; i++) {
+      const x = tp.getX(i), z = tp.getZ(i);
+      tp.setY(i, ground(x, z)); shade[i] = .9 + .12 * vnoise(x * .9, z * .9) + .06 * vnoise(x * 3.1, z * 3.1);
+    }
+    tp.needsUpdate = true; tg.computeVertexNormals();
   }
   tg.setAttribute("aShade", new T.BufferAttribute(shade, 1));
-  tg.computeVertexNormals();
+  shapeTerrain();
   const terrain = new T.Mesh(tg, new T.ShaderMaterial({
     uniforms: U,
     vertexShader: "attribute float aShade; varying float vS; varying vec3 vW; varying vec3 vN; void main(){ vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; vN = normal; vS = aShade; gl_Position = projectionMatrix * viewMatrix * w; }",
-    fragmentShader: `uniform vec3 uShore, uSand, uRock, uDeep, uSunCol; uniform vec3 uSunDir; uniform float uTime, uLight, uLava;
+    fragmentShader: `uniform vec3 uShore, uSand, uRock, uDeep, uShallow, uSunCol, uSkyBot; uniform vec3 uSunDir; uniform float uTime, uLight, uLava, uSea;
       varying vec3 vW; varying vec3 vN; varying float vS; ${FOG} ${NOISE}
       void main(){
         vec3 n = normalize(vN); float slope = 1. - n.y;
+        if (uSea > .5 && length(vec2(vW.x / 9., vW.z / 5.6)) > .98) {
+          // the open sea beyond the play area: rolling swell, glints and the sky mirrored in it
+          float w = sin(vW.x * .8 + uTime * .9) * sin(vW.z * .6 - uTime * .7) + .5 * sin((vW.x + vW.z) * 1.9 + uTime * 1.6);
+          vec3 V = normalize(cameraPosition - vW);
+          float fr = pow(1. - max(V.y, 0.), 4.);
+          vec3 c = mix(mix(uDeep, uShallow, .35 + .12 * w) * (.35 + .65 * uLight), uSkyBot, fr * .8);
+          c += uSunCol * pow(max(w, 0.), 8.) * .25 * uLight;
+          gl_FragColor = vec4(fogged(c, vW), 1.); return;
+        }
         float g = fbm(vW.xz * .45);
         vec3 grass = mix(uShore * .78, uShore * 1.12, g);
         grass = mix(grass, uShore * vec3(1.15, 1.1, .7), smoothstep(.62, .8, fbm(vW.xz * .9 + 3.)) * .5);
         vec3 c = mix(uSand * (.92 + .16 * vn(vW.xz * 6.)), grass, smoothstep(.3, .6, vW.y + (g - .5) * .3));
         c = mix(c, uRock * (.85 + .3 * g), smoothstep(.2, .42, slope));
-        // wet sand just above the waterline
         c *= 1. - .28 * smoothstep(.3, .05, vW.y) * step(-.02, vW.y);
         c *= vS;
-        float under = 0.;
         if (vW.y < .03) {
-          under = clamp(-vW.y / 1.75, 0., 1.);
+          float under = clamp(-vW.y / 1.75, 0., 1.);
           c = mix(c, uDeep * .7, under * .75);
           float ca = abs(sin(vW.x * 2.3 + uTime * 1.1) * sin(vW.z * 2.7 - uTime * .9) + .5 * sin((vW.x + vW.z) * 1.7 + uTime * .7));
           c += pow(ca, 3.) * .28 * (1. - under) * uLight * (1. - uLava);
@@ -2181,7 +2292,7 @@ function makePond3D(T, host, hooks) {
     vertexShader: `uniform mat4 uTexM; attribute float aDepth; varying vec3 vW; varying vec3 vN; varying float vDepth; varying vec4 vR;
       void main(){ vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; vN = normal; vDepth = aDepth; vR = uTexM * vec4(w.x, 0., w.z, 1.);
         gl_Position = projectionMatrix * viewMatrix * w; }`,
-    fragmentShader: `uniform vec3 uSkyTop, uSkyBot, uDeep, uShallow, uSunCol, uSunDir; uniform float uTime, uLight, uLava, uRX, uRZ;
+    fragmentShader: `uniform vec3 uSkyTop, uSkyBot, uDeep, uShallow, uSunCol, uSunDir; uniform float uTime, uLight, uLava, uSea, uRX, uRZ;
       uniform sampler2D tRefl; varying vec3 vW; varying vec3 vN; varying float vDepth; varying vec4 vR; ${FOG}
       void main(){
         float e = length(vec2(vW.x / uRX, vW.z / uRZ)); if (e > 1.) discard;
@@ -2190,21 +2301,22 @@ function makePond3D(T, host, hooks) {
           .022 * sin(dot(p, vec2(2.1, .7)) + t * 1.4) + .014 * sin(dot(p, vec2(-3.7, 2.3)) + t * 2.1) + .008 * sin(dot(p, vec2(7.9, -5.3)) + t * 3.3),
           0.,
           .022 * cos(dot(p, vec2(.6, 2.4)) + t * 1.2) + .014 * cos(dot(p, vec2(3.1, -3.3)) + t * 1.8) + .008 * cos(dot(p, vec2(-6.1, 8.2)) + t * 2.9));
-        vec3 N = normalize(vN + dn * (1. - uLava * .7));
+        vec3 N = normalize(vN + dn * (1. - uLava * .7) * (1. + uSea));
         vec3 V = normalize(cameraPosition - vW);
         float fres = .03 + .97 * pow(1. - max(dot(N, V), 0.), 5.);
         vec3 R = reflect(-V, N);
         vec2 ruv = vR.xy / vR.w + N.xz * .09;
         vec3 refl = texture2D(tRefl, ruv).rgb;
         float d = clamp(vDepth / 1.6, 0., 1.);
+        if (uSea > .5) d = max(d, .75);
         vec3 body = mix(uShallow, uDeep, pow(d, .7)) * (.3 + .7 * uLight);
         vec3 c = mix(body, refl, clamp(fres * 1.15 + .12, 0., 1.));
         c += uSunCol * pow(max(dot(R, uSunDir), 0.), 220.) * 2.6 * uLight;
         c += uSunCol * pow(max(dot(R, uSunDir), 0.), 18.) * .08 * uLight;
-        // a soft foam line where the water meets the shore
-        float foam = smoothstep(.955, 1., e) * (.6 + .4 * sin(e * 140. - t * 2. + vW.x));
+        float foam = smoothstep(.955, 1., e) * (.6 + .4 * sin(e * 140. - t * 2. + vW.x)) * (1. - uSea);
         c = mix(c, vec3(.95) * (.4 + .6 * uLight), foam * .22);
         float a = mix(.45, .94, d) + fres * .4;
+        if (uSea > .5) { c = mix(c, mix(uDeep, uShallow, .35) * (.35 + .65 * uLight), smoothstep(.8, 1., e) * .6); a = 1.; }
         if (uLava > .5) {
           float n = sin(vW.x * 1.7 + t * .4) * sin(vW.z * 2.1 - t * .3) + .35 * sin((vW.x - vW.z) * 3. + t) + .2 * sin(vW.x * 6.3 - t * .8) * sin(vW.z * 5.7);
           float hot = clamp(.5 + n * .3 + (1. - N.y) * 7., 0., 1.);
@@ -2260,29 +2372,34 @@ function makePond3D(T, host, hooks) {
   // ---- decor around the pond, one style per zone
   let decor = null, pads = [];
   const lam = c => new T.MeshLambertMaterial({ color: c });
+  const glow = c => new T.MeshBasicMaterial({ color: c });
   const geo = { cone: new T.ConeGeometry(1, 1, 8), cyl: new T.CylinderGeometry(1, 1, 1, 7), sph: new T.IcosahedronGeometry(1, 1),
-    box: new T.BoxGeometry(1, 1, 1), rock: new T.DodecahedronGeometry(1, 0), pad: new T.CircleGeometry(1, 16, .35, Math.PI * 2 - .7) };
+    box: new T.BoxGeometry(1, 1, 1), rock: new T.DodecahedronGeometry(1, 0), oct: new T.OctahedronGeometry(1, 0),
+    pad: new T.CircleGeometry(1, 16, .35, Math.PI * 2 - .7) };
   function part(g, m, x, y, z, sx, sy, sz, rx, ry, rz) {
     const o = new T.Mesh(geo[g], m); o.position.set(x, y, z); o.scale.set(sx, sy, sz); o.rotation.set(rx || 0, ry || 0, rz || 0); return o;
   }
   const tint = (c, r, k) => { const x = col(c); x.offsetHSL((r() - .5) * .04, (r() - .5) * .1, (r() - .5) * k); return x; };
+  function pine(g, M, s, snowy) {
+    g.add(part("cyl", M("trunk", 0x4a3020), 0, .45 * s, 0, .13 * s, .9 * s, .13 * s));
+    const pm = M("pine", 0x1f5a28, .1), sn = M("snow", 0xeef4ff, .03);
+    [[1.5, 1.15, 1.9], [2.35, .9, 1.6], [3.1, .6, 1.3]].forEach(([y, r, hh]) => {
+      g.add(part("cone", pm, 0, y * s, 0, r * s, hh * s, r * s));
+      if (snowy) g.add(part("cone", sn, 0, (y + hh * .2) * s, 0, r * .75 * s, hh * .6 * s, r * .75 * s));
+    });
+  }
   function buildDecor(theme, seed) {
     if (decor) scene.remove(decor);
     decor = new T.Group(); pads = [];
     const style = theme.decor, r = rng(seed), mats = {};
     const M = (key, c, k) => { const id = key + Math.floor(r() * 4); return mats[id] || (mats[id] = lam(tint(c, r, k || .08))); };
-    const count = { pine: 120, farm: 50, acacia: 34, palm: 50, autumn: 90, rock: 70 }[style] || 60;
+    const count = { pine: 120, snow: 110, farm: 50, acacia: 34, palm: 50, autumn: 90, rock: 70, cave: 90, sea: 0 }[style] ?? 60;
     for (let n = 0; n < count; n++) {
       const a = r() * Math.PI * 2, e = 1.18 + r() * r() * 5.5, x = Math.cos(a) * RX * e, z = Math.sin(a) * RZ * e;
-      if (z > RZ * .5 && Math.abs(x) < RX * 1.3) continue;   // keep the near shore in front of the camera clear
+      if (z > RZ * .5 && Math.abs(x) < RX * 1.3) continue;
       const y = ground(x, z) - .05, s = .75 + r() * .8, g = new T.Group(); g.position.set(x, y, z); g.rotation.y = r() * 6;
-      if (style === "pine") {
-        g.add(part("cyl", M("trunk", 0x4a3020), 0, .45 * s, 0, .13 * s, .9 * s, .13 * s));
-        const pm = M("pine", 0x1f5a28, .1);
-        g.add(part("cone", pm, 0, 1.5 * s, 0, 1.15 * s, 1.9 * s, 1.15 * s));
-        g.add(part("cone", pm, 0, 2.35 * s, 0, .9 * s, 1.6 * s, .9 * s));
-        g.add(part("cone", pm, 0, 3.1 * s, 0, .6 * s, 1.3 * s, .6 * s));
-      } else if (style === "farm") {
+      if (style === "pine" || style === "snow") pine(g, M, s, style === "snow");
+      else if (style === "farm") {
         if (r() < .5) { g.add(part("cyl", M("hay", 0xd8b84a), 0, .3 * s, 0, .5 * s, .6 * s, .5 * s)); g.add(part("cone", M("hay", 0xd8b84a), 0, .8 * s, 0, .55 * s, .5 * s, .55 * s)); }
         else if (r() < .5) { g.add(part("cyl", M("trunk", 0x5a3a1e), 0, .8 * s, 0, .1 * s, 1.6 * s, .1 * s)); g.add(part("sph", M("leaf", 0x6a8a30), 0, 1.8 * s, 0, .8 * s, .7 * s, .8 * s)); }
         else g.add(part("rock", M("grey", 0x8a8070), 0, .2 * s, 0, .6 * s, .45 * s, .6 * s, r(), r(), r()));
@@ -2301,20 +2418,28 @@ function makePond3D(T, host, hooks) {
         const cm = M("leaf" + Math.floor(r() * 3), [0xc0452b, 0x8e44ad, 0xd8782a][Math.floor(r() * 3)], .1);
         g.add(part("sph", cm, 0, 1.9 * s, 0, 1 * s, .9 * s, 1 * s));
         g.add(part("sph", cm, .5 * s, 1.6 * s, .2 * s, .6 * s, .55 * s, .6 * s));
+      } else if (style === "cave") {
+        const k = r();
+        if (k < .45) g.add(part("cone", M("stone", 0x3a3530, .06), 0, .9 * s, 0, .35 * s, 1.8 * s * (1 + r()), .35 * s));
+        else if (k < .75) { g.add(part("cyl", M("stem", 0xd8d0c0), 0, .25 * s, 0, .05 * s, .5 * s, .05 * s));
+          g.add(part("sph", glow([0x3ad8ff, 0xb05aff, 0x4affb0][Math.floor(r() * 3)]), 0, .52 * s, 0, .25 * s, .1 * s, .25 * s)); }
+        else g.add(part("oct", glow(0x5ab8ff), 0, .4 * s, 0, .15 * s, .55 * s, .15 * s, 0, 0, (r() - .5) * .6));
+        // stalactites hanging out of the dark above
+        if (r() < .35) g.add(part("cone", M("stone", 0x2a2622, .05), 0, 7 + r() * 2, 0, .4 * s, 2.4 * s, .4 * s, Math.PI, 0, 0));
       } else {
         g.add(part("rock", M("rock", 0x2a1e18, .05), 0, .3 * s, 0, .9 * s, .7 * s, .9 * s, r(), r(), r()));
-        if (r() < .6) g.add(part("sph", new T.MeshBasicMaterial({ color: 0xff6a10 }), .3 * s, .55 * s, .2, .07 * s, .07 * s, .07 * s));
+        if (r() < .6) g.add(part("sph", glow(0xff6a10), .3 * s, .55 * s, .2, .07 * s, .07 * s, .07 * s));
       }
       decor.add(g);
     }
-    // rocks dotted along the waterline
-    const rockM = theme.lava ? lam(0x1e1410) : M("shoreRock", theme.rock, .1);
-    for (let n = 0; n < 26; n++) {
-      const a = r() * Math.PI * 2, e = 1.0 + r() * .12, x = Math.cos(a) * RX * e, z = Math.sin(a) * RZ * e, s = .15 + r() * .35;
-      if (z > RZ * .7 && Math.abs(x) < 3) continue;
-      decor.add(part("rock", rockM, x, ground(x, z) + s * .2, z, s * 1.3, s * .8, s, r(), r(), r()));
+    if (style !== "sea") {
+      const rockM = theme.lava ? lam(0x1e1410) : M("shoreRock", theme.rock, .1);
+      for (let n = 0; n < 26; n++) {
+        const a = r() * Math.PI * 2, e = 1.0 + r() * .12, x = Math.cos(a) * RX * e, z = Math.sin(a) * RZ * e, s = .15 + r() * .35;
+        if (z > RZ * .7 && Math.abs(x) < 3) continue;
+        decor.add(part("rock", rockM, x, ground(x, z) + s * .2, z, s * 1.3, s * .8, s, r(), r(), r()));
+      }
     }
-    // reeds (cattails) in clumps along the shore
     if (theme.reeds) {
       const stem = M("reed", theme.reeds, .06), head = lam(0x5a3a1e);
       for (let c = 0; c < 9; c++) {
@@ -2327,48 +2452,70 @@ function makePond3D(T, host, hooks) {
         }
       }
     }
-    // lily pads float on the simulated water and ride the waves
-    if (theme.pads) {
-      const padM = M("pad", theme.pads, .06), flowerM = lam(0xffb6d9), flowerC = lam(0xffe066);
-      for (let n = 0; n < 16; n++) {
-        const a = r() * Math.PI * 2, e = .5 + r() * .38, x = Math.cos(a) * RX * e, z = Math.sin(a) * RZ * e, s = .22 + r() * .25;
+    // things floating on the water that ride the waves: lily pads, ice floes, driftwood
+    if (theme.pads || theme.ice || theme.drift) {
+      const padM = theme.pads && M("pad", theme.pads, .06), iceM = lam(0xe8f4ff), woodM = lam(0x6a4a2a), flowerM = lam(0xffb6d9), flowerC = lam(0xffe066);
+      const n = theme.ice ? 12 : theme.drift ? 6 : 16;
+      for (let k = 0; k < n; k++) {
+        const a = r() * Math.PI * 2, e = .45 + r() * .43, x = Math.cos(a) * RX * e, z = Math.sin(a) * RZ * e, s = .22 + r() * .25;
         const g = new T.Group(); g.position.set(x, .02, z);
-        g.add(part("pad", padM, 0, 0, 0, s, s, s, -Math.PI / 2, 0, r() * 6));
-        if (r() < .3) { g.add(part("cone", flowerM, 0, .06, 0, .09, .12, .09)); g.add(part("sph", flowerC, 0, .09, 0, .035, .035, .035)); }
+        if (theme.ice) g.add(part("box", iceM, 0, 0, 0, s * 2.4, .1, s * 1.8, 0, r() * 3, 0));
+        else if (theme.drift) g.add(part("cyl", woodM, 0, 0, 0, .07, s * 5, .07, Math.PI / 2, r() * 3, 0));
+        else {
+          g.add(part("pad", padM, 0, 0, 0, s, s, s, -Math.PI / 2, 0, r() * 6));
+          if (r() < .3) { g.add(part("cone", flowerM, 0, .06, 0, .09, .12, .09)); g.add(part("sph", flowerC, 0, .09, 0, .035, .035, .035)); }
+        }
         decor.add(g); pads.push({ g, x, z, rot: r() * 6 });
       }
     }
+    // standing on a boat deck out at sea
+    if (theme.boat) {
+      const plank = lam(0x7a5530), dark = lam(0x4a3218);
+      // the bow of the ship along the bottom of the view: deck, gunwale, railing and a mast off to the side
+      for (let k = 0; k < 20; k++) decor.add(part("box", k % 2 ? plank : dark, -9.5 + k, .3, 8.3, .98, .14, 2.6));
+      decor.add(part("box", dark, 0, .55, 7.05, 20, .5, .25));
+      decor.add(part("box", plank, 0, 1.12, 7.05, 20, .1, .3));
+      for (let k = 0; k < 15; k++) decor.add(part("cyl", dark, -9.8 + k * 1.4, .95, 7.05, .05, .6, .05));
+      decor.add(part("cyl", dark, -6.5, 3.5, 8.6, .16, 7, .16));
+      decor.add(part("box", lam(0xe8dcc0), -5.2, 4.2, 8.6, 2.6, 3.4, .04));
+    }
     scene.add(decor);
+    mtns.visible = !theme.indoor && !theme.boat;
     mtnMat.color.set(theme.lava ? 0x1a0805 : theme.mtn || 0x5a6a7a);
   }
 
-  // ---- rod, line, bobber; the rod is placed relative to the camera so it always sits in the lower right corner
-  const TIP = new T.Vector3(), BUTT = new T.Vector3();
-  function placeTip() {
+  // ---- the rod and its lines; the rod sits relative to the camera so it's always in the lower right corner
+  const rodGeo = new T.CylinderGeometry(.022, .06, 1, 8), rodMat = lam(0x3a2414), reelGeo = new T.CylinderGeometry(.09, .09, .07, 12), reelMat = lam(0x888888);
+  const LN = 28, lines = [];
+  let nLines = 1;
+  function mkLine(i) {
+    const L = { i, TIP: new T.Vector3(), BUTT: new T.Vector3(), lured: null };
+    L.rod = new T.Mesh(rodGeo, rodMat); L.reel = new T.Mesh(reelGeo, reelMat); scene.add(L.rod, L.reel);
+    L.geo = new T.BufferGeometry(); L.geo.setAttribute("position", new T.Float32BufferAttribute(new Float32Array(LN * 3), 3));
+    L.line = new T.Line(L.geo, new T.LineBasicMaterial({ color: 0xeeeeee, transparent: true, opacity: .6 }));
+    L.line.frustumCulled = false; L.line.visible = false; scene.add(L.line);
+    L.bob = new T.Group();
+    L.bob.add(new T.Mesh(new T.SphereGeometry(.16, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), lam([0xd8261e, 0x1e6ad8, 0x2aa83a][i])));
+    L.bob.add(new T.Mesh(new T.SphereGeometry(.16, 20, 10, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), lam(0xf4f4f4)));
+    const stick = new T.Mesh(new T.CylinderGeometry(.018, .018, .24, 6), lam(0x222222)); stick.position.y = .2; L.bob.add(stick);
+    L.bob.visible = false; scene.add(L.bob);
+    L.B = { mode: "none", x: 0, z: 0, y: 0, vy: 0, t: 0, tx: 0, tz: 0, sx: 0, sz: 0, land: null, prog: 0, tens: .5, tip: new T.Vector3() };
+    return L;
+  }
+  for (let i = 0; i < 3; i++) lines.push(mkLine(i));
+  function placeTips() {
     const dist = 3.6, hh = Math.tan(cam.fov * Math.PI / 360) * dist, hw = hh * cam.aspect;
     cam.updateMatrixWorld();
-    TIP.copy(cam.localToWorld(new T.Vector3(hw * .5, -hh * .15, -dist)));
-    BUTT.copy(cam.localToWorld(new T.Vector3(hw * 1.15, -hh * 1.4, -dist * .5)));
+    const tip = cam.localToWorld(new T.Vector3(hw * .5, -hh * .15, -dist)), butt = cam.localToWorld(new T.Vector3(hw * 1.15, -hh * 1.4, -dist * .5));
+    lines.forEach(L => { L.TIP.copy(tip); L.BUTT.copy(butt); });
   }
-  placeTip();
-  const rod = new T.Mesh(new T.CylinderGeometry(.022, .06, 1, 8), lam(0x3a2414));
-  const reelM = new T.Mesh(new T.CylinderGeometry(.09, .09, .07, 12), lam(0x888888));
-  function placeRod(tip) {
-    const d = new T.Vector3().subVectors(tip, BUTT), len = d.length();
-    rod.scale.set(1, len, 1); rod.position.copy(BUTT).addScaledVector(d, .5);
-    rod.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), d.normalize());
-    reelM.position.copy(BUTT).addScaledVector(d, len * .18); reelM.quaternion.copy(rod.quaternion);
+  function placeRod(L, tip) {
+    const d = new T.Vector3().subVectors(tip, L.BUTT), len = d.length();
+    L.rod.scale.set(1, len, 1); L.rod.position.copy(L.BUTT).addScaledVector(d, .5);
+    L.rod.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), d.normalize());
+    L.reel.position.copy(L.BUTT).addScaledVector(d, len * .18); L.reel.quaternion.copy(L.rod.quaternion);
   }
-  placeRod(TIP); scene.add(rod, reelM);
-  const LN = 28, lineGeo = new T.BufferGeometry(); lineGeo.setAttribute("position", new T.Float32BufferAttribute(new Float32Array(LN * 3), 3));
-  const line = new T.Line(lineGeo, new T.LineBasicMaterial({ color: 0xeeeeee, transparent: true, opacity: .6 }));
-  line.frustumCulled = false; line.visible = false; scene.add(line);
-  const bob = new T.Group();
-  bob.add(new T.Mesh(new T.SphereGeometry(.16, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), lam(0xd8261e)));
-  bob.add(new T.Mesh(new T.SphereGeometry(.16, 20, 10, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), lam(0xf4f4f4)));
-  const stick = new T.Mesh(new T.CylinderGeometry(.018, .018, .24, 6), lam(0x222222)); stick.position.y = .2; bob.add(stick);
-  bob.visible = false; scene.add(bob);
-  const B = { mode: "none", x: 0, z: 0, y: 0, vy: 0, t: 0, tx: 0, tz: 0, sx: 0, sz: 0, land: null, prog: 0, tens: .5, tip: TIP.clone() };
+  placeTips();
   const aimRing = new T.Mesh(new T.RingGeometry(.22, .3, 32), new T.MeshBasicMaterial({ color: 0xffd100, transparent: true, opacity: .55, depthWrite: false }));
   aimRing.rotation.x = -Math.PI / 2; aimRing.visible = false; aimRing.renderOrder = 3; scene.add(aimRing);
 
@@ -2382,18 +2529,18 @@ function makePond3D(T, host, hooks) {
     scene.add(g); return g;
   }
   const fishes = [];
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < 10; i++) {
     const [x, z] = toWorld(15 + Math.random() * 70, 20 + Math.random() * 60);
     fishes.push({ g: makeFish(0x08202a, .5), x, z, vx: 0, vz: 0, tx: x, tz: z, sp: .5 + Math.random() * .6, s: .7 + Math.random() * .8 });
   }
-  let lured = null, school = null;
+  let school = null;
   const schoolFish = [];
   for (let i = 0; i < 16; i++) { const f = makeFish(0x0a2630, .45); f.visible = false; schoolFish.push({ g: f, a: Math.random() * 6.28, r: .3 + Math.random() * .9, sp: .8 + Math.random() * .8 }); }
   const jumper = makeFish(0xffffff, 1); jumper.visible = false;
-  const J = { t: -1, from: new T.Vector3() };
+  const J = { t: -1, from: new T.Vector3(), to: new T.Vector3() };
 
-  // ---- particles: splashes, rain, fireflies, embers
-  const SP = 90, spPos = new Float32Array(SP * 3), spVel = new Float32Array(SP * 3), spLife = new Float32Array(SP);
+  // ---- particles: splashes, rain/snow, fireflies/embers/spores
+  const SP = 120, spPos = new Float32Array(SP * 3), spVel = new Float32Array(SP * 3), spLife = new Float32Array(SP);
   const spGeo = new T.BufferGeometry(); spGeo.setAttribute("position", new T.BufferAttribute(spPos, 3));
   const spMat = new T.PointsMaterial({ color: 0xffffff, size: .09, transparent: true, opacity: .9, depthWrite: false });
   const splashes = new T.Points(spGeo, spMat); splashes.frustumCulled = false; scene.add(splashes);
@@ -2410,7 +2557,8 @@ function makePond3D(T, host, hooks) {
   for (let i = 0; i < RN; i++) { const x = (Math.random() - .5) * 30, y = Math.random() * 14, z = -14 + Math.random() * 24;
     rnPos.set([x, y, z, x - .05, y + .45, z], i * 6); }
   rnGeo.setAttribute("position", new T.BufferAttribute(rnPos, 3));
-  const rain = new T.LineSegments(rnGeo, new T.LineBasicMaterial({ color: 0xb8c8d8, transparent: true, opacity: .35 }));
+  const rainMat = new T.LineBasicMaterial({ color: 0xb8c8d8, transparent: true, opacity: .35 });
+  const rain = new T.LineSegments(rnGeo, rainMat);
   rain.frustumCulled = false; rain.visible = false; scene.add(rain);
   const FF = 60, ffPos = new Float32Array(FF * 3), ffSeed = [];
   for (let i = 0; i < FF; i++) { ffSeed.push([Math.random() * 6.28, (Math.random() - .5) * 26, Math.random() * 2.2 + .2, -10 + Math.random() * 15, .3 + Math.random() * .6]); }
@@ -2426,19 +2574,21 @@ function makePond3D(T, host, hooks) {
     if (!theme) return;
     const top = col(theme.skyTop), bot = col(theme.skyBot), sc = col(0xfff4e0);
     let light = 1, sunY = .55, stars = 0, night = 0, ff = 0;
-    if (!theme.lava) {
+    if (!theme.indoor) {
       if (tod === "dusk") { top.lerp(col(0x2b2d6e), .6); bot.lerp(col(0xff8a4a), .65); sc.set(0xffa060); light = .7; sunY = .08; }
       else if (tod === "night") { top.lerp(col(0x03050f), .92); bot.lerp(col(0x16213f), .85); sc.set(0x8aa0d0); light = .3; sunY = .45; stars = 1; night = 1; ff = 1; }
       else if (tod === "dawn") { top.lerp(col(0x5a6ab0), .4); bot.lerp(col(0xffb0a0), .55); sc.set(0xffc0a0); light = .75; sunY = .1; }
     }
     const grey = col(0x7a828c);
     let cloud = .32;
-    if (wx === "clear") cloud = .2;
-    if (wx === "cloudy") { top.lerp(grey, .45); bot.lerp(grey, .35); light *= .82; stars *= .3; cloud = .62; }
-    if (wx === "rain") { top.lerp(col(0x55606a), .7); bot.lerp(grey, .6); light *= .62; stars = 0; cloud = .9; ff = 0; }
-    if (wx === "storm") { top.lerp(col(0x22272e), .85); bot.lerp(col(0x454c55), .75); light *= .45; stars = 0; cloud = 1; ff = 0; }
-    if (theme.lava) light = Math.max(light, .6);
-    Object.assign(Tg, { light, sunY, stars, cloud, night, ff: theme.lava ? 0 : ff });
+    if (!theme.indoor) {
+      if (wx === "clear") cloud = .2;
+      if (wx === "cloudy") { top.lerp(grey, .45); bot.lerp(grey, .35); light *= .82; stars *= .3; cloud = .62; }
+      if (wx === "rain") { top.lerp(col(0x55606a), .7); bot.lerp(grey, .6); light *= .62; stars = 0; cloud = .9; ff = 0; }
+      if (wx === "storm") { top.lerp(col(0x22272e), .85); bot.lerp(col(0x454c55), .75); light *= .45; stars = 0; cloud = 1; ff = 0; }
+    }
+    if (theme.indoor) light = theme.lava ? .6 : .8;
+    Object.assign(Tg, { light, sunY, stars, cloud, night, ff: theme.indoor ? 1 : ff });
     Tg.top.copy(top); Tg.bot.copy(bot); Tg.sunCol.copy(sc); Tg.deep.set(theme.deep); Tg.shallow.set(theme.shallow);
   }
 
@@ -2450,7 +2600,7 @@ function makePond3D(T, host, hooks) {
     mirrorCam.position.set(cam.position.x, -cam.position.y, cam.position.z);
     mirrorCam.up.set(0, 1, 0); mirrorCam.lookAt(LOOK.x, -LOOK.y, LOOK.z); mirrorCam.updateMatrixWorld();
     U.uTexM.value.set(.5, 0, 0, .5, 0, .5, 0, .5, 0, 0, .5, .5, 0, 0, 0, 1).multiply(mirrorCam.projectionMatrix).multiply(mirrorCam.matrixWorldInverse);
-    const hide = [water, rain, splashes, aimRing, line, fireflies].concat(fishes.map(f => f.g), schoolFish.map(f => f.g));
+    const hide = [water, rain, splashes, aimRing, fireflies].concat(lines.map(L => L.line), fishes.map(f => f.g), schoolFish.map(f => f.g));
     const vis = hide.map(o => o.visible); hide.forEach(o => { o.visible = false; });
     renderer.setRenderTarget(rt); renderer.render(scene, mirrorCam); renderer.setRenderTarget(null);
     hide.forEach((o, i) => { o.visible = vis[i]; });
@@ -2460,13 +2610,15 @@ function makePond3D(T, host, hooks) {
     raf = requestAnimationFrame(frame);
     const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
     U.uTime.value += dt;
-    const t = U.uTime.value, lava = theme && theme.lava;
-    // a slow breathing sway, like you're actually standing there
-    cam.position.set(CAM.x + Math.sin(t * .23) * .12, CAM.y + Math.sin(t * .37) * .05, CAM.z); cam.lookAt(LOOK); placeTip();
+    const t = U.uTime.value, lava = theme && theme.lava, indoor = theme && theme.indoor, sea = theme && theme.boat;
+    // a slow breathing sway; on a boat it rocks with the swell
+    cam.position.set(CAM.x + Math.sin(t * .23) * .12, CAM.y + Math.sin(t * .37) * .05 + (sea ? Math.sin(t * .8) * .18 : 0), CAM.z);
+    cam.lookAt(LOOK); if (sea) cam.rotateZ(Math.sin(t * .6) * .02);
+    placeTips();
     const k = Math.min(1, dt * 1.2);
     C.top.lerp(Tg.top, k); C.bot.lerp(Tg.bot, k); C.deep.lerp(Tg.deep, k); C.shallow.lerp(Tg.shallow, k); C.sunCol.lerp(Tg.sunCol, k);
     C.light += (Tg.light - C.light) * k; C.cloud += (Tg.cloud - C.cloud) * k * .5; C.night += (Tg.night - C.night) * k;
-    if (wx === "storm" && !lava && (nextBolt -= dt) <= 0) { flash = 1; nextBolt = 6 + Math.random() * 9; setTimeout(() => hooks.thunder && hooks.thunder(), 300 + Math.random() * 900); }
+    if (wx === "storm" && !indoor && (nextBolt -= dt) <= 0) { flash = 1; nextBolt = 6 + Math.random() * 9; setTimeout(() => hooks.thunder && hooks.thunder(), 300 + Math.random() * 900); }
     flash = Math.max(0, flash - dt * 3);
     const fl = flash > 0 ? flash * (Math.random() < .5 ? 1 : .4) : 0;
     U.uSkyTop.value.copy(C.top).lerp(col(0xdde8ff), fl * .7); U.uSkyBot.value.copy(C.bot).lerp(col(0xffffff), fl * .6);
@@ -2477,28 +2629,31 @@ function makePond3D(T, host, hooks) {
     hemi.intensity = .25 + .55 * U.uLight.value; sunL.intensity = .8 * U.uLight.value; sunL.color.copy(C.sunCol);
     sunL.position.copy(U.uSunDir.value).multiplyScalar(20);
     starMat.opacity += (Tg.stars - starMat.opacity) * k;
-    // ambient life on the water: wind, rain drops, lava bubbles
-    const rainy = wx === "rain" || wx === "storm";
+    // ambient life on the water: wind, swell, rain drops, lava bubbles, cave drips
+    const wet = (wx === "rain" || wx === "storm") && !indoor;
     if (lava) { if (Math.random() < dt * 2.2) { const [x, z] = toWorld(10 + Math.random() * 80, 10 + Math.random() * 80); disturb(x, z, .16, 1.6); if (Math.random() < .4) splash(x, z, 6, .5); } }
-    else if (Math.random() < dt * (wx === "storm" ? 9 : 3)) { const [x, z] = toWorld(Math.random() * 100, Math.random() * 100); disturb(x, z, wx === "storm" ? -.05 : -.015, 1.5); }
-    rain.visible = rainy && !lava;
+    else if (indoor) { if (Math.random() < dt * 1.5) { const [x, z] = toWorld(Math.random() * 100, Math.random() * 100); disturb(x, z, -.06, .9); } }
+    else if (Math.random() < dt * (wx === "storm" ? 9 : sea ? 7 : 3)) { const [x, z] = toWorld(Math.random() * 100, Math.random() * 100); disturb(x, z, wx === "storm" || sea ? -.06 : -.015, sea ? 2.6 : 1.5); }
+    rain.visible = wet;
     if (rain.visible) {
-      const fall = (wx === "storm" ? 24 : 17) * dt;
+      const snow = theme.snow, fall = (snow ? 2.2 : wx === "storm" ? 24 : 17) * dt;
+      rainMat.color.set(snow ? 0xffffff : 0xb8c8d8); rainMat.opacity = snow ? .8 : .35;
       for (let i = 0; i < RN; i++) {
-        const o = i * 6; rnPos[o + 1] -= fall; rnPos[o + 4] -= fall;
+        const o = i * 6, len = snow ? .06 : .45;
+        rnPos[o + 1] -= fall; rnPos[o + 4] = rnPos[o + 1] + len;
+        if (snow) { rnPos[o] += Math.sin(t + i) * dt * .3; rnPos[o + 3] = rnPos[o] - .02; }
         if (rnPos[o + 1] < 0) {
           const x = rnPos[o], z = rnPos[o + 2];
-          if ((x / RX) ** 2 + (z / RZ) ** 2 < .95 && Math.random() < .5) disturb(x, z, -.035, .9);
+          if (!snow && (x / RX) ** 2 + (z / RZ) ** 2 < .95 && Math.random() < .5) disturb(x, z, -.035, .9);
           const nx = (Math.random() - .5) * 30, nz = -14 + Math.random() * 24, ny = 12 + Math.random() * 3;
-          rnPos.set([nx, ny, nz, nx - .05, ny + .45, nz], o);
+          rnPos.set([nx, ny, nz, nx - .05, ny + len, nz], o);
         }
       }
       rnGeo.attributes.position.needsUpdate = true;
     }
-    // fireflies at night, embers rising out of the lava
-    const ffTarget = lava ? 1 : Tg.ff;
+    const ffTarget = Tg.ff;
     ffMat.opacity += (ffTarget * (lava ? .9 : .5 + .5 * Math.sin(t * 7)) - ffMat.opacity) * Math.min(1, dt * 3);
-    ffMat.color.set(lava ? 0xff7a20 : 0xd8ff6a); ffMat.size = lava ? .1 : .13;
+    ffMat.color.set(lava ? 0xff7a20 : indoor ? 0x6ad8ff : 0xd8ff6a); ffMat.size = lava ? .1 : .13;
     if (ffMat.opacity > .01) {
       for (let i = 0; i < FF; i++) {
         const s = ffSeed[i];
@@ -2513,7 +2668,7 @@ function makePond3D(T, host, hooks) {
       const gx = (surf(p.x + .2, p.z) - surf(p.x - .2, p.z)) / .4, gz = (surf(p.x, p.z + .2) - surf(p.x, p.z - .2)) / .4;
       p.g.position.y = surf(p.x, p.z) + .015; p.g.rotation.set(gz * 1.2, p.rot + Math.sin(t * .2 + p.rot) * .1, -gx * 1.2);
     });
-    updateBob(dt);
+    lines.forEach(L => updateLine(L, dt));
     updateFish(dt);
     let any = false;
     for (let i = 0; i < SP; i++) {
@@ -2531,13 +2686,14 @@ function makePond3D(T, host, hooks) {
     renderReflection();
     renderer.render(scene, cam);
   }
-  function updateBob(dt) {
-    const m = B.mode;
-    B.tip.copy(TIP);
-    if (m === "reel") { B.tip.x += (Math.random() - .5) * .08 * B.tens; B.tip.y += (Math.random() - .5) * .08 * B.tens - .25 * B.tens; }
-    placeRod(B.tip);
-    if (m === "none") { bob.visible = false; line.visible = false; return; }
-    bob.visible = true; line.visible = m !== "drift";
+  function updateLine(L, dt) {
+    const B = L.B, m = B.mode, on = L.i < nLines;
+    L.rod.visible = L.i === 0; L.reel.visible = L.i === 0;
+    B.tip.copy(L.TIP);
+    if (m === "reel" && L.i === 0) { B.tip.x += (Math.random() - .5) * .08 * B.tens; B.tip.y += (Math.random() - .5) * .08 * B.tens - .25 * B.tens; }
+    placeRod(L, B.tip);
+    if (m === "none" || !on) { L.bob.visible = false; L.line.visible = false; return; }
+    L.bob.visible = true; L.line.visible = m !== "drift";
     B.t += dt;
     if (m === "fly") {
       const p = Math.min(1, B.t / .7);
@@ -2553,7 +2709,7 @@ function makePond3D(T, host, hooks) {
       if (p >= 1) B.mode = "none";
     } else {
       if (m === "reel") {
-        const goalX = B.sx + (2.2 - B.sx) * B.prog, goalZ = B.sz + (RZ * .82 - B.sz) * B.prog;
+        const goalX = B.sx + (L.TIP.x * .6 - B.sx) * B.prog, goalZ = B.sz + (RZ * .82 - B.sz) * B.prog;
         B.x += (goalX - B.x) * Math.min(1, dt * 3) + (Math.random() - .5) * .06 * B.tens;
         B.z += (goalZ - B.z) * Math.min(1, dt * 3) + (Math.random() - .5) * .06 * B.tens;
         if (Math.random() < dt * (2 + B.tens * 10)) { disturb(B.x, B.z, -.06 - B.tens * .08, 1.2); if (B.tens > .7) splash(B.x, B.z, 4, .5); }
@@ -2567,18 +2723,18 @@ function makePond3D(T, host, hooks) {
       B.vy += acc * dt; B.y += B.vy * dt;
       if (Math.abs(B.vy) > .15) disturb(B.x, B.z, -B.vy * dt * .5, 1.1);
     }
-    bob.position.set(B.x, B.y, B.z);
+    L.bob.position.set(B.x, B.y, B.z);
     const gx = (surf(B.x + .12, B.z) - surf(B.x - .12, B.z)) / .24, gz = (surf(B.x, B.z + .12) - surf(B.x, B.z - .12)) / .24;
-    bob.rotation.set(gz * 1.4 + (B.mode === "bite" ? Math.sin(B.t * 30) * .25 : 0), 0, -gx * 1.4);
+    L.bob.rotation.set(gz * 1.4 + (B.mode === "bite" ? Math.sin(B.t * 30) * .25 : 0), 0, -gx * 1.4);
     const sag = B.mode === "reel" ? .05 + (1 - B.tens) * .35 : B.mode === "fly" ? .2 : B.mode === "yank" ? .05 : .9;
-    const a = lineGeo.attributes.position.array, end = v3.set(B.x, B.y + .3, B.z);
+    const a = L.geo.attributes.position.array, end = v3.set(B.x, B.y + .3, B.z);
     for (let i = 0; i < LN; i++) {
       const t = i / (LN - 1), mx = (B.tip.x + end.x) / 2, my = (B.tip.y + end.y) / 2 - sag, mz = (B.tip.z + end.z) / 2;
       a[i * 3] = (1 - t) ** 2 * B.tip.x + 2 * (1 - t) * t * mx + t * t * end.x;
       a[i * 3 + 1] = (1 - t) ** 2 * B.tip.y + 2 * (1 - t) * t * my + t * t * end.y;
       a[i * 3 + 2] = (1 - t) ** 2 * B.tip.z + 2 * (1 - t) * t * mz + t * t * end.z;
     }
-    lineGeo.attributes.position.needsUpdate = true;
+    L.geo.attributes.position.needsUpdate = true;
   }
   function inside(x, z, lim) { return (x / RX) ** 2 + (z / RZ) ** 2 < lim * lim; }
   function updateFish(dt) {
@@ -2586,7 +2742,8 @@ function makePond3D(T, host, hooks) {
     fishes.forEach(f => {
       f.g.visible = !lava;
       let tx = f.tx, tz = f.tz, sp = f.sp;
-      if (f === lured && (B.mode === "float" || B.mode === "bite" || B.mode === "reel")) { tx = B.x - .35; tz = B.z + .05; sp = B.mode === "float" ? .35 : 1.6; }
+      const L = lines.find(l => l.lured === f);
+      if (L && (L.B.mode === "float" || L.B.mode === "bite" || L.B.mode === "reel")) { tx = L.B.x - .35; tz = L.B.z + .05; sp = L.B.mode === "float" ? .35 : 1.6; }
       else if (Math.hypot(tx - f.x, tz - f.z) < .4 || !inside(tx, tz, .85)) {
         const [x, z] = toWorld(10 + Math.random() * 80, 15 + Math.random() * 70); f.tx = x; f.tz = z;
       }
@@ -2611,7 +2768,7 @@ function makePond3D(T, host, hooks) {
     if (J.t >= 0) {
       J.t += dt; const p = Math.min(1, J.t / .8);
       jumper.visible = p < 1;
-      jumper.position.set(J.from.x + (B.tip.x - J.from.x) * p, Math.sin(p * Math.PI) * 2.4 + p * B.tip.y * .6, J.from.z + (B.tip.z - J.from.z) * p);
+      jumper.position.set(J.from.x + (J.to.x - J.from.x) * p, Math.sin(p * Math.PI) * 2.4 + p * J.to.y * .6, J.from.z + (J.to.z - J.from.z) * p);
       jumper.rotation.set(0, J.t * 3, Math.sin(J.t * 25) * .5);
       if (p >= 1) J.t = -1;
     }
@@ -2628,59 +2785,70 @@ function makePond3D(T, host, hooks) {
     const w = host.clientWidth, hh = host.clientHeight;
     if (!w || !hh) return;
     renderer.setSize(w, hh, false); cam.aspect = w / hh;
-    cam.fov = w / hh < 1.2 ? 52 : 42; cam.updateProjectionMatrix(); placeTip();
+    cam.fov = w / hh < 1.2 ? 52 : 42; cam.updateProjectionMatrix(); placeTips();
     rt.setSize(Math.round(w * PR * .6), Math.round(hh * PR * .6));
   }
   new ResizeObserver(resize).observe(host);
   const RCOL = { poor: 0x9d9d9d, common: 0xdddddd, uncommon: 0x1eff00, rare: 0x0070dd, epic: 0xa335ee, legendary: 0xff8000 };
+  const LI = i => lines[i || 0];
 
   return {
     gl: true,
     pick(e) { const w = pickWorld(e); return w ? (([x, y]) => ({ x, y }))(toPct(w.x, w.z)) : null; },
     aim(e, on) { const w = on && pickWorld(e); aimRing.visible = !!w; if (w) aimRing.position.set(w.x, surf(w.x, w.z) + .02, w.z); },
     setZone(z) {
-      theme = z.theme; U.uLava.value = theme.lava ? 1 : 0;
+      theme = z.theme;
+      U.uLava.value = theme.lava ? 1 : 0; U.uIndoor.value = theme.indoor ? 1 : 0; U.uSea.value = theme.boat ? 1 : 0;
+      U.uFogNear.value = theme.fog ? theme.fog[0] : 32; U.uFogFar.value = theme.fog ? theme.fog[1] : 95;
+      scene.fog.near = U.uFogNear.value; scene.fog.far = U.uFogFar.value;
       U.uShore.value.set(theme.shore); U.uSand.value.set(theme.sand); U.uRock.value.set(theme.rock);
-      h.fill(0); hp.fill(0); buildDecor(theme, z.req * 7 + 3); retarget();
+      if (flat !== !!theme.boat) { flat = !!theme.boat; shapeTerrain(); }
+      h.fill(0); hp.fill(0); buildDecor(theme, z.req * 7 + 3 + z.id.length); retarget();
       C.top.copy(Tg.top); C.bot.copy(Tg.bot); C.deep.copy(Tg.deep); C.shallow.copy(Tg.shallow); C.light = Tg.light; C.cloud = Tg.cloud; C.night = Tg.night;
-      school = null; lured = null; B.mode = "none";
+      school = null; lines.forEach(L => { L.lured = null; L.B.mode = "none"; });
     },
+    setLines(n) { nLines = n; lines.forEach((L, i) => { if (i >= n) L.B.mode = "none"; }); },
     env(t, w) { tod = t; wx = w; retarget(); },
-    cast(px, py, cb) {
+    cast(px, py, cb, i) {
       const [x, z] = toWorld(px, py);
-      Object.assign(B, { mode: "fly", t: 0, tx: x, tz: z, land: cb, vy: 0 }); aimRing.visible = false;
+      Object.assign(LI(i).B, { mode: "fly", t: 0, tx: x, tz: z, land: cb, vy: 0 }); aimRing.visible = false;
     },
-    bob(mode) {
+    bob(mode, i) {
+      const L = LI(i), B = L.B;
       if (mode === "nibble") { B.vy -= 1.4; disturb(B.x, B.z, -.05, 1.1); return; }
       if (mode === "bite") { B.mode = "bite"; B.t = 0; disturb(B.x, B.z, -.18, 1.8); splash(B.x, B.z, 10, .6); return; }
       if (mode === "reel") { B.mode = "reel"; B.sx = B.x; B.sz = B.z; B.prog = 0; return; }
       if (mode === "none") { if (B.mode !== "none" && B.mode !== "fly") { B.mode = "yank"; B.t = 0; B.sx = B.x; B.sz = B.z; } else B.mode = "none"; }
     },
-    reel(prog, tens) { B.prog = Math.max(0, Math.min(1, prog)); B.tens = tens; },
-    lure(on) {
-      if (!on) { lured = null; return; }
-      let best = null, bd = 1e9; fishes.forEach(f => { const d = Math.hypot(f.x - B.tx, f.z - B.tz); if (d < bd) { bd = d; best = f; } }); lured = best;
+    reel(prog, tens, i) { const B = LI(i).B; B.prog = Math.max(0, Math.min(1, prog)); B.tens = tens; },
+    lure(on, i) {
+      const L = LI(i);
+      if (!on) { L.lured = null; return; }
+      let best = null, bd = 1e9;
+      fishes.forEach(f => { if (lines.some(o => o.lured === f)) return; const d = Math.hypot(f.x - L.B.tx, f.z - L.B.tz); if (d < bd) { bd = d; best = f; } });
+      L.lured = best;
     },
     school(on, px, py) { if (!on) { school = null; return; } const [x, z] = toWorld(px, py); school = { x, z }; },
-    catchFish(rar) {
+    catchFish(rar, i) {
+      const L = LI(i), B = L.B;
       if (rar) {
-        J.t = 0; J.from.set(B.x, 0, B.z); jumper.children.forEach(c => c.material.color.set(RCOL[rar]));
-        jumper.scale.setScalar({ poor: .8, common: 1, uncommon: 1.2, rare: 1.5, epic: 1.9, legendary: 2.6 }[rar]);
+        J.t = 0; J.from.set(B.x, 0, B.z); J.to.copy(L.TIP); jumper.children.forEach(c => c.material.color.set(RCOL[rar] || 0xc8a050));
+        jumper.scale.setScalar({ poor: .8, common: 1, uncommon: 1.2, rare: 1.5, epic: 1.9, legendary: 2.6 }[rar] || 1.4);
         splash(B.x, B.z, 24, 1.2); disturb(B.x, B.z, -.3, 2.4);
-        if (lured) { const [x, z] = toWorld(10 + Math.random() * 80, 20 + Math.random() * 60); lured.x = x; lured.z = z; lured.tx = x; lured.tz = z; }
+        if (L.lured) { const [x, z] = toWorld(10 + Math.random() * 80, 20 + Math.random() * 60); Object.assign(L.lured, { x, z, tx: x, tz: z }); }
       }
-      lured = null; B.mode = "yank"; B.t = 0; B.sx = B.x; B.sz = B.z;
+      L.lured = null; B.mode = "yank"; B.t = 0; B.sx = B.x; B.sz = B.z;
     },
-    lost() { lured = null; B.mode = "drift"; B.t = 0; splash(B.x, B.z, 8, .6); },
+    lost(i) { const L = LI(i); L.lured = null; L.B.mode = "drift"; L.B.t = 0; splash(L.B.x, L.B.z, 8, .6); },
     poke(px, py, amp) { const [x, z] = toWorld(px, py); disturb(x, z, amp, 1.5); },
     start() { if (running) return; running = true; last = 0; resize(); raf = requestAnimationFrame(frame); },
     stop() { running = false; cancelAnimationFrame(raf); },
-    _debug: { disturb, surf, B, frame: t => { running = true; frame(t); running = false; cancelAnimationFrame(raf); } }
+    _debug: { disturb, surf, lines, frame: t => { running = true; frame(t); running = false; cancelAnimationFrame(raf); } }
   };
 }
-// ---------- Fishing v2: zones, gear, gold, nibbles, reeling, schools, day/night + weather, cooking, Nat Pagle and the DT Extravaganza ----------
+// ---------- Fishing v2: zones, gear, gold, nibbles, reeling, schools, day/night + weather, cooking, bait, chests, boat passes, Nat Pagle and the DT Extravaganza ----------
 const F2_ZONES = [
-  { id: "elwynn", name: "Elwynn Lake", req: 1, mult: 1, school: "School of Smallfish",
+  { id: "elwynn", icon: "🌲", name: "Elwynn Lake", req: 1, mult: 1, school: "School of Smallfish",
     night: "Moonlit Smallfish", rain: "Drowned Kobold Candle (still lit?)",
     recipe: { n: "Goldshire Fish Stew", q: "common", buff: { luck: 10 }, casts: 15 },
     theme: { skyTop: 0x4f8fd9, skyBot: 0xcfe6ff, deep: 0x0d3b5c, shallow: 0x3f9fb8, shore: 0x4f8a2e, sand: 0xb8a36a, rock: 0x6d6a62, decor: "pine", reeds: 0x5a7a2a, pads: 0x3f7a2a, mtn: 0x5a6a7a },
@@ -2691,7 +2859,7 @@ const F2_ZONES = [
     rare: ["Hogger's Rubber Duck", "Stormwind Guard's Lost Helmet"],
     epic: ["Marshal Dughan's Reading Glasses"],
     legendary: ["The Elwynn Lake Monster (gnome-sized)"] } },
-  { id: "westfall", name: "Westfall Coast", req: 50, mult: 1.6, school: "School of Albacore",
+  { id: "westfall", icon: "🌾", name: "Westfall Coast", req: 50, mult: 1.6, school: "School of Albacore",
     night: "Ghost of the Deadmines Cod", rain: "Storm-Tossed Albacore",
     recipe: { n: "Westfall Stew (now with fish)", q: "common", buff: { speed: 15 }, casts: 15 },
     theme: { skyTop: 0x6a9fd8, skyBot: 0xf3e3b8, deep: 0x0b4655, shallow: 0x46a9a5, shore: 0xa89a45, sand: 0xd8c28a, rock: 0x8a7a5a, decor: "farm", reeds: 0x8a8a3a, mtn: 0x7a7a6a },
@@ -2702,7 +2870,7 @@ const F2_ZONES = [
     rare: ["VanCleef's Spare Hat", "Cookie's Missing Ladle"],
     epic: ["Smite's Mighty Hammer (waterlogged)"],
     legendary: ["The Juggernaut's Anchor"] } },
-  { id: "barrens", name: "Barrens Oasis", req: 100, mult: 2.4, school: "School of Deviate Fish",
+  { id: "barrens", icon: "🦒", name: "Barrens Oasis", req: 100, mult: 2.4, school: "School of Deviate Fish",
     night: "Barrens Chat Moonfish", rain: "Rare Barrens Raindrop (it never rains here)",
     recipe: { n: "Kodo-Fish Kabob", q: "uncommon", buff: { reel: 15 }, casts: 15 },
     theme: { skyTop: 0x7aa6d6, skyBot: 0xf2d7a0, deep: 0x2c3a1c, shallow: 0x6f8f4a, shore: 0xb59a5a, sand: 0xc9b07a, rock: 0x8a6a4a, decor: "acacia", reeds: 0x8a8a3a, mtn: 0x9a7a5a },
@@ -2713,7 +2881,7 @@ const F2_ZONES = [
     rare: ["Old Crafty's Cousin", "Chuck Norris' Fishing Line"],
     epic: ["Deviate Fish That Turned You Into a Pirate"],
     legendary: ["[Mankrik's Wife] (found her!)"] } },
-  { id: "stv", name: "Booty Bay", req: 150, mult: 3.5, school: "School of Tastyfish",
+  { id: "stv", icon: "🏴‍☠️", name: "Booty Bay", req: 150, mult: 3.5, school: "School of Tastyfish",
     night: "Midnight Tastyfish", rain: "Monsoon Mightfish",
     recipe: { n: "Booty Bay Grog-Battered Fish", q: "uncommon", buff: { luck: 20 }, casts: 15 },
     theme: { skyTop: 0x3a8fd0, skyBot: 0xbfefff, deep: 0x075a6a, shallow: 0x3fd6c4, shore: 0x2f7a2a, sand: 0xe8d8a0, rock: 0x5a6a4a, decor: "palm", reeds: 0x3a7a2a, pads: 0x2f8a3a, mtn: 0x3a6a5a },
@@ -2724,7 +2892,7 @@ const F2_ZONES = [
     rare: ["Keefer's Angelfish", "Mr. Pinchy (he grants wishes)"],
     epic: ["Dezian Queenfish"],
     legendary: ["Gurubashi Arena Chest (very wet)"] } },
-  { id: "azshara", name: "Azshara Coast", req: 225, mult: 5, school: "School of Naga Snappers",
+  { id: "azshara", icon: "🌸", name: "Azshara Coast", req: 225, mult: 5, school: "School of Naga Snappers",
     night: "Elune's Glowing Koi", rain: "Tempest Naga Snapper",
     recipe: { n: "Naga Sushi Platter", q: "rare", buff: { skill: 25, speed: 20 }, casts: 20 },
     theme: { skyTop: 0x3a3a8a, skyBot: 0xe0a0c0, deep: 0x140f4a, shallow: 0x5b4bc6, shore: 0x8a5a2a, sand: 0xc8a888, rock: 0x6a5a7a, decor: "autumn", pads: 0x6a5a9a, mtn: 0x5a4a7a },
@@ -2735,17 +2903,51 @@ const F2_ZONES = [
     rare: ["Dirty Nagatics Fan Club Badge", "Sea Turtle (sadly not a mount)"],
     epic: ["Queen Azshara's Spare Crown"],
     legendary: ["The Leviathan That Owes DT Money"] } },
-  { id: "mc", name: "Molten Core (lava)", req: 275, mult: 8, fire: true, school: "Pool of Molten Snappers",
+  { id: "mc", icon: "🌋", name: "Molten Core", req: 275, mult: 8, fire: true, school: "Pool of Molten Snappers",
     night: "Ember Wyrmling (night shift)", rain: "Steam Eel (it's raining on lava)",
     recipe: { n: "Molten Fish Fry", q: "epic", buff: { luck: 30, reel: 20 }, casts: 20 },
-    theme: { skyTop: 0x120302, skyBot: 0x4a1206, deep: 0x330000, shallow: 0xff6600, shore: 0x2a1a14, sand: 0x3a2418, rock: 0x1e1410, decor: "rock", lava: true },
+    theme: { skyTop: 0x120302, skyBot: 0x4a1206, deep: 0x330000, shallow: 0xff6600, shore: 0x2a1a14, sand: 0x3a2418, rock: 0x1e1410, decor: "rock", lava: true, indoor: true },
     fish: {
     poor: ["Charred Bobber", "Molten Fishbone", "Melted Raid Strategy", "Ash (formerly a fish)"],
     common: ["Lava Eel", "Magma Shrimp", "Firefin Snapper (extra crispy)", "Molten Mudfish", "Core Hound Drool"],
     uncommon: ["Core Hound Puppy (very hot)", "Sulfuron's Spare Hammer Head", "Lava Rock With a Face"],
     rare: ["Ragnaros' Rubber Duck", "Fiery Core"],
     epic: ["Golemagg's Lost Sock"],
-    legendary: ["Eye of Sulfuras"] } }
+    legendary: ["Eye of Sulfuras"] } },
+  // only reachable with a boat pass: three lines at once, richer waters
+  { id: "sea", icon: "⛵", name: "The Great Sea", req: 0, mult: 6, special: true, school: "Swarm of Mackerel",
+    night: "Moonlit Anglerfish", rain: "Storm-Tossed Kraken Arm",
+    recipe: { n: "Sailor's Fish Pie", q: "rare", buff: { luck: 25, speed: 10 }, casts: 20 },
+    theme: { skyTop: 0x3f86d6, skyBot: 0xd8ecff, deep: 0x062a4a, shallow: 0x1d6f9a, shore: 0x1d5f8a, sand: 0x1d5f8a, rock: 0x1d5f8a, decor: "sea", boat: true, drift: true, fog: [24, 120] },
+    fish: {
+    poor: ["Seaweed Tangle", "Message in a Bottle (blank)", "Barnacled Boot", "Pirate's Wooden Leg"],
+    common: ["Raw Mackerel", "Raw Sea Bass", "Giant Clam Meat", "Raw Deep Sea Cod", "Flying Fish (crashed)"],
+    uncommon: ["Swordfish Bill", "Kraken Sucker Cup", "Sunken Ship's Bell"],
+    rare: ["Great White Tooth", "Narwhal Horn (gnome-carved)"],
+    epic: ["Admiral's Lost Spyglass"],
+    legendary: ["The Sea Serpent That Ate the Last Boat"] } },
+  { id: "cave", icon: "🦇", name: "Blackfathom Deeps", req: 0, mult: 7, special: true, school: "Swarm of Glowfin",
+    night: "Shadow Eel (always night down here)", rain: "Waterfall Leech",
+    recipe: { n: "Glowcap Fish Soup", q: "rare", buff: { reel: 25, luck: 15 }, casts: 20 },
+    theme: { skyTop: 0x050c12, skyBot: 0x10303a, deep: 0x03202a, shallow: 0x1a8a96, shore: 0x4a4844, sand: 0x5a544a, rock: 0x4a443e, decor: "cave", indoor: true, fog: [10, 48] },
+    fish: {
+    poor: ["Glowing Pebble", "Naga Toenail Clipping", "Soggy Torch", "Twilight Cultist Robe (wet)"],
+    common: ["Blind Cave Fish", "Raw Glowfin", "Murk Eel", "Cave Shrimp", "Fungal Carp"],
+    uncommon: ["Aku'mai Scale", "Luminous Mushroom Cap", "Ancient Night Elf Coin"],
+    rare: ["Twilight's Hammer Pamphlet", "Glowing Abyssal Pearl"],
+    epic: ["Aku'mai's Toothbrush"],
+    legendary: ["Aku'mai's Unhatched Egg"] } },
+  { id: "ice", icon: "❄️", name: "Lake Kel'Theril (frozen)", req: 0, mult: 6.5, special: true, school: "Swarm of Frostfin",
+    night: "Aurora Koi", rain: "Snowflake Minnow",
+    recipe: { n: "Frozen Fish Sticks", q: "rare", buff: { speed: 25, skill: 15 }, casts: 20 },
+    theme: { skyTop: 0x8fb4dd, skyBot: 0xeef4ff, deep: 0x0e3a5a, shallow: 0x7ec8e8, shore: 0xf2f6ff, sand: 0xd8e2ea, rock: 0x8a96a2, decor: "snow", ice: true, snow: true, mtn: 0xbac8d8 },
+    fish: {
+    poor: ["Frozen Snowball", "Mitten (left)", "Owlbeast Feather", "Frostsaber Hairball"],
+    common: ["Raw Frostfin", "Ice Perch", "Winterspring Trout", "Snowy Smelt", "Chillwind Char"],
+    uncommon: ["Frozen Treasure Map", "Yeti Toe", "Icy Tear of Elune"],
+    rare: ["Frost Wyrm Scale", "Winterfall Firewater (frozen solid)"],
+    epic: ["Kel'Theril Ice Crystal"],
+    legendary: ["Frozen Jacob (he wasn't wearing a hat)"] } }
 ];
 const F2_GEAR = [
   { id: "pole0", slot: "pole", n: "Fishing Pole", q: "common", price: 0 },
@@ -2786,7 +2988,26 @@ const F2_SKY = [
   { id: "time2", n: "Hourglass of Dusk", q: "uncommon", tod: "dusk", price: 500, note: "skips to dusk (+10% bites)" },
   { id: "time3", n: "Elune's Lantern", q: "rare", tod: "night", price: 1500, note: "skips to nightfall (+10 luck, night fish)" }
 ];
+const F2_TOOLS = [{ id: "picks", n: "Thieves' Lockpicks (×5)", q: "common", price: 100, note: "for opening chests you fish up" }];
+// bait is crafted from your catch at the campfire; one bait at a time, used up per cast
+const F2_BAIT = [
+  { id: "chum", n: "Junk Chum", q: "common", need: [["poor", 3]], casts: 12, fx: { nojunk: 1 }, desc: "no junk catches" },
+  { id: "glitter", n: "Glittering Bait", q: "uncommon", need: [["uncommon", 2]], casts: 10, fx: { mul: { rare: 2 } }, desc: "rare catches ×2" },
+  { id: "gold", n: "Pirate's Gold-Dusted Bait", q: "uncommon", need: [["rare", 1], ["poor", 2]], casts: 10, fx: { chest: 3 }, desc: "chests ×3 as likely" },
+  { id: "paste", n: "Arcane Fish Paste", q: "rare", need: [["rare", 2]], casts: 8, fx: { mul: { epic: 2.5 } }, desc: "epic catches ×2.5" },
+  { id: "specimen", n: "Specimen Bait", q: "rare", need: [["common", 3], ["uncommon", 1]], casts: 10, fx: { target: 1 },
+    desc: "25% chance to catch the fish you pick (in its zone)" },
+  { id: "cake", n: "Legendary Lure-Cake", q: "epic", need: [["epic", 1], ["rare", 2]], casts: 6, fx: { mul: { legendary: 3 } }, desc: "legendary catches ×3" }
+];
+const F2_CHESTS = [null,
+  { n: "Waterlogged Lockbox", r: "uncommon", pins: 3, v: 60 },
+  { n: "Battered Pirate Chest", r: "rare", pins: 4, v: 200 },
+  { n: "Sunken Royal Coffer", r: "epic", pins: 5, v: 600 },
+  { n: "Abyssal Treasure Hoard", r: "legendary", pins: 6, v: 2000 }];
+const F2_PASS = "Captain Grief's Boat Pass";
+const F2_BOAT_CATCHES = 30, F2_BOAT_LINES = 3;
 const F2_SLOTS = ["pole", "hat", "boots", "line", "bag"];
+const F2_SLOT_ICON = { pole: "🎣", hat: "🎩", boots: "👢", line: "🧵", bag: "🎒", lure: "✨", food: "🍲", bait: "🪱" };
 const F2_BASE_W = { poor: 26, common: 34, uncommon: 22, rare: 11.5, epic: 5, legendary: 1.5 };
 const F2_VALUE = { poor: 3, common: 8, uncommon: 40, rare: 150, epic: 500, legendary: 2500 };
 const F2_LBS = { common: [.4, 4], uncommon: [1, 9], rare: [3, 22], epic: [8, 45], legendary: [30, 160] };
@@ -2796,22 +3017,27 @@ const F2_EARLY = ["Just a nibble. You yanked the rod and scared it off.", "That 
 const F2_LATE = ["Too slow. It stole the bait and left.", "Missed it! It'll tell all its friends.", "It got away while you were tabbed out."];
 const F2_SNAP = ["Your line snapped! {f} swims off with your hook as a souvenir.", "SNAP. {f} is gone, and so is your dignity."];
 const F2_ESCAPE = ["You let the line go slack and {f} slipped off the hook.", "{f} wriggled free. So close."];
-// one in-game day lasts 6 minutes: day, dusk, night, dawn
 const F2_DAY = 360, F2_TOD = [[0, "day", "☀️ Day"], [190, "dusk", "🌇 Dusk"], [225, "night", "🌙 Night"], [335, "dawn", "🌅 Dawn"]];
 const F2_WX = { clear: "☀ Clear", cloudy: "☁ Cloudy", rain: "🌧 Rain", storm: "⛈ Storm" };
 const F2_SAVE_KEY = "fish2";
-let f2 = null, f2State = "idle", f2T = [], f2Nib = null, f2Hook = null, f2Reel = null, f2Hold = false, f2SchoolT = null, f2School = null, f2Tab = "bag";
-let f2Tok = 0, f2Tick = null, f2Ev = null, f2EvT = null, f2P3 = null, f2Three = null;
-const f2New = () => ({ skill: 1, gold: 0, caught: 0, zone: "elwynn", gear: { pole: "pole0" }, owned: ["pole0"], lure: null, food: null, bag: [],
-  journal: {}, mastered: [], quest: null, clock: 20, wx: "clear", wxLeft: 120, trophies: 0 });
+let f2 = null, f2Reel = null, f2Hold = false, f2SchoolT = null, f2School = null, f2Tab = "bag", f2Sel = -1, f2Target = null;
+let f2Tick = null, f2Ev = null, f2EvT = null, f2P3 = null, f2Three = null, f2Lock = null;
+// one entry per fishing line; normal ponds only ever use the first
+const F2L = [0, 1, 2].map(i => ({ i, st: "idle", tok: 0, T: [], nib: null, hook: null }));
+let f2N = 1;
+const f2New = () => ({ skill: 1, gold: 0, caught: 0, zone: "elwynn", gear: { pole: "pole0" }, owned: ["pole0"], lure: null, food: null, bait: null, bag: [],
+  journal: {}, mastered: [], quest: null, clock: 20, wx: "clear", wxLeft: 120, trophies: 0, picks: 3, boat: null });
 function f2Load() {
   try { f2 = Object.assign(f2New(), JSON.parse(localStorage.getItem(F2_SAVE_KEY) || "{}")); } catch (e) { f2 = f2New(); }
+  f2N = f2.boat ? F2_BOAT_LINES : 1;
 }
 function f2Save() { try { localStorage.setItem(F2_SAVE_KEY, JSON.stringify(f2)); } catch (e) {} }
 const f2Gear = id => F2_GEAR.find(g => g.id === id);
 const f2Zone = (id = f2.zone) => F2_ZONES.find(z => z.id === id);
 const f2Tod = () => { const t = f2.clock % F2_DAY; let r = F2_TOD[0]; F2_TOD.forEach(p => { if (t >= p[0]) r = p; }); return r; };
-// what the time of day and weather do for you
+const f2Lines = () => F2L.slice(0, f2N);
+const f2Night = z => f2Tod()[1] === "night" || (z.theme.indoor && !z.theme.lava);
+const f2Busy = () => !!f2Reel || f2Lines().some(l => l.st !== "idle");
 function f2EnvBonus(k) {
   const tod = f2Tod()[1], wx = f2.wx;
   if (k === "luck") return (tod === "night" ? 10 : 0) + (wx === "storm" ? 10 : 0);
@@ -2829,23 +3055,67 @@ const f2Cap = () => 12 + f2Stat("cap");
 function f2Money(c) {
   c = Math.floor(c);
   const g = Math.floor(c / 10000), sv = Math.floor(c / 100) % 100, cp = c % 100;
-  return (g ? '<span class="cg">' + g + "g</span> " : "") + (g || sv ? '<span class="cs">' + sv + "s</span> " : "") + '<span class="cc">' + cp + "c</span>";
+  return (g ? '<span class="cg">' + g + "</span> " : "") + (g || sv ? '<span class="cs">' + sv + "</span> " : "") + '<span class="cc">' + cp + "</span>";
 }
 const f2Esc = t => String(t).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 const f2Name = (n, r) => '<span style="color:' + RARITY[r] + '">' + f2Esc(n) + "</span>";
 const f2BuffText = b => Object.entries(b).map(([k, v]) => "+" + v + (k === "speed" ? "% bite speed" : " " + k)).join(", ");
-function f2Msg(html) { $("f2msg").innerHTML = html; }
-function f2Later(ms, fn) { f2T.push(setTimeout(fn, ms)); }
+function f2Later(L, ms, fn) { L.T.push(setTimeout(fn, ms)); }
 function f2Sound(fn) { if (ctx && !sfxOff()) fn(ctx.currentTime); }
+// the message log under the pond, like the chat frame
+function f2Msg(html) {
+  const log = $("f2msg"), d = document.createElement("div");
+  d.innerHTML = html; log.appendChild(d);
+  while (log.children.length > 6) log.firstElementChild.remove();
+  log.scrollTop = log.scrollHeight;
+}
+// icons: emoji picked from the item's name, or by what kind of thing it is
+const F2_ICON_WORDS = [[/boot|shoe/i, "🥾"], [/sock|mitten/i, "🧦"], [/key/i, "🗝️"], [/map/i, "🗺️"], [/crown|tiara/i, "👑"], [/hat|helmet|eyepatch/i, "🎩"],
+  [/duck/i, "🦆"], [/clam|pearl/i, "🦪"], [/shrimp|lobster/i, "🦐"], [/crab|pinchy/i, "🦀"], [/squid|kraken|leviathan|serpent/i, "🦑"], [/eel|leech/i, "🐍"],
+  [/turtle/i, "🐢"], [/earring|ring\b|badge|coin/i, "💍"], [/letter|log|pamphlet|poster|note|tab\b|strategy/i, "📜"], [/bottle|water|firewater|drool/i, "🍾"],
+  [/candle|torch/i, "🕯️"], [/glasses|spyglass|mirror/i, "👓"], [/feather/i, "🪶"], [/tooth|toenail|horn|bill|bone/i, "🦷"], [/hammer|anchor/i, "⚓"],
+  [/egg/i, "🥚"], [/mushroom|cap\b/i, "🍄"], [/rock|pebble|ash|snowball|crystal|core\b|eye of/i, "🪨"], [/bell/i, "🔔"], [/sand|dropping/i, "💩"],
+  [/jacob/i, "🧊"], [/wife/i, "👩"], [/puppy|hound|tadpole|wyrmling/i, "🐶"], [/chest|hoard|coffer|lockbox/i, "📦"], [/seaweed|wig|robe|bandana|cage/i, "🧶"],
+  [/snail/i, "🐌"], [/jelly|angler|koi|minnow/i, "🐠"]];
+function f2Icon(it) {
+  if (it.kind === "chest") return it.tier >= 4 ? "💎" : "📦";
+  if (it.kind === "pass") return "🎟️";
+  if (it.kind === "bait") return "🪱";
+  if (it.kind === "sky") return { sky1: "☀️", sky2: "☁️", sky3: "🌧️", sky4: "⛈️", time1: "🐓", time2: "⏳", time3: "🏮" }[it.id] || "🌀";
+  const w = F2_ICON_WORDS.find(([re]) => re.test(it.n));
+  if (w) return w[1];
+  return { poor: "🦴", common: "🐟", uncommon: "🐠", rare: "🐡", epic: "🦈", legendary: "🐉" }[it.r] || "🐟";
+}
+
+// ----- tooltips: anything with data-tip shows a WoW-style tooltip
+const f2Tips = {};
+let f2TipN = 0;
+function f2Tip(html) { const k = "t" + (++f2TipN); f2Tips[k] = html; return ' data-tip="' + k + '"'; }
+function f2TipMove(e) {
+  const el = e.target.closest && e.target.closest("[data-tip]"), tip = $("f2tip");
+  if (!el || !f2Tips[el.dataset.tip]) { tip.style.display = "none"; return; }
+  tip.innerHTML = f2Tips[el.dataset.tip]; tip.style.display = "block";
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  tip.style.left = Math.min(innerWidth - w - 8, e.clientX + 16) + "px";
+  tip.style.top = Math.min(innerHeight - h - 8, e.clientY + 14) + "px";
+}
+function f2ItemTip(it) {
+  const kind = { chest: "Locked chest · open it with lockpicks", pass: "Use: board the boat to a special fishing area", sky: "Use: change the weather or time",
+    bait: "Use: put it on your hook" }[it.kind] || (it.r === "poor" ? "Junk" : "Fish");
+  return '<div class="tn" style="color:' + RARITY[it.r] + '">' + f2Esc(it.n) + "</div><div class=\"tk\">" + kind + "</div>" +
+    (it.c > 1 ? "<div>Stack of " + it.c + "</div>" : "") + (it.lb ? "<div>" + it.lb + " lb</div>" : "") +
+    (it.v ? '<div class="tv">Sell price: ' + f2Money(it.v * it.c) + "</div>" : '<div class="tv">No sell price</div>');
+}
 
 // ----- the pond: 3D when WebGL + three.js are available, the old 2D pond otherwise
 const P2 = {
   gl: false,
   pick(e) { const r = $("f2pond").getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100 }; },
-  aim() {}, env() {}, reel() {}, lure() {}, poke() {}, start() {}, stop() {},
+  aim() {}, env() {}, reel() {}, lure() {}, poke() {}, start() {}, stop() {}, setLines() {},
   setZone(z) { $("f2pond").dataset.z = z.id; },
-  cast(px, py, cb) { const b = $("f2bob"); b.style.left = px + "%"; b.style.top = py + "%"; b.className = "on"; cb(); },
-  bob(m) {
+  cast(px, py, cb, i) { if (!i) { const b = $("f2bob"); b.style.left = px + "%"; b.style.top = py + "%"; b.className = "on"; } cb(); },
+  bob(m, i) {
+    if (i) return;
     const b = $("f2bob");
     if (m === "nibble") { b.className = "on nib"; setTimeout(() => { if (b.className === "on nib") b.className = "on"; }, 400); }
     else b.className = m === "none" ? "" : m === "bite" ? "on bite" : "on";
@@ -2854,7 +3124,7 @@ const P2 = {
     const s = $("f2school"); s.classList.toggle("on", !!on);
     if (on) { s.style.left = px + "%"; s.style.top = py + "%"; $("f2schooltag").textContent = f2Zone().school; }
   },
-  catchFish() { $("f2bob").className = ""; }, lost() { $("f2bob").className = ""; }
+  catchFish(r, i) { if (!i) $("f2bob").className = ""; }, lost(i) { if (!i) $("f2bob").className = ""; }
 };
 let P = P2;
 function f2Load3D() {
@@ -2874,10 +3144,9 @@ function f2Load3D() {
   f2Three.catch(() => {});
   return f2Three;
 }
-// switch to the 3D pond as soon as it's loaded and nothing is in the water
 function f2UseBestPond() {
-  if (!f2P3 || P === f2P3 || f2State !== "idle") return;
-  P.stop(); P = f2P3; P.setZone(f2Zone()); P.env(f2Tod()[1], f2.wx);
+  if (!f2P3 || P === f2P3 || f2Busy()) return;
+  P.stop(); P = f2P3; P.setZone(f2Zone()); P.setLines(f2N); P.env(f2Tod()[1], f2.wx);
   if (f2School) P.school(true, f2School.x, f2School.y);
   if ($("fish2").classList.contains("on")) P.start();
 }
@@ -2885,167 +3154,365 @@ function f2UseBestPond() {
 // ----- rendering
 function f2RenderZones() {
   const box = $("f2zones"); box.textContent = "";
+  if (f2.boat) {
+    const z = f2Zone();
+    box.innerHTML = '<div class="f2boatbar">' + z.icon + " " + f2Esc(z.name) + " · " + F2_BOAT_LINES + " lines · " + f2.boat.left +
+      ' catches left <button class="f2btn" id="f2home">⛵ Sail back to shore</button></div>';
+    $("f2home").addEventListener("click", () => { if (!f2Busy()) f2EndBoat("You ask the captain to turn the boat around."); });
+    return;
+  }
   const eff = f2Eff();
-  F2_ZONES.forEach(z => {
+  F2_ZONES.filter(z => !z.special).forEach(z => {
     const b = document.createElement("button");
     const low = eff < z.req || (z.fire && !f2Stat("fire"));
     b.className = (z.id === f2.zone ? "on" : "") + (low ? " low" : "");
-    b.innerHTML = f2Esc(z.name) + "<small>" + (z.fire ? "🔥 " : "") + z.req + "</small>" + (f2.mastered.includes(z.id) ? " ⭐" : "");
+    b.innerHTML = '<span class="zi">' + z.icon + "</span>" + f2Esc(z.name) + "<small>" + (z.fire ? "🔥" : "") + z.req + "</small>" + (f2.mastered.includes(z.id) ? " ⭐" : "");
     b.title = "Recommended fishing skill " + z.req + (z.fire ? ", needs fireproof gear" : "");
     b.addEventListener("click", () => f2Travel(z.id));
     box.appendChild(b);
   });
 }
 function f2RenderHud() {
-  const [, , label] = f2Tod(), bon = [];
+  const [, , label] = f2Tod(), bon = [], z = f2Zone(), indoor = z.theme.indoor;
   if (f2EnvBonus("luck")) bon.push("+" + f2EnvBonus("luck") + " luck");
   if (f2EnvBonus("speed")) bon.push("+" + f2EnvBonus("speed") + "% bites");
-  const z = f2Zone(), special = [];
-  if (f2Tod()[1] === "night") special.push("🌙 " + z.night);
+  const special = [];
+  if (f2Night(z)) special.push("🌙 " + z.night);
   if (f2.wx === "rain" || f2.wx === "storm") special.push("🌧 " + z.rain);
-  $("f2hud").innerHTML = label + " · " + F2_WX[f2.wx] + (bon.length ? ' <span style="color:#9f9">(' + bon.join(", ") + ")</span>" : "") +
+  $("f2hud").innerHTML = (indoor ? "🕯 Underground" : label + " · " + F2_WX[f2.wx]) + (bon.length ? ' <span style="color:#9f9">(' + bon.join(", ") + ")</span>" : "") +
     (special.length ? '<br><span style="color:#8cf">Biting now: ' + special.map(f2Esc).join(", ") + "</span>" : "") +
     (f2School ? '<br><span style="color:#ffd100">' + f2Esc(z.school) + " spotted!</span>" : "");
 }
+function f2Slot(icon, q, inner, tip, extra) {
+  return '<div class="f2gslot"' + (tip ? f2Tip(tip) : "") + '><span class="f2ico" style="border-color:' + (q ? RARITY[q] : "#3a3020") + '">' + icon + (extra || "") +
+    "</span>" + inner + "</div>";
+}
 function f2RenderChar() {
-  $("f2gold").innerHTML = "💰 " + f2Money(f2.gold) + (f2.trophies ? ' · 🏆 ' + f2.trophies : "");
+  $("f2gold").innerHTML = f2Money(f2.gold) + (f2.trophies ? '<span class="f2troph" title="Extravaganza trophies">🏆 ' + f2.trophies + "</span>" : "") +
+    '<span class="f2picks" title="Lockpicks">🗝️ ' + f2.picks + "</span>";
   $("f2skillbar").firstElementChild.style.width = (f2.skill / 3) + "%";
   const bonus = f2Stat("skill");
-  $("f2skilltxt").textContent = "Fishing " + f2.skill + "/300" + (bonus ? " (+" + bonus + ") = " + f2Eff() : "");
+  $("f2skilltxt").textContent = "Fishing " + f2.skill + " / 300" + (bonus ? "  (+" + bonus + ")" : "");
   $("f2gear").innerHTML = F2_SLOTS.map(sl => {
     const g = f2Gear(f2.gear[sl]);
-    return '<div class="f2slot"><span>' + sl + "</span><span>" + (g ? f2Name(g.n, g.q) : '<span style="color:#555">empty</span>') + "</span></div>";
-  }).join("") + (() => {
-    const l = f2.lure && F2_LURES.find(x => x.id === f2.lure.id);
-    return '<div class="f2slot"><span>lure</span><span>' + (l ? f2Name(l.n, l.q) + " (" + f2.lure.casts + ")" : '<span style="color:#555">none</span>') + "</span></div>" +
-      '<div class="f2slot"><span>food</span><span>' + (f2.food ? f2Name(f2.food.n, f2.food.q) + " (" + f2.food.casts + ")" : '<span style="color:#555">not fed</span>') + "</span></div>";
-  })();
+    const st = g ? [g.skill && "+" + g.skill + " skill", g.luck && "+" + g.luck + " luck", g.speed && "+" + g.speed + "% speed", g.reel && "+" + g.reel + " reel",
+      g.cap && "+" + g.cap + " slots", g.fire && "fireproof"].filter(Boolean).join(", ") : "";
+    return f2Slot(F2_SLOT_ICON[sl], g && g.q, '<span class="f2gtxt"><span class="sl">' + sl + "</span>" + (g ? f2Name(g.n, g.q) : '<span class="none">empty</span>') + "</span>",
+      g ? '<div class="tn" style="color:' + RARITY[g.q] + '">' + f2Esc(g.n) + '</div><div class="tk">' + sl + "</div><div>" + (st || "no bonuses") + "</div>" + (g.note ? "<div>" + f2Esc(g.note) + "</div>" : "") : "");
+  }).join("");
+  const l = f2.lure && F2_LURES.find(x => x.id === f2.lure.id), buffs = [];
+  if (l) buffs.push(['✨', l.q, l.n, f2.lure.casts, "+" + (l.skill || 0) + " skill" + (l.luck ? ", +" + l.luck + " luck" : "")]);
+  if (f2.food) buffs.push(['🍲', f2.food.q, f2.food.n, f2.food.casts, "Well Fed: " + f2BuffText(f2.food.buff)]);
+  if (f2.bait) buffs.push(['🪱', f2.bait.q, f2.bait.n + (f2.bait.target ? ": " + f2.bait.target : ""), f2.bait.casts, F2_BAIT.find(b => b.id === f2.bait.id).desc]);
+  $("f2buffs").innerHTML = buffs.length ? buffs.map(([ic, q, n, c, d]) => '<span class="f2buff"' + f2Tip('<div class="tn" style="color:' + RARITY[q] + '">' +
+    f2Esc(n) + "</div><div>" + f2Esc(d) + "</div><div class=\"tk\">" + c + " casts left</div>") + ' style="border-color:' + RARITY[q] + '">' + ic + "<b>" + c + "</b></span>").join("")
+    : '<span class="none">No lure, food or bait active</span>';
   const st = [];
-  if (f2Stat("luck")) st.push("Luck +" + f2Stat("luck"));
-  if (f2Stat("speed")) st.push("Bite speed +" + f2Stat("speed") + "%");
-  if (f2Stat("reel")) st.push("Reel +" + f2Stat("reel"));
-  if (f2Stat("fire")) st.push("🔥 Fireproof");
-  $("f2stats").innerHTML = st.join(" · ") || "No bonuses yet. Visit the vendor.";
+  if (f2Stat("luck")) st.push("🍀 " + f2Stat("luck"));
+  if (f2Stat("speed")) st.push("⚡ " + f2Stat("speed") + "%");
+  if (f2Stat("reel")) st.push("💪 " + f2Stat("reel"));
+  if (f2Stat("fire")) st.push("🔥 fireproof");
+  $("f2stats").innerHTML = st.map(s => "<span>" + s + "</span>").join("") || '<span class="none">No bonuses yet. Visit the vendor.</span>';
   const q = f2.quest;
   if (!q) { $("f2quest").innerHTML = "Nat Pagle is thinking about what he wants..."; return; }
   const z = f2Zone(q.zone);
-  $("f2quest").innerHTML = "Bring " + q.need + "× " + f2Name(q.fish, q.r) + " from " + f2Esc(z.name) + '.<div class="qbar"><i style="width:' +
-    (q.have / q.need * 100) + '%"></i></div>' + q.have + "/" + q.need + " · Reward: " + f2Money(q.reward) +
-    ' <button class="f2btn" id="f2qskip">New request</button>';
+  $("f2quest").innerHTML = "Bring " + q.need + "× " + f2Name(q.fish, q.r) + " from " + z.icon + " " + f2Esc(z.name) + '.<div class="qbar"><i style="width:' +
+    (q.have / q.need * 100) + '%"></i><span>' + q.have + " / " + q.need + '</span></div><div class="qrow">Reward: ' + f2Money(q.reward) +
+    ' <button class="f2btn" id="f2qskip">New request</button></div>';
   $("f2qskip").addEventListener("click", () => { f2NewQuest(); f2RenderChar(); playSfx("menuButton", .5); });
 }
 const f2BagUsed = () => f2.bag.length;
-const f2Commons = zid => f2.bag.filter(it => it.z === zid && it.r === "common").reduce((n, it) => n + it.c, 0);
+const f2Commons = zid => f2.bag.filter(it => it.z === zid && it.r === "common" && !it.kind).reduce((n, it) => n + it.c, 0);
+const f2HaveR = r => f2.bag.filter(it => it.r === r && !it.kind).reduce((n, it) => n + it.c, 0);
+function f2Row(icon, q, title, sub, right, btn, tip) {
+  return '<div class="f2row"' + (tip ? f2Tip(tip) : "") + '><span class="f2ico sm" style="border-color:' + RARITY[q] + '">' + icon + '</span><span class="nm">' +
+    f2Name(title, q) + (sub ? '<span class="st">' + sub + "</span>" : "") + '</span><span class="pr">' + (right || "") + "</span>" + (btn || "") + "</div>";
+}
 function f2RenderPanel() {
   document.querySelectorAll("#f2tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === f2Tab));
   const p = $("f2panel");
   if (f2Tab === "bag") {
-    const total = f2.bag.reduce((n, it) => n + it.v * it.c, 0);
-    p.innerHTML = '<div class="f2head"><span>Bag ' + f2BagUsed() + "/" + f2Cap() + "</span><span>" +
-      '<button class="f2btn" id="f2selljunk">Sell grey</button> <button class="f2btn" id="f2sellall">Sell all (' + f2Money(total) + ")</button></span></div>" +
-      (f2.bag.length ? "" : '<div style="color:#666">Empty. Go catch something.</div>') +
-      f2.bag.map((it, i) => '<div class="f2row"><span class="nm">' + f2Name(it.n, it.r) + (it.c > 1 ? " ×" + it.c : "") +
-        '</span><span class="pr">' + f2Money(it.v * it.c) + '</span><button class="f2btn" data-sell="' + i + '">Sell</button></div>').join("");
-    $("f2selljunk").addEventListener("click", () => f2Sell(it => it.r === "poor"));
-    $("f2sellall").addEventListener("click", () => f2Sell(() => true));
-    p.querySelectorAll("[data-sell]").forEach(b => b.addEventListener("click", () => { const it = f2.bag[+b.dataset.sell]; f2Sell(x => x === it); }));
+    const total = f2.bag.filter(it => !it.kind).reduce((n, it) => n + it.v * it.c, 0);
+    let html = '<div class="f2head"><span>🎒 ' + f2BagUsed() + " / " + f2Cap() + '</span><span><button class="f2btn" id="f2selljunk">Sell grey</button> ' +
+      '<button class="f2btn" id="f2sellall"' + f2Tip("Sells all fish and junk (not chests, passes or usable items)") + ">Sell fish (" + f2Money(total) + ")</button></span></div>";
+    html += '<div class="f2baggrid">';
+    for (let i = 0; i < f2Cap(); i++) {
+      const it = f2.bag[i];
+      html += it ? '<div class="f2bslot' + (i === f2Sel ? " sel" : "") + '" data-i="' + i + '" style="--rc:' + RARITY[it.r] + '"' + f2Tip(f2ItemTip(it)) + ">" + f2Icon(it) +
+        (it.c > 1 ? "<b>" + it.c + "</b>" : "") + "</div>" : '<div class="f2bslot empty"></div>';
+    }
+    html += '</div><div class="f2hint">Click an item for options · right-click sells</div><div id="f2detail"></div>';
+    p.innerHTML = html;
+    $("f2selljunk").addEventListener("click", () => f2Sell(it => it.r === "poor" && !it.kind));
+    $("f2sellall").addEventListener("click", () => f2Sell(it => !it.kind));
+    p.querySelectorAll(".f2bslot[data-i]").forEach(s => {
+      s.addEventListener("click", () => { f2Sel = +s.dataset.i; playSfx("menuButton", .3); f2RenderPanel(); });
+      s.addEventListener("contextmenu", e => { e.preventDefault(); const it = f2.bag[+s.dataset.i]; if (it && it.v) f2Sell(x => x === it); });
+    });
+    f2RenderDetail();
   } else if (f2Tab === "shop") {
-    const row = (g, owned, eq, isLure) => {
+    const row = (g, icon, owned, eq, isLure) => {
       const st = [g.skill && "+" + g.skill + " skill", g.luck && "+" + g.luck + " luck", g.speed && "+" + g.speed + "% bite speed",
         g.reel && "+" + g.reel + " reel", g.cap && "+" + g.cap + " bag slots", isLure && g.casts + " casts", g.note].filter(Boolean).join(", ");
-      let btn;
-      if (eq) btn = '<button class="f2btn" disabled>Equipped</button>';
-      else if (owned) btn = '<button class="f2btn" data-equip="' + g.id + '">Equip</button>';
-      else btn = '<button class="f2btn" data-buy="' + g.id + '"' + (f2.gold < g.price ? " disabled" : "") + ">Buy</button>";
-      return '<div class="f2row"><span class="nm">' + f2Name(g.n, g.q) + '<span class="st">' + st + '</span></span><span class="pr">' +
-        (owned ? "" : f2Money(g.price)) + "</span>" + btn + "</div>";
+      const btn = eq ? '<button class="f2btn" disabled>Equipped</button>' : owned ? '<button class="f2btn" data-equip="' + g.id + '">Equip</button>'
+        : '<button class="f2btn buy" data-buy="' + g.id + '"' + (f2.gold < g.price ? " disabled" : "") + ">Buy</button>";
+      return f2Row(icon, g.q, g.n, st, owned ? "" : f2Money(g.price), btn);
     };
-    let html = '<div class="f2head"><span>Nat Pagle\'s Supplies</span><span>' + f2Money(f2.gold) + "</span></div>";
+    let html = '<div class="f2head"><span>🛒 Nat Pagle\'s Supplies</span><span>' + f2Money(f2.gold) + "</span></div>";
     for (const sl of F2_SLOTS) {
       html += "<h4>" + sl + (sl === "boots" ? "" : "s") + "</h4>";
-      F2_GEAR.filter(g => g.slot === sl && g.price).forEach(g => { html += row(g, f2.owned.includes(g.id), f2.gear[sl] === g.id); });
+      F2_GEAR.filter(g => g.slot === sl && g.price).forEach(g => { html += row(g, F2_SLOT_ICON[sl], f2.owned.includes(g.id), f2.gear[sl] === g.id); });
     }
-    html += "<h4>Lures (one at a time, used up per cast)</h4>";
-    F2_LURES.forEach(l => { html += row(l, false, false, true); });
-    html += "<h4>Weather and time (used right away)</h4>";
-    F2_SKY.forEach(x => { html += row(x, false, false); });
+    html += "<h4>Lures · one at a time, used up per cast</h4>";
+    F2_LURES.forEach(l => { html += row(l, "✨", false, false, true); });
+    html += "<h4>Weather and time · used right away</h4>";
+    F2_SKY.forEach(x => { html += row(x, f2Icon({ kind: "sky", id: x.id }), false, false); });
+    html += "<h4>Tools</h4>";
+    F2_TOOLS.forEach(x => { html += row(x, "🗝️", false, false); });
     p.innerHTML = html;
     p.querySelectorAll("[data-buy]").forEach(b => b.addEventListener("click", () => f2Buy(b.dataset.buy)));
     p.querySelectorAll("[data-equip]").forEach(b => b.addEventListener("click", () => f2Equip(b.dataset.equip)));
-  } else if (f2Tab === "cook") {
-    let html = '<div class="f2head"><span>🔥 Campfire</span><span>' + (f2.food ? "Well Fed (" + f2.food.casts + ")" : "Hungry") + "</span></div>" +
-      '<div style="color:#999;margin-bottom:.4rem">Cook 3 common fish from a zone into its dish. Eating it gives a buff for a number of casts (one dish at a time).</div>';
+  } else if (f2Tab === "camp") {
+    let html = '<div class="f2head"><span>🔥 Campfire</span><span class="f2hint">Your catch becomes food and bait</span></div><h4>Cooking · 3 common fish from a zone</h4>';
     F2_ZONES.forEach(z => {
+      if (z.special && !f2Commons(z.id) && !f2.journal[z.id]) return;
       const have = f2Commons(z.id), r = z.recipe;
-      html += '<div class="f2row"><span class="nm">' + f2Name(r.n, r.q) + '<span class="st">' + f2BuffText(r.buff) + ", " + r.casts + " casts · needs 3 common fish from " +
-        f2Esc(z.name) + " (" + have + ")</span></span>" + '<button class="f2btn" data-cook="' + z.id + '"' + (have < 3 ? " disabled" : "") + ">Cook</button></div>";
+      html += f2Row("🍲", r.q, r.n, f2BuffText(r.buff) + " for " + r.casts + " casts · " + z.icon + " " + f2Esc(z.name) + " fish: " + have + "/3", "",
+        '<button class="f2btn" data-cook="' + z.id + '"' + (have < 3 ? " disabled" : "") + ">Cook</button>");
+    });
+    html += "<h4>Bait crafting · from any zone</h4>";
+    const zz = f2Zone(), j = f2.journal[zz.id] || {};
+    const targets = ["common", "uncommon", "rare", "epic"].flatMap(r => zz.fish[r].filter(n => n in j).map(n => [n, r]));
+    if (!f2Target || !targets.some(t => t[0] === f2Target)) f2Target = targets.length ? targets[0][0] : null;
+    F2_BAIT.forEach(b => {
+      const ok = b.need.every(([r, n]) => f2HaveR(r) >= n) && (!b.fx.target || f2Target);
+      const need = b.need.map(([r, n]) => n + "× " + '<span style="color:' + RARITY[r] + '">' + r + "</span> (" + f2HaveR(r) + ")").join(" + ");
+      let sub = b.desc + ", " + b.casts + " casts · needs " + need;
+      if (b.fx.target) sub += '<br><select id="f2target">' + (targets.length ? targets.map(([n]) => "<option" + (n === f2Target ? " selected" : "") + ">" + f2Esc(n) +
+        "</option>").join("") : "<option>catch something here first</option>") + "</select>";
+      html += f2Row("🪱", b.q, b.n, sub, "", '<button class="f2btn" data-bait="' + b.id + '"' + (ok ? "" : " disabled") + ">Craft</button>");
     });
     p.innerHTML = html;
     p.querySelectorAll("[data-cook]").forEach(b => b.addEventListener("click", () => f2Cook(b.dataset.cook)));
+    p.querySelectorAll("[data-bait]").forEach(b => b.addEventListener("click", () => f2CraftBait(b.dataset.bait)));
+    const sel = $("f2target"); if (sel) sel.addEventListener("change", () => { f2Target = sel.value; });
   } else {
     const z = f2Zone(), j = f2.journal[z.id] || {};
     const all = f2AllFish(z), got = all.filter(n => n in j).length;
-    let html = '<div class="f2head"><span>' + f2Esc(z.name) + "</span><span>" + got + "/" + all.length + (f2.mastered.includes(z.id) ? " ⭐" : "") + "</span></div>";
+    let html = '<div class="f2head"><span>' + z.icon + " " + f2Esc(z.name) + "</span><span>" + got + " / " + all.length + (f2.mastered.includes(z.id) ? " ⭐" : "") + "</span></div>" +
+      '<div class="qbar"><i style="width:' + (got / all.length * 100) + '%"></i></div>';
     const li = (n, r, pre) => n in j
-      ? '<li style="color:' + RARITY[r] + '">' + (pre || "") + f2Esc(n) + (j[n] ? ' <span style="color:#888">(record ' + j[n] + " lb)</span>" : "") + "</li>"
-      : '<li class="missing">' + (pre || "") + "???</li>";
+      ? '<li style="color:' + RARITY[r] + '"><span class="ji">' + f2Icon({ n, r }) + "</span>" + (pre || "") + f2Esc(n) + (j[n] ? ' <span class="rec">' + j[n] + " lb</span>" : "") + "</li>"
+      : '<li class="missing"><span class="ji">❔</span>' + (pre || "") + "???</li>";
     for (const [r, list] of Object.entries(z.fish)) html += '<h4 style="color:' + RARITY[r] + '">' + r + "</h4><ul>" + list.map(n => li(n, r)).join("") + "</ul>";
     html += '<h4 style="color:#8cf">special</h4><ul>' + li(z.night, "rare", "🌙 ") + li(z.rain, "rare", "🌧 ") + "</ul>";
-    html += '<div style="color:#888;margin-top:.6rem">🌙 only bites at night, 🌧 only in rain or storms. Complete a zone for a bonus from Nat Pagle.</div>';
+    html += '<div class="f2hint">🌙 only bites at night, 🌧 only in rain or storms. Complete a zone for a bonus from Nat Pagle.</div>';
     p.innerHTML = html;
   }
+}
+function f2RenderDetail() {
+  const box = $("f2detail"), it = f2.bag[f2Sel];
+  if (!box) return;
+  if (!it) { box.innerHTML = ""; return; }
+  const btns = [];
+  if (it.kind === "chest") btns.push('<button class="f2btn buy" data-act="open">🔓 Pick the lock</button>');
+  if (it.kind === "pass") btns.push('<button class="f2btn buy" data-act="board"' + (f2.boat ? " disabled" : "") + ">⛵ Board the boat</button>");
+  if (it.kind === "sky" || it.kind === "bait") btns.push('<button class="f2btn buy" data-act="use">Use</button>');
+  if (it.v) btns.push('<button class="f2btn" data-act="sell">Sell (' + f2Money(it.v * it.c) + ")</button>");
+  btns.push('<button class="f2btn" data-act="drop">Destroy</button>');
+  box.innerHTML = '<div class="f2det"><span class="f2ico" style="border-color:' + RARITY[it.r] + '">' + f2Icon(it) + "</span><div>" + f2Name(it.n, it.r) +
+    (it.c > 1 ? " ×" + it.c : "") + "<div>" + btns.join(" ") + "</div></div></div>";
+  box.querySelectorAll("[data-act]").forEach(b => b.addEventListener("click", () => {
+    const a = b.dataset.act;
+    if (a === "sell") f2Sell(x => x === it);
+    else if (a === "drop") { f2.bag = f2.bag.filter(x => x !== it); f2Sel = -1; f2Msg("You destroy " + f2Name(it.n, it.r) + "."); f2Save(); f2RenderAll(); }
+    else if (a === "open") f2OpenLock(it);
+    else if (a === "board") f2ChooseBoat(it);
+    else if (a === "use") f2UseItem(it);
+  }));
 }
 const f2AllFish = z => Object.values(z.fish).flat().concat([z.night, z.rain]);
 function f2RenderAll() { f2RenderZones(); f2RenderHud(); f2RenderChar(); f2RenderPanel(); }
 
-// ----- vendor, bag, cooking
+// ----- vendor, bag, cooking, bait
+function f2ApplySky(sky) {
+  if (sky.wx) { f2.wx = sky.wx; f2.wxLeft = 180; }
+  else { const start = F2_TOD.find(t => t[1] === sky.tod)[0]; f2.clock = f2.clock - f2.clock % F2_DAY + start; }
+  f2Msg("You use " + f2Name(sky.n, sky.q) + ". " + { clear: "The clouds scatter.", cloudy: "Grey clouds roll in.", rain: "It starts pouring.",
+    storm: "Thunder rumbles. Here comes the storm.", day: "Cock-a-doodle-doo! Good morning.", dusk: "The sun sinks toward the horizon.",
+    night: "Night falls. The fish come out to play." }[sky.wx || sky.tod]);
+  P.env(f2Tod()[1], f2.wx);
+}
 function f2Buy(id) {
-  const g = f2Gear(id), l = F2_LURES.find(x => x.id === id), sky = F2_SKY.find(x => x.id === id), it = g || l || sky;
+  const g = f2Gear(id), l = F2_LURES.find(x => x.id === id), sky = F2_SKY.find(x => x.id === id), tool = F2_TOOLS.find(x => x.id === id), it = g || l || sky || tool;
   if (!it || f2.gold < it.price) return;
   f2.gold -= it.price;
-  if (sky) {
-    if (sky.wx) { f2.wx = sky.wx; f2.wxLeft = 180; }
-    else { const start = F2_TOD.find(t => t[1] === sky.tod)[0]; f2.clock = f2.clock - f2.clock % F2_DAY + start; }
-    f2Msg("You use " + f2Name(sky.n, sky.q) + ". " + { clear: "The clouds scatter.", cloudy: "Grey clouds roll in.", rain: "It starts pouring.",
-      storm: "Thunder rumbles. Here comes the storm.", day: "Cock-a-doodle-doo! Good morning.", dusk: "The sun sinks toward the horizon.",
-      night: "Night falls. The fish come out to play." }[sky.wx || sky.tod]);
-    P.env(f2Tod()[1], f2.wx);
-  } else if (g) { f2.owned.push(id); f2.gear[g.slot] = id; f2Msg("You bought and equipped " + f2Name(g.n, g.q) + "."); }
+  if (sky) f2ApplySky(sky);
+  else if (tool) { f2.picks += 5; f2Msg("You buy a bundle of lockpicks. You now have " + f2.picks + "."); }
+  else if (g) { f2.owned.push(id); f2.gear[g.slot] = id; f2Msg("You bought and equipped " + f2Name(g.n, g.q) + "."); }
   else { f2.lure = { id, casts: l.casts }; f2Msg("You apply " + f2Name(l.n, l.q) + " to your hook. +" + (l.skill || 0) + " skill for " + l.casts + " casts."); }
   if (!playSfx("coin", .8)) f2Sound(t => tone(1318.5, "triangle", t, .3, .06));
   f2Save(); f2RenderAll();
 }
 function f2Equip(id) { const g = f2Gear(id); f2.gear[g.slot] = id; playSfx("menuButton", .5); f2Save(); f2RenderAll(); }
 function f2Sell(which) {
-  const sold = f2.bag.filter(which);
+  const sold = f2.bag.filter(it => it.v && which(it));
   if (!sold.length) return;
   const sum = sold.reduce((n, it) => n + it.v * it.c, 0);
-  f2.bag = f2.bag.filter(it => !sold.includes(it)); f2.gold += sum;
+  f2.bag = f2.bag.filter(it => !sold.includes(it)); f2.gold += sum; f2Sel = -1;
   f2Msg("Sold for " + f2Money(sum) + ".");
   if (!playSfx("coin", .7)) f2Sound(t => tone(1318.5, "triangle", t, .3, .06));
   f2Save(); f2RenderAll();
 }
-function f2AddBag(n, r, v, z) {
-  const stack = r !== "poor" && f2.bag.find(it => it.n === n && it.c < 20);
+// returns false when there's no room
+function f2AddBag(item) {
+  const it = Object.assign({ c: 1 }, item);
+  const stack = !it.kind && it.r !== "poor" && f2.bag.find(x => !x.kind && x.n === it.n && x.c < 20);
   if (stack) { stack.c++; return true; }
   if (f2BagUsed() >= f2Cap()) return false;
-  f2.bag.push({ n, r, v, c: 1, z }); return true;
+  f2.bag.push(it); return true;
+}
+// take n fish of a rarity (or of a zone's commons) out of the bag, biggest stacks first
+function f2Take(filter, n) {
+  f2.bag.filter(it => !it.kind && filter(it)).sort((a, b) => b.c - a.c).forEach(it => { const use = Math.min(n, it.c); it.c -= use; n -= use; });
+  f2.bag = f2.bag.filter(it => it.c > 0); f2Sel = -1;
 }
 function f2Cook(zid) {
   const z = f2Zone(zid), r = z.recipe;
   if (f2Commons(zid) < 3) return;
-  let need = 3;
-  f2.bag.filter(it => it.z === zid && it.r === "common").sort((a, b) => b.c - a.c).forEach(it => { const use = Math.min(need, it.c); it.c -= use; need -= use; });
-  f2.bag = f2.bag.filter(it => it.c > 0);
+  f2Take(it => it.z === zid && it.r === "common", 3);
   f2.food = { n: r.n, q: r.q, buff: r.buff, casts: r.casts };
   f2Msg("You cook " + f2Name(r.n, r.q) + " and eat it. Well Fed: " + f2BuffText(r.buff) + " for " + r.casts + " casts.");
   f2Sound(() => whoosh(300, 1200, .7));
   f2Save(); f2RenderAll();
 }
+function f2CraftBait(id) {
+  const b = F2_BAIT.find(x => x.id === id);
+  if (!b.need.every(([r, n]) => f2HaveR(r) >= n) || (b.fx.target && !f2Target)) return;
+  b.need.forEach(([r, n]) => f2Take(it => it.r === r, n));
+  f2.bait = { id: b.id, n: b.n, q: b.q, casts: b.casts, target: b.fx.target ? f2Target : null, zone: b.fx.target ? f2.zone : null };
+  f2Msg("You craft " + f2Name(b.n, b.q) + (f2.bait.target ? " for " + f2Esc(f2.bait.target) : "") + " and put it on your hook: " + b.desc + ".");
+  f2Sound(t => { tone(660, "triangle", t, .15, .05); tone(880, "triangle", t + .1, .2, .05); });
+  f2Save(); f2RenderAll();
+}
+function f2UseItem(it) {
+  if (it.kind === "sky") f2ApplySky(F2_SKY.find(x => x.id === it.id));
+  else if (it.kind === "bait") {
+    const b = F2_BAIT.find(x => x.id === it.id);
+    f2.bait = { id: b.id, n: b.n, q: b.q, casts: b.casts, target: null };
+    f2Msg("You put " + f2Name(b.n, b.q) + " on your hook: " + b.desc + ".");
+  }
+  if (--it.c <= 0) { f2.bag = f2.bag.filter(x => x !== it); f2Sel = -1; }
+  f2Save(); f2RenderAll();
+}
+
+// ----- chests and lockpicking: set every pin while it's inside the gold band
+function f2OpenLock(it) {
+  if (f2Busy()) { f2Msg("Finish what's on your line first."); return; }
+  const ch = F2_CHESTS[it.tier];
+  f2Lock = { it, pins: Array.from({ length: ch.pins }, (_, i) => ({ band: .12 + Math.random() * .6, size: Math.max(.12, .28 - it.tier * .035), ph: Math.random() * 6, set: false })),
+    cur: 0, t: 0, speed: 1.6 + it.tier * .45 };
+  $("lktitle").innerHTML = f2Name(it.n, it.r);
+  $("lkpins").innerHTML = f2Lock.pins.map((p, i) => '<div class="lkslot" data-i="' + i + '"><div class="lkband" style="top:' + (p.band * 100) + "%;height:" + (p.size * 100) +
+    '%"></div><div class="lkpin"></div></div>').join("");
+  f2LockInfo("Click (or press Space) when the pin is inside the gold band.");
+  $("f2lock").classList.add("on");
+  clearInterval(f2Lock.iv);
+  f2Lock.iv = setInterval(() => {
+    if (!f2Lock) return;
+    f2Lock.t += .016;
+    f2Lock.pins.forEach((p, i) => {
+      const el = $("lkpins").children[i]; if (!el) return;
+      el.classList.toggle("cur", i === f2Lock.cur && !p.set); el.classList.toggle("set", p.set);
+      if (!p.set) p.y = i === f2Lock.cur ? (Math.sin(f2Lock.t * f2Lock.speed * 2 + p.ph) + 1) / 2 * .92 : .92;
+      el.lastElementChild.style.top = (p.y * 100) + "%";
+    });
+  }, 16);
+}
+function f2LockInfo(html) { $("lkinfo").innerHTML = html + '<br><span style="color:#aaa">Lockpicks: ' + f2.picks + "</span>"; }
+function f2LockTry() {
+  const L = f2Lock; if (!L) return;
+  if (f2.picks <= 0) { f2LockInfo('<span class="err">You have no lockpicks left. Buy some at the vendor, or smash it.</span>'); return; }
+  if (L.cur >= L.pins.length) return;
+  const p = L.pins[L.cur], mid = p.y + .04;
+  if (mid >= p.band && mid <= p.band + p.size) {
+    p.set = true; p.y = p.band + p.size / 2 - .04; L.cur++;
+    f2Sound(t => tone(1400 + L.cur * 120, "square", t, .05, .03));
+    if (L.cur >= L.pins.length) { f2Sound(t => { tone(523, "triangle", t, .3, .06); tone(784, "triangle", t + .1, .4, .06); }); setTimeout(() => f2ChestOpen(false), 350); }
+    else f2LockInfo("Click! " + (L.pins.length - L.cur) + (L.pins.length - L.cur === 1 ? " pin" : " pins") + " to go.");
+  } else {
+    f2.picks--; f2Save();
+    const el = $("lkpins").children[L.cur]; el.classList.remove("snap"); void el.offsetWidth; el.classList.add("snap");
+    f2Sound(t => tone(180, "sawtooth", t, .12, .05));
+    f2LockInfo('<span class="err">Your lockpick snaps!</span>');
+    f2RenderChar();
+  }
+}
+function f2LockClose() { if (f2Lock) clearInterval(f2Lock.iv); f2Lock = null; $("f2lock").classList.remove("on"); }
+function f2ChestOpen(smashed) {
+  const it = f2Lock.it, tier = it.tier, z = f2Zone(it.z) || f2Zone();
+  f2LockClose();
+  f2.bag = f2.bag.filter(x => x !== it); f2Sel = -1;
+  const out = [];
+  if (Math.random() < .07) {
+    const lose = Math.min(50000, Math.floor(f2.gold * .1));
+    f2.gold -= lose;
+    f2Msg('<span class="err">It was a Mimic!</span> It bites your hand and swallows ' + f2Money(lose) + " before hopping back into the water.");
+    boom(); f2Save(); f2RenderAll(); return;
+  }
+  let gold = Math.round((150 + Math.random() * 250) * tier * tier * z.mult);
+  if (smashed) {
+    if (Math.random() < .55) { f2Msg("You smash " + f2Name(it.n, it.r) + " to splinters. Everything inside is ruined, except 3 copper."); f2.gold += 3; f2Save(); f2RenderAll(); return; }
+    gold = Math.round(gold * .5);
+  }
+  f2.gold += gold; out.push(f2Money(gold));
+  if (!smashed) {
+    if (Math.random() < .5) { const n = 1 + Math.floor(Math.random() * 2); f2.picks += n; out.push(n + " lockpick" + (n > 1 ? "s" : "")); }
+    if (Math.random() < .35) { const s = pick(F2_SKY); if (f2AddBag({ n: s.n, r: s.q, v: 0, kind: "sky", id: s.id })) out.push(f2Name(s.n, s.q)); }
+    if (Math.random() < .3) { const b = pick(F2_BAIT.filter(x => !x.fx.target)); if (f2AddBag({ n: b.n, r: b.q, v: 0, kind: "bait", id: b.id })) out.push(f2Name(b.n, b.q)); }
+    const gear = F2_GEAR.filter(g => g.price && !f2.owned.includes(g.id) && ["common", "uncommon", "rare", "epic"].indexOf(g.q) <= tier);
+    if (gear.length && Math.random() < .12 * tier) { const g = pick(gear); f2.owned.push(g.id); out.push(f2Name(g.n, g.q) + " (equip it at the vendor)"); }
+    if (Math.random() < .03 * tier && f2AddBag({ n: F2_PASS, r: "epic", v: 0, kind: "pass" })) out.push(f2Name(F2_PASS, "epic") + "!");
+  }
+  f2Msg("You open " + f2Name(it.n, it.r) + ". Inside: " + out.join(", ") + ".");
+  if (!playSfx("coin", .8)) f2Sound(t => tone(1318.5, "triangle", t, .3, .06));
+  f2Save(); f2RenderAll();
+}
+
+// ----- boat pass: special areas, three lines from one rod
+function f2ChooseBoat(it) {
+  if (f2Busy()) { f2Msg("Reel in first."); return; }
+  $("f2destbtns").innerHTML = F2_ZONES.filter(z => z.special).map(z => '<button class="f2dest" data-z="' + z.id + '"><span>' + z.icon + "</span>" + f2Esc(z.name) +
+    "<small>" + { sea: "Open water as far as you can see", cave: "A glowing underground lake", ice: "Ice fishing in Winterspring" }[z.id] + "</small></button>").join("");
+  $("f2dest").classList.add("on");
+  $("f2destbtns").querySelectorAll("[data-z]").forEach(b => b.addEventListener("click", () => {
+    $("f2dest").classList.remove("on");
+    if (--it.c <= 0) f2.bag = f2.bag.filter(x => x !== it);
+    f2Sel = -1;
+    f2.boat = { left: F2_BOAT_CATCHES, home: f2.zone };
+    f2SetZone(b.dataset.z);
+    f2Msg('<span style="color:#ffd100">⛵ All aboard! Captain Grief takes you to ' + f2Esc(f2Zone().name) + ". You get " + F2_BOAT_LINES +
+      " lines at once for the next " + F2_BOAT_CATCHES + " catches.</span>");
+    playSfx("readyCheck", .6);
+  }));
+}
+function f2EndBoat(why) {
+  const home = f2.boat ? f2.boat.home : "elwynn";
+  f2.boat = null;
+  f2SetZone(home);
+  f2Msg("⛵ " + why + " You're back at " + f2Esc(f2Zone().name) + ".");
+}
+function f2SetZone(id) {
+  f2StopAll();
+  f2.zone = id; f2N = f2.boat ? F2_BOAT_LINES : 1;
+  f2HideSchool();
+  P.setZone(f2Zone()); P.setLines(f2N); P.env(f2Tod()[1], f2.wx);
+  f2Save(); f2RenderAll(); f2ScheduleSchool();
+}
 
 // ----- Nat Pagle's requests
 function f2NewQuest() {
-  const eff = f2Eff(), zones = F2_ZONES.filter(z => z.req <= eff + 10 && (!z.fire || f2Stat("fire")));
+  const eff = f2Eff(), zones = F2_ZONES.filter(z => !z.special && z.req <= eff + 10 && (!z.fire || f2Stat("fire")));
   const z = pick(zones), r = Math.random() < .7 ? "common" : "uncommon", fish = pick(z.fish[r]), need = 2 + Math.floor(Math.random() * (r === "common" ? 4 : 2));
   f2.quest = { zone: z.id, fish, r, need, have: 0, reward: Math.round(F2_VALUE[r] * z.mult * need * 4 + 100 * z.mult) };
 }
@@ -3069,7 +3536,6 @@ function f2RenderEv() {
 }
 function f2EndEv() {
   const ev = f2Ev; f2Ev = null; f2RenderEv();
-  // ties go to the guildie. They were there first
   const rank = 1 + ev.rivals.filter(r => r.c >= ev.me).length, top = ev.rivals.slice().sort((a, b) => b.c - a.c)[0], z = f2Zone();
   const prize = [0, 4000, 1200, 400][rank] ? Math.round([0, 4000, 1200, 400][rank] * z.mult) : 0;
   let msg;
@@ -3092,8 +3558,11 @@ function f2Second() {
     const r = Math.random(), old = f2.wx;
     f2.wx = r < .45 ? "clear" : r < .67 ? "cloudy" : r < .9 ? "rain" : "storm";
     f2.wxLeft = 90 + Math.floor(Math.random() * 120);
-    if (f2.wx !== old) { changed = true; f2Msg({ clear: "The sky clears up.", cloudy: "Clouds roll in.", rain: "It starts to rain. Fish love this.",
-      storm: "A storm is brewing! The fish go crazy." }[f2.wx]); }
+    if (f2.wx !== old && !f2Zone().theme.indoor) {
+      changed = true;
+      f2Msg({ clear: "The sky clears up.", cloudy: "Clouds roll in.", rain: f2Zone().theme.snow ? "It starts snowing." : "It starts to rain. Fish love this.",
+        storm: "A storm is brewing! The fish go crazy." }[f2.wx]);
+    }
   }
   if (changed) { P.env(f2Tod()[1], f2.wx); f2RenderHud(); f2RenderChar(); }
   if (f2Ev) { f2Ev.left--; f2Ev.rivals.forEach(r => { if (Math.random() < r.rate) r.c++; }); f2RenderEv(); if (f2Ev.left <= 0) f2EndEv(); }
@@ -3102,13 +3571,11 @@ function f2Second() {
 
 // ----- the actual fishing
 function f2Travel(id) {
-  if (f2State !== "idle" || id === f2.zone) return;
-  f2.zone = id; f2Save(); f2HideSchool();
+  if (f2Busy() || id === f2.zone || f2.boat) return;
+  f2SetZone(id);
   const z = f2Zone(), eff = f2Eff();
-  P.setZone(z); P.env(f2Tod()[1], f2.wx);
-  f2Msg("You travel to " + f2Esc(z.name) + "." + (z.fire && !f2Stat("fire") ? ' <span class="err">You need fireproof gear to fish in lava.</span>'
+  f2Msg("You travel to " + z.icon + " " + f2Esc(z.name) + "." + (z.fire && !f2Stat("fire") ? ' <span class="err">You need fireproof gear to fish in lava.</span>'
     : eff < z.req ? ' <span class="err">Your fishing skill (' + eff + ") is low for this zone (" + z.req + "). Most fish will get away.</span>" : ""));
-  f2RenderAll(); f2ScheduleSchool();
 }
 function f2ScheduleSchool() {
   clearTimeout(f2SchoolT);
@@ -3119,88 +3586,111 @@ function f2ScheduleSchool() {
     f2SchoolT = setTimeout(() => { f2HideSchool(); f2ScheduleSchool(); }, 18000);
   }, 10000 + Math.random() * 15000);
 }
-function f2HideSchool() { f2School = null; P.school(false); if ($("f2hud")) f2RenderHud(); }
+function f2HideSchool() { f2School = null; P.school(false); if (f2) f2RenderHud(); }
+// what bites: a chest, a boat pass, or a fish (with weather, bait and specimen bait mixed in)
 function f2Roll(inSchool) {
-  const z = f2Zone(), luck = f2Stat("luck") + (inSchool ? 25 : 0);
+  const z = f2Zone(), luck = f2Stat("luck") + (inSchool ? 25 : 0), bait = f2.bait && F2_BAIT.find(b => b.id === f2.bait.id);
+  const chestP = (.03 + luck * .0004 + (z.special ? .03 : 0)) * (bait && bait.fx.chest || 1);
+  if (Math.random() < chestP) {
+    const r = Math.random(), tier = r < .6 ? 1 : r < .88 ? 2 : r < .98 ? 3 : 4, c = F2_CHESTS[tier];
+    return { kind: "chest", tier, r: c.r, n: c.n };
+  }
+  if (!z.special && Math.random() < .006) return { kind: "pass", r: "epic", n: F2_PASS };
+  if (bait && bait.fx.target && f2.bait.zone === z.id && Math.random() < .25) {
+    const r = Object.keys(z.fish).find(k => z.fish[k].includes(f2.bait.target));
+    if (r) return { r, n: f2.bait.target };
+  }
   const w = { poor: Math.max(3, F2_BASE_W.poor - luck * .35), common: Math.max(8, F2_BASE_W.common - luck * .2),
     uncommon: F2_BASE_W.uncommon + luck * .25, rare: F2_BASE_W.rare + luck * .17, epic: F2_BASE_W.epic + luck * .09, legendary: F2_BASE_W.legendary + luck * .04 };
-  let r = Math.random() * Object.values(w).reduce((a, b) => a + b, 0), res = ["common", pick(z.fish.common)];
-  for (const [k, v] of Object.entries(w)) if ((r -= v) < 0) { res = [k, pick(z.fish[k])]; break; }
-  // night and rain fish replace some of the rare-or-better catches when the conditions are right
-  if (res[0] === "rare" || res[0] === "epic") {
+  if (bait && bait.fx.nojunk) w.poor = 0;
+  if (bait && bait.fx.mul) Object.entries(bait.fx.mul).forEach(([k, m]) => { w[k] *= m; });
+  let r = Math.random() * Object.values(w).reduce((a, b) => a + b, 0), res = { r: "common", n: pick(z.fish.common) };
+  for (const [k, v] of Object.entries(w)) if ((r -= v) < 0) { res = { r: k, n: pick(z.fish[k]) }; break; }
+  if (res.r === "rare" || res.r === "epic") {
     const sp = [];
-    if (f2Tod()[1] === "night") sp.push(z.night);
+    if (f2Night(z)) sp.push(z.night);
     if (f2.wx === "rain" || f2.wx === "storm") sp.push(z.rain);
-    if (sp.length && Math.random() < .5) res = ["rare", pick(sp)];
+    if (sp.length && Math.random() < .5) res = { r: "rare", n: pick(sp) };
   }
   return res;
 }
-function f2Cast(x, y) {
-  if (f2State !== "idle") return;
+// cast every idle line; out on the boat the extra lines spread out around where you clicked
+function f2CastAll(x, y) {
+  const idle = f2Lines().filter(l => l.st === "idle");
+  if (!idle.length || f2Reel) return;
   f2UseBestPond();
   const z = f2Zone();
-  f2Stop();
   if (z.fire && !f2Stat("fire")) {
     f2Msg('<span class="err">Your line burns up instantly. That\'s lava. You need fireproof gear (check the vendor).</span>');
     f2Sound(() => whoosh(800, 200, .4));
     return;
   }
-  x = Math.max(8, Math.min(92, (x ?? 20 + Math.random() * 60) + (Math.random() - .5) * 5));
-  y = Math.max(12, Math.min(88, (y ?? 25 + Math.random() * 50) + (Math.random() - .5) * 5));
-  const inSchool = !!f2School && Math.abs(x - f2School.x) < 10 && Math.abs(y - f2School.y) < 13;
-  if (f2.lure && --f2.lure.casts <= 0) { f2.lure = null; f2Later(900, () => f2Msg("Your lure is used up.")); }
-  if (f2.food && --f2.food.casts <= 0) { f2.food = null; f2Later(1200, () => f2Msg("You are no longer Well Fed.")); }
+  x = x ?? 20 + Math.random() * 60; y = y ?? 25 + Math.random() * 50;
+  const spread = [[0, 0], [-16, 8], [15, -9]];
+  if (f2.lure && --f2.lure.casts <= 0) { f2.lure = null; f2Msg("Your lure is used up."); }
+  if (f2.food && --f2.food.casts <= 0) { f2.food = null; f2Msg("You are no longer Well Fed."); }
+  if (f2.bait && --f2.bait.casts <= 0) { f2.bait = null; f2Msg("Your bait is gone."); }
   playSfx("fishCast", .7);
-  f2State = "wait";
-  const tok = ++f2Tok;
-  f2Msg(inSchool ? "Right into the " + f2Esc(z.school) + "! Waiting..." : "Waiting for a bite... (careful, nibbles aren't bites)");
+  idle.forEach((L, k) => f2CastLine(L, x + spread[k][0] + (Math.random() - .5) * 5, y + spread[k][1] + (Math.random() - .5) * 5));
+  if (f2N === 1) f2Msg(f2School && Math.abs(x - f2School.x) < 10 ? "Right into the " + f2Esc(z.school) + "! Waiting..." : "Waiting for a bite...");
   f2RenderChar();
+}
+function f2CastLine(L, x, y) {
+  x = Math.max(8, Math.min(92, x)); y = Math.max(12, Math.min(88, y));
+  const inSchool = !!f2School && Math.abs(x - f2School.x) < 10 && Math.abs(y - f2School.y) < 13;
+  f2LineStop(L);
+  L.st = "wait";
+  const tok = ++L.tok;
   P.cast(x, y, () => {
-    if (tok !== f2Tok || f2State !== "wait") return;
-    P.lure(true);
-    // little fake nibbles to tempt you into pulling early
-    f2Nib = setInterval(() => {
-      if (f2State !== "wait" || Math.random() < .5) return;
-      P.bob("nibble"); f2Sound(t => tone(1200 + Math.random() * 300, "sine", t, .05, .02));
+    if (tok !== L.tok || L.st !== "wait") return;
+    P.lure(true, L.i);
+    L.nib = setInterval(() => {
+      if (L.st !== "wait" || Math.random() < .5) return;
+      P.bob("nibble", L.i); f2Sound(t => tone(1200 + Math.random() * 300, "sine", t, .05, .02));
     }, 1300);
     const wait = (2000 + Math.random() * 6500) * (1 - Math.min(.65, f2Stat("speed") / 100)) * (inSchool ? .6 : 1);
-    f2Later(wait, () => {
-      clearInterval(f2Nib);
-      const [r, n] = f2Roll(inSchool);
-      f2Hook = { r, n, inSchool };
-      f2State = "bite"; P.bob("bite");
+    f2Later(L, wait, () => {
+      clearInterval(L.nib);
+      L.hook = f2Roll(inSchool);
+      L.st = "bite"; P.bob("bite", L.i);
       playSfx("fishBite" + (1 + Math.floor(Math.random() * 3)), .8);
-      f2Msg("<b>!!!</b> Click now!");
-      const win = { poor: 1300, common: 1200, uncommon: 1050, rare: 950, epic: 850, legendary: 750 }[r];
-      f2Later(win, () => { if (f2State === "bite") { f2Stop(); P.catchFish(null); f2Msg(pick(F2_LATE)); } });
+      if (!f2Reel) f2Msg("<b>!!!</b> " + (f2N > 1 ? ["Red", "Blue", "Green"][L.i] + " bobber! " : "") + "Click now!");
+      const win = { poor: 1300, common: 1200, uncommon: 1050, rare: 950, epic: 850, legendary: 750 }[L.hook.r] + (f2N > 1 ? 300 : 0);
+      f2Later(L, win, () => { if (L.st === "bite") { f2LineStop(L); P.catchFish(null, L.i); if (!f2Reel) f2Msg(pick(F2_LATE)); } });
     });
-  });
+  }, L.i);
 }
-function f2Strike() {
-  f2T.forEach(clearTimeout); f2T = [];
-  const h = f2Hook, z = f2Zone(), eff = f2Eff();
+function f2LineStop(L) { L.T.forEach(clearTimeout); L.T = []; clearInterval(L.nib); L.st = "idle"; P.lure(false, L.i); }
+function f2StopAll() {
+  clearInterval(f2Reel && f2Reel.id); f2Reel = null; f2Hold = false;
+  F2L.forEach(L => { f2LineStop(L); P.bob("none", L.i); });
+  $("f2reel").classList.remove("on"); $("f2cast").textContent = "🎣 Cast";
+}
+function f2Strike(L) {
+  L.T.forEach(clearTimeout); L.T = [];
+  const h = L.hook, z = f2Zone(), eff = f2Eff();
   if (eff < z.req && Math.random() < Math.min(.9, .3 + (z.req - eff) / 60)) {
-    f2Stop(); P.lost(); f2Msg("The fish shook itself free. Your fishing skill is too low for " + f2Esc(z.name) + ".");
+    f2LineStop(L); P.lost(L.i); f2Msg("The fish shook itself free. Your fishing skill is too low for " + f2Esc(z.name) + ".");
     return;
   }
   const needsReel = F2_REEL[h.r] && (h.r !== "uncommon" || Math.random() < .4);
-  if (needsReel) f2StartReel(); else f2Land();
+  if (needsReel) f2StartReel(L); else f2Land(L);
 }
-function f2StartReel() {
-  const h = f2Hook, diff = F2_REEL[h.r], reel = f2Stat("reel");
-  f2State = "reel";
+function f2StartReel(L) {
+  const h = L.hook, diff = F2_REEL[h.r], reel = f2Stat("reel");
+  L.st = "reel";
   const zw = Math.max(.14, .34 - diff * .1 + reel / 300);
-  f2Reel = { T: .5, P: .3, force: 0, forceT: 0, diff, zw, reel };
+  f2Reel = { L, T: .5, P: .3, force: 0, forceT: 0, diff, zw, reel };
   const g = $("f2green"); g.style.left = (50 - zw * 50) + "%"; g.style.width = (zw * 100) + "%";
   $("f2reel").classList.add("on");
-  f2Msg("Something big is on the line! Reel it in.");
-  $("f2cast").textContent = "🎣 Hold to reel";
-  P.bob("reel");
+  f2Msg(h.kind === "chest" ? "Something heavy and square is on the line..." : "Something big is on the line! Reel it in.");
+  $("f2cast").textContent = "💪 Hold to reel";
+  P.bob("reel", L.i);
   f2Reel.id = setInterval(f2ReelStep, 30);
 }
 function f2ReelStep() {
   const R = f2Reel; if (!R) return;
-  const dt = .03;
+  const dt = .03, L = R.L;
   if ((R.forceT -= dt) <= 0) { R.force = (Math.random() * 2 - 1) * R.diff * .7; R.forceT = .3 + Math.random() * .7; }
   R.T += ((f2Hold ? 1 : -.8) + R.force) * dt;
   if (R.T <= 0) R.T = 0;
@@ -3208,55 +3698,61 @@ function f2ReelStep() {
   R.P += inZone ? (.2 + R.reel / 300) / Math.sqrt(R.diff) * dt : -.13 * dt * (R.T === 0 ? 2 : 1);
   $("f2needle").style.left = (R.T * 100) + "%";
   $("f2prog").firstElementChild.style.width = Math.max(0, Math.min(1, R.P)) * 100 + "%";
-  P.reel(R.P, Math.min(1, R.T));
-  const f = f2Name(f2Hook.n, f2Hook.r);
-  if (R.T >= 1) { f2Stop(); P.lost(); f2Msg(pick(F2_SNAP).replace("{f}", f)); f2Sound(t => tone(1800, "square", t, .08, .04)); }
-  else if (R.P <= 0) { f2Stop(); P.lost(); f2Msg(pick(F2_ESCAPE).replace("{f}", f)); }
-  else if (R.P >= 1) f2Land();
+  P.reel(R.P, Math.min(1, R.T), L.i);
+  const f = f2Name(L.hook.n, L.hook.r);
+  if (R.T >= 1) { f2EndReel(); f2LineStop(L); P.lost(L.i); f2Msg(pick(F2_SNAP).replace("{f}", f)); f2Sound(t => tone(1800, "square", t, .08, .04)); }
+  else if (R.P <= 0) { f2EndReel(); f2LineStop(L); P.lost(L.i); f2Msg(pick(F2_ESCAPE).replace("{f}", f)); }
+  else if (R.P >= 1) { f2EndReel(); f2Land(L); }
 }
-// stop everything that's running; the pond keeps whatever animation it's in
-function f2Stop() {
-  clearInterval(f2Reel && f2Reel.id); f2Reel = null; f2Hold = false; f2T.forEach(clearTimeout); f2T = []; clearInterval(f2Nib);
-  f2State = "idle"; $("f2reel").classList.remove("on"); $("f2cast").textContent = "🎣 Cast";
-  P.lure(false);
-}
-function f2Land() {
-  const h = f2Hook, z = f2Zone();
-  f2Stop();
+function f2EndReel() { clearInterval(f2Reel && f2Reel.id); f2Reel = null; f2Hold = false; $("f2reel").classList.remove("on"); $("f2cast").textContent = "🎣 Cast"; }
+function f2Land(L) {
+  const h = L.hook, z = f2Zone();
+  f2LineStop(L);
   if (f2Stat("boom") && Math.random() < f2Stat("boom")) {
-    P.lost(); f2Msg('<span class="err">Your Goblin Fishing Pole exploded.</span> The fish is fine. Your eyebrows are not.'); f2Sound(() => boom()); return;
+    P.lost(L.i); f2Msg('<span class="err">Your Goblin Fishing Pole exploded.</span> The fish is fine. Your eyebrows are not.'); f2Sound(() => boom()); return;
   }
-  P.catchFish(h.r);
+  P.catchFish(h.r, L.i);
   let up = f2.skill < 75 ? (Math.random() < .9) + (Math.random() < .4) : Math.random() < (f2.skill < 150 ? .75 : f2.skill < 225 ? .55 : .4) ? 1 : 0;
-  if (f2.skill - z.req > 100 && Math.random() < .6) up = 0;
+  if (f2.skill - z.req > 100 && !z.special && Math.random() < .6) up = 0;
   const oldSkill = f2.skill;
   f2.skill = Math.min(300, f2.skill + up);
   f2.caught++;
-  const lb = F2_LBS[h.r] ? +(F2_LBS[h.r][0] + Math.random() ** 2 * (F2_LBS[h.r][1] - F2_LBS[h.r][0])).toFixed(1) : 0;
-  const val = Math.round(F2_VALUE[h.r] * z.mult * (lb ? .7 + lb / F2_LBS[h.r][1] * .6 : 1));
-  const j = f2.journal[z.id] = f2.journal[z.id] || {};
-  const isNew = !(h.n in j), rec = lb && (!j[h.n] || lb > j[h.n]);
-  if (isNew || rec) j[h.n] = Math.max(j[h.n] || 0, lb);
-  const room = f2AddBag(h.n, h.r, val, z.id);
-  let msg = "You caught " + f2Name(h.n, h.r) + (lb ? " (" + lb + " lb)" : "");
-  if (!room) msg += ' · <span class="err">Inventory is full.</span> It flops back into the water.';
-  else if (isNew) msg += " · New journal entry!";
-  else if (rec) msg += " · New size record!";
+  let msg, room;
+  if (h.kind === "chest") {
+    room = f2AddBag({ n: h.n, r: h.r, v: F2_CHESTS[h.tier].v, kind: "chest", tier: h.tier, z: z.id });
+    msg = "You fished up " + f2Name(h.n, h.r) + "! " + (room ? "It's locked. Find it in your bag." : '<span class="err">Inventory is full.</span> It sinks again.');
+  } else if (h.kind === "pass") {
+    room = f2AddBag({ n: h.n, r: h.r, v: 0, kind: "pass" });
+    msg = "A soggy ticket floats up: " + f2Name(h.n, h.r) + "! " + (room ? "Use it from your bag to sail to a special fishing area." : '<span class="err">Inventory is full.</span> It floats away.');
+    if (room) playSfx("achievement", .5);
+  } else {
+    const lb = F2_LBS[h.r] ? +(F2_LBS[h.r][0] + Math.random() ** 2 * (F2_LBS[h.r][1] - F2_LBS[h.r][0])).toFixed(1) : 0;
+    const val = Math.round(F2_VALUE[h.r] * z.mult * (lb ? .7 + lb / F2_LBS[h.r][1] * .6 : 1));
+    const j = f2.journal[z.id] = f2.journal[z.id] || {};
+    const isNew = !(h.n in j), rec = lb && (!j[h.n] || lb > j[h.n]);
+    if (isNew || rec) j[h.n] = Math.max(j[h.n] || 0, lb);
+    room = f2AddBag({ n: h.n, r: h.r, v: val, z: z.id });
+    msg = "You caught " + f2Name(h.n, h.r) + (lb ? " (" + lb + " lb)" : "");
+    if (!room) msg += ' · <span class="err">Inventory is full.</span> It flops back into the water.';
+    else if (isNew) msg += " · New journal entry!";
+    else if (rec) msg += " · New size record!";
+    if (f2Ev && h.r !== "poor") { f2Ev.me++; f2RenderEv(); }
+    const q = f2.quest;
+    if (q && room && q.zone === z.id && q.fish === h.n && ++q.have >= q.need) {
+      f2.gold += q.reward;
+      msg += '<br><span style="color:#ffd100">Request complete! Nat Pagle pays you ' + f2Money(q.reward) + ".</span>";
+      f2NewQuest(); playSfx("coin", .8);
+    }
+    if (!f2.mastered.includes(z.id) && f2AllFish(z).every(n => n in j)) {
+      f2.mastered.push(z.id);
+      const bonus = Math.round(5000 * z.mult);
+      f2.gold += bonus;
+      msg += '<br><span style="color:#ff8000">' + f2Esc(z.name) + " mastered! Nat Pagle sends you " + f2Money(bonus) + ".</span>";
+    }
+  }
   if (f2.skill > oldSkill) msg += '<br><span style="color:#4080ff">Your skill in Fishing has increased to ' + f2.skill + ".</span>";
-  if (f2Ev && h.r !== "poor") { f2Ev.me++; f2RenderEv(); }
-  const q = f2.quest;
-  if (q && room && q.zone === z.id && q.fish === h.n && ++q.have >= q.need) {
-    f2.gold += q.reward;
-    msg += '<br><span style="color:#ffd100">Request complete! Nat Pagle pays you ' + f2Money(q.reward) + ".</span>";
-    f2NewQuest(); playSfx("coin", .8);
-  }
-  if (!f2.mastered.includes(z.id) && f2AllFish(z).every(n => n in j)) {
-    f2.mastered.push(z.id);
-    const bonus = Math.round(5000 * z.mult);
-    f2.gold += bonus;
-    msg += '<br><span style="color:#ff8000">' + f2Esc(z.name) + " mastered! Nat Pagle sends you " + f2Money(bonus) + ".</span>";
-  }
   f2Msg(msg);
+  if (f2.boat && --f2.boat.left <= 0) setTimeout(() => { if (f2.boat && !f2Busy()) f2EndBoat("The captain rings the bell: time's up!"); else if (f2.boat) f2.boat.left = 1; }, 1500);
   f2Save(); f2RenderAll();
   const ladder = { poor: 1, common: 2, uncommon: 3, rare: 4, epic: 5, legendary: 6 }[h.r];
   if (h.r === "legendary") {
@@ -3265,49 +3761,58 @@ function f2Land() {
   }
   f2Sound(t0 => [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", t0 + i * .08, .5, .07)));
 }
-function f2TooEarly() { f2Stop(); P.catchFish(null); f2Msg(pick(F2_EARLY)); }
-function f2PondDown(e) {
-  if (f2State === "reel") { e.preventDefault(); f2Hold = true; return; }
-  if (f2State === "idle") { const pt = P.pick(e); if (pt) f2Cast(pt.x, pt.y); }
-  else if (f2State === "wait") f2TooEarly();
-  else if (f2State === "bite") f2Strike();
+function f2TooEarly(L) { f2LineStop(L); P.catchFish(null, L.i); f2Msg(pick(F2_EARLY)); }
+// one click does the most useful thing: reel, strike a biting line, cast idle lines, or (single line) pull too early
+function f2Act(pt) {
+  if (f2Lock) return;
+  if (f2Reel) { f2Hold = true; return; }
+  const biting = f2Lines().find(l => l.st === "bite");
+  if (biting) { f2Strike(biting); return; }
+  if (f2Lines().some(l => l.st === "idle")) { if (pt !== null) f2CastAll(pt && pt.x, pt && pt.y); return; }
+  if (f2N === 1) f2TooEarly(F2L[0]);
+  else f2Msg("All lines are out. Wait for a splash!");
 }
-$("f2pond").addEventListener("pointerdown", f2PondDown);
-$("f2pond").addEventListener("pointermove", e => P.aim(e, f2State === "idle"));
+$("f2pond").addEventListener("pointerdown", e => { if (f2Reel) { e.preventDefault(); f2Hold = true; return; } f2Act(P.pick(e)); });
+$("f2pond").addEventListener("pointermove", e => P.aim(e, f2Lines().some(l => l.st === "idle") && !f2Reel));
 $("f2pond").addEventListener("pointerleave", e => P.aim(e, false));
-$("f2cast").addEventListener("pointerdown", e => {
-  if (f2State === "reel") { e.preventDefault(); f2Hold = true; }
-  else if (f2State === "idle") f2Cast();
-  else if (f2State === "bite") f2Strike();
-  else if (f2State === "wait") f2TooEarly();
-});
+$("f2cast").addEventListener("pointerdown", e => { e.preventDefault(); if (f2Reel) f2Hold = true; else f2Act(undefined); });
 addEventListener("pointerup", () => { f2Hold = false; });
 addEventListener("keydown", e => {
   if (!$("fish2").classList.contains("on")) return;
   if (e.key === " ") {
     e.preventDefault();
-    if (f2State === "reel") f2Hold = true;
-    else if (!e.repeat) { if (f2State === "idle") f2Cast(); else if (f2State === "bite") f2Strike(); else if (f2State === "wait") f2TooEarly(); }
-  } else if (e.key === "Escape") closeFish2();
+    if (f2Lock) { if (!e.repeat) f2LockTry(); return; }
+    if (f2Reel) f2Hold = true; else if (!e.repeat) f2Act(undefined);
+  } else if (e.key === "Escape") { if (f2Lock) f2LockClose(); else if ($("f2dest").classList.contains("on")) $("f2dest").classList.remove("on"); else closeFish2(); }
 });
 addEventListener("keyup", e => { if (e.key === " ") f2Hold = false; });
-document.querySelectorAll("#f2tabs button").forEach(b => b.addEventListener("click", () => { f2Tab = b.dataset.t; f2RenderPanel(); playSfx("menuButton", .4); }));
+document.querySelectorAll("#f2tabs button").forEach(b => b.addEventListener("click", () => { f2Tab = b.dataset.t; f2Sel = -1; f2RenderPanel(); playSfx("menuButton", .4); }));
+$("lkpins").addEventListener("pointerdown", f2LockTry);
+$("lkpick").addEventListener("click", f2LockTry);
+$("lksmash").addEventListener("click", () => { if (f2Lock) { f2Sound(() => boom()); f2ChestOpen(true); } });
+$("lkleave").addEventListener("click", f2LockClose);
+$("f2destx").addEventListener("click", () => $("f2dest").classList.remove("on"));
+$("fish2").addEventListener("mousemove", f2TipMove);
+$("fish2").addEventListener("mouseleave", () => { $("f2tip").style.display = "none"; });
 function openFish2() {
   foundEgg("fishing");
   f2Load(); if (!f2.quest) f2NewQuest();
-  f2Stop(); P.bob("none");
   $("fish2").classList.add("on");
   ensureAudio();
-  P.setZone(f2Zone()); P.env(f2Tod()[1], f2.wx); P.start();
-  f2Msg(f2.caught ? "Welcome back. Click the water where you want to cast." : "Welcome to Fishing v2! Click the water to cast where you click. " +
-    "Nibbles aren't bites, wait for the splash. Sell your catch, buy better gear, cook, and work your way up to the lava.");
+  f2StopAll();
+  P.setZone(f2Zone()); P.setLines(f2N); P.env(f2Tod()[1], f2.wx); P.start();
+  $("f2msg").textContent = "";
+  f2Msg(f2.caught ? "Welcome back. Click the water where you want to cast." : "Welcome to Fishing! Click the water to cast where you click. " +
+    "Nibbles aren't bites, wait for the splash. Sell your catch, buy gear, cook, craft bait and work your way up to the lava.");
+  if (f2.boat) f2Msg("⛵ You're still out on the boat: " + f2.boat.left + " catches left.");
   f2RenderAll(); f2ScheduleSchool();
   clearInterval(f2Tick); f2Tick = setInterval(f2Second, 1000);
   if (!f2Ev) f2ScheduleEv(120000 + Math.random() * 90000);
   f2Load3D().then(f2UseBestPond, () => {});
 }
 function closeFish2() {
-  f2Stop(); P.bob("none"); clearTimeout(f2SchoolT); f2HideSchool(); clearInterval(f2Tick); clearTimeout(f2EvT); f2Ev = null; f2RenderEv();
+  f2StopAll(); f2LockClose(); $("f2dest").classList.remove("on"); clearTimeout(f2SchoolT); f2HideSchool(); clearInterval(f2Tick); clearTimeout(f2EvT); f2Ev = null; f2RenderEv();
+  $("f2tip").style.display = "none";
   P.stop(); f2Save(); $("fish2").classList.remove("on");
 }
 $("f2close").addEventListener("click", closeFish2);

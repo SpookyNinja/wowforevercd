@@ -275,6 +275,97 @@
   #jcount { color:var(--gold); font-weight:bold; margin-bottom:.4rem; }
   #fishcast { align-self:center; margin-top:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1.2rem; cursor:pointer; }
   #fishclose { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  /* the pond asks which fishing you want */
+  #fishpick { background:rgba(0,0,0,.75); z-index:52; }
+  .fpbox { background:#140f08; border:2px solid #7a5a1c; padding:1.2rem 1.4rem; font-family:Arial,sans-serif; color:#ddd; text-align:center; width:min(560px, 92vw); }
+  .fpbox h2 { color:var(--gold); letter-spacing:.2em; text-transform:uppercase; font-size:1.1rem; margin-bottom:.9rem; }
+  .fpbtns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+  .fpbtns button { flex:1 1 200px; background:linear-gradient(#2a1f0c, #160f05); border:1px solid #c9a14a; color:#ffd100; font:bold 1.05rem Arial,sans-serif;
+                   padding:.9rem .8rem; cursor:pointer; line-height:1.4; }
+  .fpbtns button:hover { box-shadow:0 0 14px rgba(255,209,0,.35); }
+  .fpbtns small { display:block; color:#bbb; font-weight:normal; font-size:.78rem; }
+  .fpbtns .new { color:#1eff00; font-size:.7rem; letter-spacing:.15em; }
+  /* Fishing v2 */
+  #fish2 { background:rgba(0,0,0,.82); }
+  .f2box { width:min(1180px, 97vw); }
+  #f2zones { display:flex; gap:.35rem; justify-content:center; flex-wrap:wrap; margin-bottom:.6rem; }
+  #f2zones button { background:#1b140a; border:1px solid #4a3818; color:#bbb; font:.78rem Arial,sans-serif; padding:.3rem .6rem; cursor:pointer; }
+  #f2zones button small { color:#888; margin-left:.3rem; }
+  #f2zones button.low small { color:#ff5050; }
+  #f2zones button.on { border-color:#ffd100; color:#ffd100; background:#2a1f0c; }
+  .f2grid { display:grid; grid-template-columns:minmax(200px, 250px) 1fr minmax(240px, 310px); gap:.9rem; height:min(68vh, 520px); }
+  .f2grid .fcol { overflow:auto; font-size:.8rem; }
+  .f2grid .fcol h3 { color:var(--gold); font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; margin:.6rem 0 .3rem; }
+  .f2grid .fcol h3:first-child { margin-top:0; }
+  #f2gold { font-size:.95rem; margin-bottom:.3rem; }
+  .cg { color:#ffd100; } .cs { color:#c7c7cf; } .cc { color:#c47a3c; }
+  #f2skillbar { height:12px; background:#0a0a0a; border:1px solid #444; position:relative; margin:.2rem 0 .1rem; }
+  #f2skillbar i { position:absolute; inset:0 auto 0 0; background:linear-gradient(#3c8f2a, #1f5a14); }
+  #f2skilltxt { font-size:.75rem; color:#ccc; }
+  .f2slot { display:flex; justify-content:space-between; gap:.4rem; padding:.12rem 0; border-bottom:1px solid #2a2014; }
+  .f2slot span:first-child { color:#888; text-transform:capitalize; flex:none; }
+  .f2slot span:last-child { text-align:right; }
+  #f2stats { color:#aaa; margin-top:.3rem; line-height:1.5; }
+  #f2quest { color:#ddd; line-height:1.45; }
+  #f2quest .qbar { height:8px; background:#0a0a0a; border:1px solid #444; margin:.25rem 0; position:relative; }
+  #f2quest .qbar i { position:absolute; inset:0 auto 0 0; background:#c9a14a; }
+  .f2btn { background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:.75rem Arial,sans-serif; padding:.18rem .5rem; cursor:pointer; }
+  .f2btn:disabled { opacity:.4; cursor:default; }
+  #f2pond { position:relative; flex:1; min-height:170px; border-radius:50% / 35%; overflow:hidden; cursor:crosshair; touch-action:none;
+            background:radial-gradient(ellipse at 50% 40%, #3a8cc4, #164f7a 60%, #0b2d4a); box-shadow:inset 0 0 40px #031524; }
+  #f2pond::before { content:""; position:absolute; inset:-20%; opacity:.25; animation:waves 6s linear infinite; pointer-events:none;
+                    background:repeating-radial-gradient(ellipse at 30% 40%, transparent 0 18px, rgba(255,255,255,.35) 19px 20px); }
+  #f2pond[data-z="westfall"] { background:radial-gradient(ellipse at 50% 40%, #3aa6b4, #146a7a 60%, #0a3a48); }
+  #f2pond[data-z="barrens"] { background:radial-gradient(ellipse at 50% 40%, #6f8f4a, #3f5a2a 60%, #232f14); }
+  #f2pond[data-z="stv"] { background:radial-gradient(ellipse at 50% 40%, #4fd6c8, #1a8f95 60%, #0b4a5a); }
+  #f2pond[data-z="azshara"] { background:radial-gradient(ellipse at 50% 40%, #6b5bd6, #2f2a8f 60%, #140f4a); }
+  #f2pond[data-z="mc"] { background:radial-gradient(ellipse at 50% 40%, #ffb03a, #d0400f 55%, #5a0f05); box-shadow:inset 0 0 50px #2a0500; }
+  #f2pond[data-z="mc"]::before { opacity:.35; animation-duration:3s;
+                                 background:repeating-radial-gradient(ellipse at 40% 50%, transparent 0 14px, rgba(255,240,150,.5) 15px 17px); }
+  #f2bob { position:absolute; width:20px; height:20px; border-radius:50%; transform:translate(-50%,-50%); display:none; z-index:2;
+           background:linear-gradient(#e53935 50%, #fafafa 50%); box-shadow:0 2px 6px rgba(0,0,0,.6); }
+  #f2bob.on { display:block; animation:bobbing 1.6s ease-in-out infinite; }
+  #f2bob.nib { animation:f2nib .12s ease-in-out 3 alternate; }
+  #f2bob.bite { animation:bite .25s ease-in-out infinite alternate; }
+  @keyframes f2nib { to { transform:translate(-45%,-35%) rotate(12deg); } }
+  #f2school { position:absolute; width:110px; height:60px; transform:translate(-50%,-50%); border-radius:50%; display:none; pointer-events:none;
+              background:radial-gradient(ellipse, rgba(0,0,0,.35), transparent 70%); }
+  #f2school.on { display:block; }
+  #f2school i { position:absolute; width:12px; height:5px; border-radius:50%; background:rgba(255,255,255,.5); animation:f2swim 2.2s linear infinite; }
+  #f2school i:nth-child(2) { animation-delay:-.7s; top:60%; } #f2school i:nth-child(3) { animation-delay:-1.4s; top:30%; }
+  #f2school i:nth-child(4) { animation-delay:-1.9s; top:45%; animation-direction:reverse; }
+  @keyframes f2swim { 0% { left:10%; top:40%; } 25% { left:50%; top:15%; } 50% { left:85%; top:45%; } 75% { left:50%; top:80%; } 100% { left:10%; top:40%; } }
+  #f2schooltag { position:absolute; left:50%; top:-14px; transform:translateX(-50%); white-space:nowrap; font-size:.68rem; color:#fff; text-shadow:1px 1px 0 #000; }
+  #f2reel { display:none; margin-top:.5rem; }
+  #f2reel.on { display:block; }
+  #f2track { position:relative; height:22px; background:linear-gradient(90deg, #5a1010, #3a2a10 35%, #3a2a10 65%, #5a1010); border:1px solid #7a5a1c; }
+  #f2green { position:absolute; top:0; bottom:0; background:rgba(60,200,60,.45); border-left:1px solid #6f6; border-right:1px solid #6f6; }
+  #f2needle { position:absolute; top:-4px; bottom:-4px; width:4px; margin-left:-2px; background:#fff; box-shadow:0 0 6px #fff; }
+  #f2prog { height:8px; background:#0a0a0a; border:1px solid #444; margin-top:.3rem; position:relative; }
+  #f2prog i { position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg, #c9a14a, #ffd100); }
+  #f2reeltxt { font-size:.75rem; color:#bbb; margin-top:.2rem; }
+  #f2msg { min-height:2.6em; margin:.6rem 0 .3rem; font-size:.92rem; }
+  #f2msg .err { color:#ff3030; font-weight:bold; }
+  #f2cast { align-self:center; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; font-weight:bold; padding:.5rem 1.2rem; cursor:pointer; user-select:none; touch-action:none; }
+  #f2tabs { display:flex; gap:.3rem; margin-bottom:.5rem; flex:none; }
+  #f2tabs button { flex:1; background:#1b140a; border:1px solid #4a3818; color:#bbb; font:.78rem Arial,sans-serif; padding:.3rem; cursor:pointer; }
+  #f2tabs button.on { border-color:#ffd100; color:#ffd100; }
+  #f2panel { overflow:auto; flex:1; min-height:0; }
+  .f2row { display:flex; align-items:center; justify-content:space-between; gap:.4rem; padding:.18rem 0; border-bottom:1px solid #2a2014; }
+  .f2row .nm { flex:1; min-width:0; }
+  .f2row .st { display:block; color:#8a8a8a; font-size:.7rem; }
+  .f2row .pr { flex:none; font-size:.72rem; text-align:right; }
+  .f2head { display:flex; justify-content:space-between; align-items:center; gap:.3rem; margin-bottom:.3rem; color:var(--gold); }
+  #f2panel ul { list-style:none; }
+  #f2panel li.missing { color:#4a4a4a; font-style:italic; }
+  #f2panel h4 { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; margin:.6rem 0 .2rem; }
+  #f2close { position:absolute; top:.6rem; right:.6rem; background:#2a1f0c; border:1px solid #7a5a1c; color:var(--gold); font:inherit; padding:.2rem .6rem; cursor:pointer; }
+  @media (max-width:860px) {
+    .f2grid { grid-template-columns:1fr; height:auto; }
+    .f2grid .fmain { order:-1; }
+    #f2pond { flex:none; height:32vh; }
+    .f2grid .fcol { max-height:32vh; }
+  }
   #legendflash { position:fixed; inset:0; z-index:56; pointer-events:none; background:radial-gradient(circle, rgba(255,140,0,.6), transparent 70%); opacity:0; }
   #legendflash.on { animation:fflash 1.6s ease-out; }
   /* dance: the whole countdown busts a move */
@@ -697,6 +788,29 @@
   </div></div>
   <div id="legendflash"></div>
   <div id="fishspot" aria-label="Fishing spot"><i></i><i></i><i></i></div>
+  <div id="fishpick" class="ov"><div class="fpbox"><h2>🎣 Gone Fishin'</h2>
+    <div class="fpbtns"><button id="fp1">Fishing Classic<small>The original. Cast, wait, click, catch.</small></button>
+      <button id="fp2"><span class="new">NEW</span><br>Fishing v2<small>Zones, gear, gold, reeling, schools of fish and Nat Pagle's requests</small></button></div></div></div>
+  <div id="fish2" class="ov"><div class="fbox f2box">
+    <button id="f2close" aria-label="Close">✕</button>
+    <h2>Fishing v2</h2>
+    <div id="f2zones"></div>
+    <div class="f2grid">
+      <div class="fcol"><h3>Angler</h3><div id="f2gold"></div>
+        <div id="f2skillbar"><i></i></div><div id="f2skilltxt"></div>
+        <h3>Gear</h3><div id="f2gear"></div><div id="f2stats"></div>
+        <h3>Nat Pagle wants</h3><div id="f2quest"></div></div>
+      <div class="fmain">
+        <div id="f2pond"><div id="f2school"><span id="f2schooltag"></span><i></i><i></i><i></i><i></i></div><div id="f2bob"></div></div>
+        <div id="f2reel"><div id="f2track"><div id="f2green"></div><div id="f2needle"></div></div><div id="f2prog"><i></i></div>
+          <div id="f2reeltxt">Hold the mouse (or Space) to reel. Keep the needle in the green.</div></div>
+        <div id="f2msg"></div>
+        <button id="f2cast">🎣 Cast</button>
+      </div>
+      <div class="fcol"><div id="f2tabs"><button data-t="bag" class="on">🎒 Bag</button><button data-t="shop">🛒 Vendor</button><button data-t="journal">📖 Journal</button></div>
+        <div id="f2panel"></div></div>
+    </div>
+  </div></div>
   <button id="fusionbtn" aria-label="Fusion">FUSION</button>
   <div id="fusion">
     <img class="fl" id="fl-naga" src="naga.webp" alt="Naga">
@@ -731,7 +845,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "20";
+const VERSION = "21";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -1739,7 +1853,7 @@ $("chicken").addEventListener("click", leeroy);
 // ---------- Easter egg: fishing. A ripple shows up now and then near the bottom; click it to fish ----------
 const RARITY = { poor: "#9d9d9d", common: "#ffffff", uncommon: "#1eff00", rare: "#0070dd", epic: "#a335ee", legendary: "#ff8000",
   artifact: "#e6cc80" };
-// the ultimate fish: only ever caught once every other item is in the journal
+// the ultimate fish: stays in the journal as "???" forever. It can't be caught (on purpose)
 const ULTIMATE_FISH = "Jacob, get a life";
 const RARITY_WEIGHT = { poor: 28, common: 30, uncommon: 22, rare: 12, epic: 6, legendary: 2 };
 const LOOT = {
@@ -1856,8 +1970,7 @@ function fishCatch() {
   clearTimeout(fishMissT);
   fishState = "idle"; $("bob").className = "";
   let [rar, item] = rollLoot();
-  const ultimate = journalCount() === LOOT_TOTAL && !fishJournal.has(ULTIMATE_FISH);
-  if (ultimate) [rar, item] = ["artifact", ULTIMATE_FISH];
+  const ultimate = false;
   fishCaught++; if (fishSkill < 300) fishSkill = Math.min(300, fishSkill + 1 + (Math.random() < .3 ? 1 : 0));
   const isNew = !fishJournal.has(item);
   fishJournal.add(item);
@@ -1868,6 +1981,7 @@ function fishCatch() {
   const b = document.createElement("b"); b.style.color = RARITY[rar]; b.textContent = item;
   $("fishmsg").textContent = "You caught: "; $("fishmsg").appendChild(b);
   if (ultimate) $("fishmsg").append(" · ULTIMATE CATCH! You have fished up literally everything.");
+  else if (isNew && journalCount() === LOOT_TOTAL) $("fishmsg").append(" · Journal complete! The ultimate fish is still out there. It always will be.");
   else if (isNew) $("fishmsg").append(" · New journal entry!");
   const li = document.createElement("li"); li.style.color = RARITY[rar]; li.textContent = item;
   $("fishlog").prepend(li);
@@ -1897,7 +2011,440 @@ function closeFishing() {
 }
 $("fishclose").addEventListener("click", closeFishing);
 $("fish").addEventListener("click", e => { if (e.target.id === "fish") closeFishing(); });
-$("fishspot").addEventListener("click", openFishing);
+$("fishspot").addEventListener("click", () => { foundEgg("fishing"); $("fishpick").classList.add("on"); playSfx("menuOpen", .5); });
+$("fishpick").addEventListener("click", e => { if (e.target.id === "fishpick") $("fishpick").classList.remove("on"); });
+$("fp1").addEventListener("click", () => { $("fishpick").classList.remove("on"); openFishing(); });
+$("fp2").addEventListener("click", () => { $("fishpick").classList.remove("on"); openFish2(); });
+
+// ---------- Fishing v2: zones with their own fish, gear from a vendor, gold, nibbles, reeling, schools and Nat Pagle's requests ----------
+const F2_ZONES = [
+  { id: "elwynn", name: "Elwynn Lake", req: 1, mult: 1, school: "School of Smallfish", fish: {
+    poor: ["Old Boot", "Hogger's Toenail", "Soggy Goldshire Pamphlet", "Kobold Candle (wet)"],
+    common: ["Raw Brilliant Smallfish", "Raw Longjaw Mud Snapper", "Raw Slitherskin Mackerel", "Murloc Scale", "A Perfectly Normal Fish"],
+    uncommon: ["Raw Bristle Whisker Catfish", "Goldshire Inn Room Key (do not ask)", "Murloc Tadpole"],
+    rare: ["Hogger's Rubber Duck", "Stormwind Guard's Lost Helmet"],
+    epic: ["Marshal Dughan's Reading Glasses"],
+    legendary: ["The Elwynn Lake Monster (gnome-sized)"] } },
+  { id: "westfall", name: "Westfall Coast", req: 50, mult: 1.6, school: "School of Albacore", fish: {
+    poor: ["Defias Bandana (smells)", "Harvest Golem Bolt", "Empty Bottle of Westfall Stew", "Soggy Wanted Poster"],
+    common: ["Raw Rainbow Fin Albacore", "Raw Rockscale Cod", "Oily Blackmouth", "Murloc Fin", "Fish That Looks Like Andre"],
+    uncommon: ["Deadmines Treasure Map", "Gnoll Paw (still twitching)", "Shiny Murloc Bauble"],
+    rare: ["VanCleef's Spare Hat", "Cookie's Missing Ladle"],
+    epic: ["Smite's Mighty Hammer (waterlogged)"],
+    legendary: ["The Juggernaut's Anchor"] } },
+  { id: "barrens", name: "Barrens Oasis", req: 100, mult: 2.4, school: "School of Deviate Fish", fish: {
+    poor: ["Barrens Chat Log (9 km long)", "Plainstrider Feather", "Chuck Norris' Discarded Toothpick", "Sand in Everything"],
+    common: ["Deviate Fish", "Raw Bristle Whisker Catfish", "Raw Loch Frenzy", "Raptor Tooth", "Oasis Water (murky)"],
+    uncommon: ["Mankrik's Wife's Earring", "Map to the Wailing Caverns (wrong)", "Kodo Dropping (petrified)"],
+    rare: ["Old Crafty's Cousin", "Chuck Norris' Fishing Line"],
+    epic: ["Deviate Fish That Turned You Into a Pirate"],
+    legendary: ["[Mankrik's Wife] (found her!)"] } },
+  { id: "stv", name: "Booty Bay", req: 150, mult: 3.5, school: "School of Tastyfish", fish: {
+    poor: ["Ganked Corpse Run Map", "Booty Bay Bar Tab (unpaid)", "Broken Parrot Cage", "Gurubashi Coin (fake)"],
+    common: ["Raw Spotted Yellowtail", "Raw Glossy Mightfish", "Stonescale Eel", "Firefin Snapper", "Big-Mouth Clam"],
+    uncommon: ["Speckled Tastyfish", "Pirate Hat (soggy)", "Bloodsail Buccaneer's Eyepatch"],
+    rare: ["Keefer's Angelfish", "Mr. Pinchy (he grants wishes)"],
+    epic: ["Dezian Queenfish"],
+    legendary: ["Gurubashi Arena Chest (very wet)"] } },
+  { id: "azshara", name: "Azshara Coast", req: 225, mult: 5, school: "School of Naga Snappers", fish: {
+    poor: ["Naga Scale (shed)", "Highborne Hairpin (bent)", "Seaweed Wig", "Ruined Love Letter to Azshara"],
+    common: ["Raw Nightfin Snapper", "Raw Sunscale Salmon", "Raw Whitescale Salmon", "Raw Redgill", "Winter Squid"],
+    uncommon: ["Fish That Is Clearly a Naga", "Azshara's Lost Mirror", "Satyr Horn Bottle Opener"],
+    rare: ["Dirty Nagatics Fan Club Badge", "Sea Turtle (sadly not a mount)"],
+    epic: ["Queen Azshara's Spare Crown"],
+    legendary: ["The Leviathan That Owes DT Money"] } },
+  { id: "mc", name: "Molten Core (lava)", req: 275, mult: 8, fire: true, school: "Pool of Molten Snappers", fish: {
+    poor: ["Charred Bobber", "Molten Fishbone", "Melted Raid Strategy", "Ash (formerly a fish)"],
+    common: ["Lava Eel", "Magma Shrimp", "Firefin Snapper (extra crispy)", "Molten Mudfish", "Core Hound Drool"],
+    uncommon: ["Core Hound Puppy (very hot)", "Sulfuron's Spare Hammer Head", "Lava Rock With a Face"],
+    rare: ["Ragnaros' Rubber Duck", "Fiery Core"],
+    epic: ["Golemagg's Lost Sock"],
+    legendary: ["Eye of Sulfuras"] } }
+];
+const F2_GEAR = [
+  { id: "pole0", slot: "pole", n: "Fishing Pole", q: "common", price: 0 },
+  { id: "pole1", slot: "pole", n: "Strong Fishing Pole", q: "common", skill: 5, price: 150 },
+  { id: "pole2", slot: "pole", n: "Big Iron Fishing Pole", q: "uncommon", skill: 20, price: 1500 },
+  { id: "pole3", slot: "pole", n: "Seth's Graphite Fishing Pole", q: "rare", skill: 20, speed: 15, price: 4000 },
+  { id: "pole4", slot: "pole", n: "Nat Pagle's Extreme Angler FC-5000", q: "rare", skill: 25, reel: 20, price: 7500 },
+  { id: "pole5", slot: "pole", n: "Arcanite Fishing Pole", q: "epic", skill: 35, luck: 10, reel: 10, price: 50000 },
+  { id: "pole6", slot: "pole", n: "Goblin Fishing Pole", q: "epic", skill: 50, luck: 5, boom: .06, price: 40000,
+    note: "6% chance to explode on a catch" },
+  { id: "hat1", slot: "hat", n: "Weather-Beaten Fishing Hat", q: "uncommon", skill: 5, price: 400 },
+  { id: "hat2", slot: "hat", n: "Lucky Fishing Hat", q: "rare", skill: 5, luck: 10, price: 3000 },
+  { id: "hat3", slot: "hat", n: "Jacob's Bucket Hat (smells of fish)", q: "epic", skill: 10, luck: 20, price: 80000 },
+  { id: "boots1", slot: "boots", n: "Nat Pagle's Extreme Anglin' Boots", q: "rare", skill: 5, speed: 20, price: 5000 },
+  { id: "boots2", slot: "boots", n: "Boots of Standing in Fire", q: "epic", skill: 5, speed: 10, luck: 5, fire: 1, price: 30000,
+    note: "fireproof: lets you fish in lava" },
+  { id: "line1", slot: "line", n: "Eternium Fishing Line", q: "uncommon", skill: 5, reel: 20, price: 2500 },
+  { id: "line2", slot: "line", n: "Elementium Fishing Line", q: "rare", skill: 5, reel: 10, fire: 1, price: 15000,
+    note: "fireproof: lets you fish in lava" },
+  { id: "bag1", slot: "bag", n: "Linen Bag", q: "common", cap: 4, price: 300 },
+  { id: "bag2", slot: "bag", n: "Mooncloth Bag", q: "uncommon", cap: 8, price: 3000 },
+  { id: "bag3", slot: "bag", n: "Onyxia Hide Backpack", q: "epic", cap: 14, price: 20000 }
+];
+const F2_LURES = [
+  { id: "lure1", n: "Shiny Bauble", q: "common", skill: 25, casts: 15, price: 50 },
+  { id: "lure2", n: "Nightcrawlers", q: "common", skill: 50, casts: 15, price: 250 },
+  { id: "lure3", n: "Bright Baubles", q: "uncommon", skill: 75, casts: 15, price: 800 },
+  { id: "lure4", n: "Aquadynamic Fish Attractor", q: "rare", skill: 100, casts: 15, price: 2500 },
+  { id: "lure5", n: "Kaj'Cola-Soaked Worm", q: "rare", skill: 50, luck: 15, casts: 10, price: 4000 }
+];
+const F2_SLOTS = ["pole", "hat", "boots", "line", "bag"];
+const F2_BASE_W = { poor: 26, common: 34, uncommon: 22, rare: 11.5, epic: 5, legendary: 1.5 };
+const F2_VALUE = { poor: 3, common: 8, uncommon: 40, rare: 150, epic: 500, legendary: 2500 };
+const F2_LBS = { common: [.4, 4], uncommon: [1, 9], rare: [3, 22], epic: [8, 45], legendary: [30, 160] };
+const F2_REEL = { uncommon: .55, rare: .8, epic: 1.05, legendary: 1.35 };
+const F2_EARLY = ["Just a nibble. You yanked the rod and scared it off.", "That was a wave, not a fish. Everything swam away.",
+  "Too eager! The fish saw you coming from a mile away.", "Patience. Nat Pagle would be ashamed."];
+const F2_LATE = ["Too slow. It stole the bait and left.", "Missed it! It'll tell all its friends.", "It got away while you were tabbed out."];
+const F2_SNAP = ["Your line snapped! {f} swims off with your hook as a souvenir.", "SNAP. {f} is gone, and so is your dignity."];
+const F2_ESCAPE = ["You let the line go slack and {f} slipped off the hook.", "{f} wriggled free. So close."];
+const F2_SAVE_KEY = "fish2";
+let f2 = null, f2State = "idle", f2T = [], f2Nib = null, f2Hook = null, f2Reel = null, f2Hold = false, f2SchoolT = null, f2School = null, f2Tab = "bag";
+const f2New = () => ({ skill: 1, gold: 0, caught: 0, zone: "elwynn", gear: { pole: "pole0" }, owned: ["pole0"], lure: null, bag: [],
+  journal: {}, mastered: [], quest: null });
+function f2Load() {
+  try { f2 = Object.assign(f2New(), JSON.parse(localStorage.getItem(F2_SAVE_KEY) || "{}")); } catch (e) { f2 = f2New(); }
+}
+function f2Save() { try { localStorage.setItem(F2_SAVE_KEY, JSON.stringify(f2)); } catch (e) {} }
+const f2Gear = id => F2_GEAR.find(g => g.id === id);
+const f2Zone = (id = f2.zone) => F2_ZONES.find(z => z.id === id);
+function f2Stat(k) {
+  let v = F2_SLOTS.reduce((n, sl) => n + ((f2Gear(f2.gear[sl]) || {})[k] || 0), 0);
+  if (f2.lure) v += (F2_LURES.find(l => l.id === f2.lure.id) || {})[k] || 0;
+  return v;
+}
+const f2Eff = () => f2.skill + f2Stat("skill");
+const f2Cap = () => 12 + f2Stat("cap");
+function f2Money(c) {
+  c = Math.floor(c);
+  const g = Math.floor(c / 10000), sv = Math.floor(c / 100) % 100, cp = c % 100;
+  return (g ? '<span class="cg">' + g + "g</span> " : "") + (g || sv ? '<span class="cs">' + sv + "s</span> " : "") + '<span class="cc">' + cp + "c</span>";
+}
+const f2Esc = t => String(t).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const f2Name = (n, r) => '<span style="color:' + RARITY[r] + '">' + f2Esc(n) + "</span>";
+function f2Msg(html) { $("f2msg").innerHTML = html; }
+function f2Clear() { f2T.forEach(clearTimeout); f2T = []; clearInterval(f2Nib); clearInterval(f2Reel); f2Reel = null; f2Hold = false; }
+function f2Later(ms, fn) { f2T.push(setTimeout(fn, ms)); }
+
+// ----- rendering
+function f2RenderZones() {
+  const box = $("f2zones"); box.textContent = "";
+  const eff = f2Eff();
+  F2_ZONES.forEach(z => {
+    const b = document.createElement("button");
+    const low = eff < z.req || (z.fire && !f2Stat("fire"));
+    b.className = (z.id === f2.zone ? "on" : "") + (low ? " low" : "");
+    b.innerHTML = f2Esc(z.name) + "<small>" + (z.fire ? "🔥 " : "") + z.req + "</small>" + (f2.mastered.includes(z.id) ? " ⭐" : "");
+    b.title = "Recommended fishing skill " + z.req + (z.fire ? ", needs fireproof gear" : "");
+    b.addEventListener("click", () => f2Travel(z.id));
+    box.appendChild(b);
+  });
+  $("f2pond").dataset.z = f2.zone;
+}
+function f2RenderChar() {
+  $("f2gold").innerHTML = "💰 " + f2Money(f2.gold);
+  $("f2skillbar").firstElementChild.style.width = (f2.skill / 3) + "%";
+  const bonus = f2Stat("skill");
+  $("f2skilltxt").textContent = "Fishing " + f2.skill + "/300" + (bonus ? " (+" + bonus + " from gear) = " + f2Eff() : "");
+  $("f2gear").innerHTML = F2_SLOTS.map(sl => {
+    const g = f2Gear(f2.gear[sl]);
+    return '<div class="f2slot"><span>' + sl + "</span><span>" + (g ? f2Name(g.n, g.q) : '<span style="color:#555">empty</span>') + "</span></div>";
+  }).join("") + (() => {
+    const l = f2.lure && F2_LURES.find(x => x.id === f2.lure.id);
+    return '<div class="f2slot"><span>lure</span><span>' + (l ? f2Name(l.n, l.q) + " (" + f2.lure.casts + ")" : '<span style="color:#555">none</span>') + "</span></div>";
+  })();
+  const st = [];
+  if (f2Stat("luck")) st.push("Luck +" + f2Stat("luck"));
+  if (f2Stat("speed")) st.push("Bite speed +" + f2Stat("speed") + "%");
+  if (f2Stat("reel")) st.push("Reel strength +" + f2Stat("reel"));
+  if (f2Stat("fire")) st.push("🔥 Fireproof");
+  $("f2stats").innerHTML = st.join(" · ") || "No bonuses yet. Visit the vendor.";
+  const q = f2.quest;
+  if (!q) { $("f2quest").innerHTML = "Nat Pagle is thinking about what he wants..."; return; }
+  const z = f2Zone(q.zone);
+  $("f2quest").innerHTML = "Bring " + q.need + "× " + f2Name(q.fish, q.r) + " from " + f2Esc(z.name) + '.<div class="qbar"><i style="width:' +
+    (q.have / q.need * 100) + '%"></i></div>' + q.have + "/" + q.need + " · Reward: " + f2Money(q.reward) +
+    ' <button class="f2btn" id="f2qskip">New request</button>';
+  $("f2qskip").addEventListener("click", () => { f2NewQuest(); f2RenderChar(); playSfx("menuButton", .5); });
+}
+const f2BagUsed = () => f2.bag.length;
+function f2RenderPanel() {
+  document.querySelectorAll("#f2tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === f2Tab));
+  const p = $("f2panel");
+  if (f2Tab === "bag") {
+    const total = f2.bag.reduce((n, it) => n + it.v * it.c, 0);
+    p.innerHTML = '<div class="f2head"><span>Bag ' + f2BagUsed() + "/" + f2Cap() + "</span><span>" +
+      '<button class="f2btn" id="f2selljunk">Sell grey</button> <button class="f2btn" id="f2sellall">Sell all (' + f2Money(total) + ")</button></span></div>" +
+      (f2.bag.length ? "" : '<div style="color:#666">Empty. Go catch something.</div>') +
+      f2.bag.map((it, i) => '<div class="f2row"><span class="nm">' + f2Name(it.n, it.r) + (it.c > 1 ? " ×" + it.c : "") +
+        '</span><span class="pr">' + f2Money(it.v * it.c) + '</span><button class="f2btn" data-sell="' + i + '">Sell</button></div>').join("");
+    $("f2selljunk").addEventListener("click", () => f2Sell(it => it.r === "poor"));
+    $("f2sellall").addEventListener("click", () => f2Sell(() => true));
+    p.querySelectorAll("[data-sell]").forEach(b => b.addEventListener("click", () => { const it = f2.bag[+b.dataset.sell]; f2Sell(x => x === it); }));
+  } else if (f2Tab === "shop") {
+    const row = (g, owned, eq, isLure) => {
+      const st = [g.skill && "+" + g.skill + " skill", g.luck && "+" + g.luck + " luck", g.speed && "+" + g.speed + "% bite speed",
+        g.reel && "+" + g.reel + " reel", g.cap && "+" + g.cap + " bag slots", isLure && g.casts + " casts", g.note].filter(Boolean).join(", ");
+      let btn;
+      if (eq) btn = '<button class="f2btn" disabled>Equipped</button>';
+      else if (owned) btn = '<button class="f2btn" data-equip="' + g.id + '">Equip</button>';
+      else btn = '<button class="f2btn" data-buy="' + g.id + '"' + (f2.gold < g.price ? " disabled" : "") + ">Buy</button>";
+      return '<div class="f2row"><span class="nm">' + f2Name(g.n, g.q) + '<span class="st">' + st + '</span></span><span class="pr">' +
+        (owned ? "" : f2Money(g.price)) + "</span>" + btn + "</div>";
+    };
+    let html = '<div class="f2head"><span>Nat Pagle\'s Supplies</span><span>' + f2Money(f2.gold) + "</span></div>";
+    for (const sl of F2_SLOTS) {
+      html += "<h4>" + sl + (sl === "bag" ? "s" : sl === "boots" ? "" : "s") + "</h4>";
+      F2_GEAR.filter(g => g.slot === sl && g.price).forEach(g => { html += row(g, f2.owned.includes(g.id), f2.gear[sl] === g.id); });
+    }
+    html += "<h4>Lures (one at a time, used up per cast)</h4>";
+    F2_LURES.forEach(l => { html += row(l, false, false, true); });
+    p.innerHTML = html;
+    p.querySelectorAll("[data-buy]").forEach(b => b.addEventListener("click", () => f2Buy(b.dataset.buy)));
+    p.querySelectorAll("[data-equip]").forEach(b => b.addEventListener("click", () => f2Equip(b.dataset.equip)));
+  } else {
+    const z = f2Zone(), j = f2.journal[z.id] || {};
+    const all = Object.values(z.fish).flat(), got = all.filter(n => n in j).length;
+    let html = '<div class="f2head"><span>' + f2Esc(z.name) + "</span><span>" + got + "/" + all.length + (f2.mastered.includes(z.id) ? " ⭐" : "") + "</span></div>";
+    for (const [r, list] of Object.entries(z.fish)) {
+      html += '<h4 style="color:' + RARITY[r] + '">' + r + "</h4><ul>" + list.map(n => n in j
+        ? '<li style="color:' + RARITY[r] + '">' + f2Esc(n) + (j[n] ? ' <span style="color:#888">(record ' + j[n] + " lb)</span>" : "") + "</li>"
+        : '<li class="missing">???</li>').join("") + "</ul>";
+    }
+    html += '<div style="color:#888;margin-top:.6rem">Complete a zone\'s journal for a bonus from Nat Pagle. Other zones: switch with the tabs on top.</div>';
+    p.innerHTML = html;
+  }
+}
+function f2RenderAll() { f2RenderZones(); f2RenderChar(); f2RenderPanel(); }
+
+// ----- vendor, bag
+function f2Buy(id) {
+  const g = f2Gear(id), l = F2_LURES.find(x => x.id === id), it = g || l;
+  if (!it || f2.gold < it.price) return;
+  f2.gold -= it.price;
+  if (g) { f2.owned.push(id); f2.gear[g.slot] = id; f2Msg("You bought and equipped " + f2Name(g.n, g.q) + "."); }
+  else { f2.lure = { id, casts: l.casts }; f2Msg("You apply " + f2Name(l.n, l.q) + " to your hook. +" + (l.skill || 0) + " skill for " + l.casts + " casts."); }
+  if (!playSfx("coin", .8) && ctx && !muted) tone(1318.5, "triangle", ctx.currentTime, .3, .06);
+  f2Save(); f2RenderAll();
+}
+function f2Equip(id) { const g = f2Gear(id); f2.gear[g.slot] = id; playSfx("menuButton", .5); f2Save(); f2RenderAll(); }
+function f2Sell(which) {
+  const sold = f2.bag.filter(which);
+  if (!sold.length) return;
+  const sum = sold.reduce((n, it) => n + it.v * it.c, 0);
+  f2.bag = f2.bag.filter(it => !sold.includes(it)); f2.gold += sum;
+  f2Msg("Sold for " + f2Money(sum) + ".");
+  if (!playSfx("coin", .7) && ctx && !muted) tone(1318.5, "triangle", ctx.currentTime, .3, .06);
+  f2Save(); f2RenderAll();
+}
+// returns false when there's no room
+function f2AddBag(n, r, v) {
+  const stack = r !== "poor" && f2.bag.find(it => it.n === n && it.c < 20);
+  if (stack) { stack.c++; return true; }
+  if (f2BagUsed() >= f2Cap()) return false;
+  f2.bag.push({ n, r, v, c: 1 }); return true;
+}
+
+// ----- quests
+function f2NewQuest() {
+  const eff = f2Eff(), zones = F2_ZONES.filter(z => z.req <= eff + 10 && (!z.fire || f2Stat("fire")));
+  const z = pick(zones), r = Math.random() < .7 ? "common" : "uncommon", fish = pick(z.fish[r]), need = 2 + Math.floor(Math.random() * (r === "common" ? 4 : 2));
+  f2.quest = { zone: z.id, fish, r, need, have: 0, reward: Math.round(F2_VALUE[r] * z.mult * need * 4 + 100 * z.mult) };
+}
+
+// ----- the actual fishing
+function f2Travel(id) {
+  if (f2State !== "idle" || id === f2.zone) return;
+  f2.zone = id; f2Save(); f2HideSchool();
+  const z = f2Zone(), eff = f2Eff();
+  f2Msg("You travel to " + f2Esc(z.name) + "." + (z.fire && !f2Stat("fire") ? ' <span class="err">You need fireproof gear to fish in lava.</span>'
+    : eff < z.req ? ' <span class="err">Your fishing skill (' + eff + ") is low for this zone (" + z.req + "). Most fish will get away.</span>" : ""));
+  f2RenderAll(); f2ScheduleSchool();
+}
+function f2ScheduleSchool() {
+  clearTimeout(f2SchoolT);
+  f2SchoolT = setTimeout(() => {
+    if (!$("fish2").classList.contains("on")) return;
+    f2School = { x: 20 + Math.random() * 60, y: 25 + Math.random() * 50 };
+    const s = $("f2school"); s.style.left = f2School.x + "%"; s.style.top = f2School.y + "%"; s.classList.add("on");
+    $("f2schooltag").textContent = f2Zone().school;
+    f2SchoolT = setTimeout(() => { f2HideSchool(); f2ScheduleSchool(); }, 15000);
+  }, 12000 + Math.random() * 18000);
+}
+function f2HideSchool() { f2School = null; $("f2school").classList.remove("on"); }
+function f2Roll(inSchool) {
+  const z = f2Zone(), luck = f2Stat("luck") + (inSchool ? 25 : 0);
+  const w = { poor: Math.max(3, F2_BASE_W.poor - luck * .35), common: Math.max(8, F2_BASE_W.common - luck * .2),
+    uncommon: F2_BASE_W.uncommon + luck * .25, rare: F2_BASE_W.rare + luck * .17, epic: F2_BASE_W.epic + luck * .09, legendary: F2_BASE_W.legendary + luck * .04 };
+  let r = Math.random() * Object.values(w).reduce((a, b) => a + b, 0);
+  for (const [k, v] of Object.entries(w)) if ((r -= v) < 0) return [k, pick(z.fish[k])];
+  return ["common", pick(z.fish.common)];
+}
+function f2Cast(x, y) {
+  if (f2State !== "idle") return;
+  const z = f2Zone();
+  f2Clear();
+  if (z.fire && !f2Stat("fire")) {
+    f2Msg('<span class="err">Your line burns up instantly. That\'s lava. You need fireproof gear (check the vendor).</span>');
+    if (ctx && !muted) whoosh(800, 200, .4);
+    return;
+  }
+  // cast where you clicked, a little off because nobody casts perfectly
+  x = Math.max(8, Math.min(92, (x ?? 20 + Math.random() * 60) + (Math.random() - .5) * 6));
+  y = Math.max(12, Math.min(88, (y ?? 25 + Math.random() * 50) + (Math.random() - .5) * 6));
+  const b = $("f2bob"); b.style.left = x + "%"; b.style.top = y + "%"; b.className = "on";
+  playSfx("fishCast", .7);
+  const inSchool = !!f2School && Math.abs(x - f2School.x) < 9 && Math.abs(y - f2School.y) < 12;
+  if (f2.lure && --f2.lure.casts <= 0) { f2.lure = null; f2Later(400, () => f2Msg("Your lure is used up.")); }
+  f2State = "wait";
+  f2Msg(inSchool ? "Right into the " + f2Esc(z.school) + "! Waiting..." : "Waiting for a bite... (careful, nibbles aren't bites)");
+  f2RenderChar();
+  // little fake nibbles to tempt you into pulling early
+  f2Nib = setInterval(() => {
+    if (f2State !== "wait" || Math.random() < .5) return;
+    b.className = "on nib"; setTimeout(() => { if (f2State === "wait") b.className = "on"; }, 400);
+  }, 1300);
+  const wait = (2000 + Math.random() * 6500) * (1 - Math.min(.6, f2Stat("speed") / 100)) * (inSchool ? .6 : 1);
+  f2Later(wait, () => {
+    clearInterval(f2Nib);
+    const [r, n] = f2Roll(inSchool);
+    f2Hook = { r, n, inSchool };
+    f2State = "bite"; b.className = "on bite";
+    playSfx("fishBite" + (1 + Math.floor(Math.random() * 3)), .8);
+    f2Msg("<b>!!!</b> Click now!");
+    // bigger fish give you less time to react
+    const win = { poor: 1300, common: 1200, uncommon: 1050, rare: 950, epic: 850, legendary: 750 }[r];
+    f2Later(win, () => { if (f2State === "bite") { f2State = "idle"; b.className = ""; f2Msg(pick(F2_LATE)); } });
+  });
+}
+function f2Strike() {
+  f2T.forEach(clearTimeout); f2T = [];
+  const h = f2Hook, z = f2Zone(), eff = f2Eff();
+  // too low skill for the zone: most fish just shake off
+  if (eff < z.req && Math.random() < Math.min(.9, .3 + (z.req - eff) / 60)) {
+    f2End(); f2Msg("The fish got away. Your fishing skill is too low for " + f2Esc(z.name) + ".");
+    return;
+  }
+  const needsReel = F2_REEL[h.r] && (h.r !== "uncommon" || Math.random() < .4);
+  if (needsReel) f2StartReel(); else f2Land();
+}
+function f2StartReel() {
+  const h = f2Hook, diff = F2_REEL[h.r], reel = f2Stat("reel");
+  f2State = "reel";
+  const zw = Math.max(.14, .34 - diff * .1 + reel / 300);
+  f2Reel = { T: .5, P: .3, force: 0, forceT: 0, diff, zw, reel };
+  const g = $("f2green"); g.style.left = (50 - zw * 50) + "%"; g.style.width = (zw * 100) + "%";
+  $("f2reel").classList.add("on");
+  f2Msg("Something big is on the line! Reel it in.");
+  $("f2cast").textContent = "🎣 Hold to reel";
+  f2Reel.id = setInterval(f2ReelStep, 30);
+}
+function f2ReelStep() {
+  const R = f2Reel; if (!R) return;
+  const dt = .03;
+  if ((R.forceT -= dt) <= 0) { R.force = (Math.random() * 2 - 1) * R.diff * .7; R.forceT = .3 + Math.random() * .7; }
+  R.T += ((f2Hold ? 1 : -.8) + R.force) * dt;
+  if (R.T <= 0) R.T = 0;
+  const inZone = Math.abs(R.T - .5) <= R.zw / 2;
+  R.P += inZone ? (.2 + R.reel / 300) / Math.sqrt(R.diff) * dt : -.13 * dt * (R.T === 0 ? 2 : 1);
+  $("f2needle").style.left = (R.T * 100) + "%";
+  $("f2prog").firstElementChild.style.width = Math.max(0, Math.min(1, R.P)) * 100 + "%";
+  const f = f2Name(f2Hook.n, f2Hook.r);
+  if (R.T >= 1) { f2End(); f2Msg(pick(F2_SNAP).replace("{f}", f)); if (ctx && !muted) tone(1800, "square", ctx.currentTime, .08, .04); }
+  else if (R.P <= 0) { f2End(); f2Msg(pick(F2_ESCAPE).replace("{f}", f)); }
+  else if (R.P >= 1) f2Land();
+}
+function f2End() {
+  clearInterval(f2Reel && f2Reel.id); f2Reel = null; f2Hold = false; f2T.forEach(clearTimeout); f2T = []; clearInterval(f2Nib);
+  f2State = "idle"; $("f2bob").className = ""; $("f2reel").classList.remove("on"); $("f2cast").textContent = "🎣 Cast";
+}
+function f2Land() {
+  const h = f2Hook, z = f2Zone();
+  f2End();
+  if (f2Stat("boom") && Math.random() < f2Stat("boom")) {
+    f2Msg('<span class="err">Your Goblin Fishing Pole exploded.</span> The fish is fine. Your eyebrows are not.'); boom(); return;
+  }
+  // skill ups: fast at first, slower later, barely any in zones far below you
+  let up = f2.skill < 75 ? (Math.random() < .9) + (Math.random() < .4) : Math.random() < (f2.skill < 150 ? .75 : f2.skill < 225 ? .55 : .4) ? 1 : 0;
+  if (f2.skill - z.req > 100 && Math.random() < .6) up = 0;
+  const oldSkill = f2.skill;
+  f2.skill = Math.min(300, f2.skill + up);
+  f2.caught++;
+  const lb = F2_LBS[h.r] ? +(F2_LBS[h.r][0] + Math.random() ** 2 * (F2_LBS[h.r][1] - F2_LBS[h.r][0])).toFixed(1) : 0;
+  const val = Math.round(F2_VALUE[h.r] * z.mult * (lb ? .7 + lb / F2_LBS[h.r][1] * .6 : 1));
+  const j = f2.journal[z.id] = f2.journal[z.id] || {};
+  const isNew = !(h.n in j), rec = lb && (!j[h.n] || lb > j[h.n]);
+  if (isNew || rec) j[h.n] = Math.max(j[h.n] || 0, lb);
+  const room = f2AddBag(h.n, h.r, val);
+  let msg = (room ? "You caught " : "You caught ") + f2Name(h.n, h.r) + (lb ? " (" + lb + " lb)" : "");
+  if (!room) msg += ' · <span class="err">Inventory is full.</span> It flops back into the water.';
+  else if (isNew) msg += " · New journal entry!";
+  else if (rec) msg += " · New size record!";
+  if (f2.skill > oldSkill) msg += '<br><span style="color:#4080ff">Your skill in Fishing has increased to ' + f2.skill + ".</span>";
+  // Nat Pagle's request
+  const q = f2.quest;
+  if (q && room && q.zone === z.id && q.fish === h.n && ++q.have >= q.need) {
+    f2.gold += q.reward;
+    msg += '<br><span style="color:#ffd100">Request complete! Nat Pagle pays you ' + f2Money(q.reward) + ".</span>";
+    f2NewQuest(); playSfx("coin", .8);
+  }
+  // a zone's whole journal
+  const all = Object.values(z.fish).flat();
+  if (!f2.mastered.includes(z.id) && all.every(n => n in j)) {
+    f2.mastered.push(z.id);
+    const bonus = Math.round(5000 * z.mult);
+    f2.gold += bonus;
+    msg += '<br><span style="color:#ff8000">' + f2Esc(z.name) + " mastered! Nat Pagle sends you " + f2Money(bonus) + ".</span>";
+  }
+  f2Msg(msg);
+  f2Save(); f2RenderAll();
+  const ladder = { poor: 1, common: 2, uncommon: 3, rare: 4, epic: 5, legendary: 6 }[h.r];
+  if (h.r === "legendary") {
+    const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
+    if (playSfx("legendary", .6)) return;
+  }
+  if (ctx && !muted) [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", ctx.currentTime + i * .08, .5, .07));
+}
+function f2PondDown(e) {
+  if (f2State === "reel") { e.preventDefault(); f2Hold = true; return; }
+  const r = $("f2pond").getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width * 100, y = (e.clientY - r.top) / r.height * 100;
+  if (f2State === "idle") f2Cast(x, y);
+  else if (f2State === "wait") { f2End(); f2Msg(pick(F2_EARLY)); }
+  else if (f2State === "bite") f2Strike();
+}
+$("f2pond").addEventListener("pointerdown", f2PondDown);
+$("f2cast").addEventListener("pointerdown", e => {
+  if (f2State === "reel") { e.preventDefault(); f2Hold = true; }
+  else if (f2State === "idle") f2Cast();
+  else if (f2State === "bite") f2Strike();
+  else if (f2State === "wait") { f2End(); f2Msg(pick(F2_EARLY)); }
+});
+addEventListener("pointerup", () => { f2Hold = false; });
+addEventListener("keydown", e => {
+  if (!$("fish2").classList.contains("on")) return;
+  if (e.key === " ") {
+    e.preventDefault();
+    if (f2State === "reel") f2Hold = true;
+    else if (!e.repeat) { if (f2State === "idle") f2Cast(); else if (f2State === "bite") f2Strike(); else if (f2State === "wait") { f2End(); f2Msg(pick(F2_EARLY)); } }
+  } else if (e.key === "Escape") closeFish2();
+});
+addEventListener("keyup", e => { if (e.key === " ") f2Hold = false; });
+document.querySelectorAll("#f2tabs button").forEach(b => b.addEventListener("click", () => { f2Tab = b.dataset.t; f2RenderPanel(); playSfx("menuButton", .4); }));
+function openFish2() {
+  foundEgg("fishing");
+  f2Load(); if (!f2.quest) f2NewQuest();
+  f2End(); f2HideSchool();
+  $("fish2").classList.add("on");
+  f2Msg(f2.caught ? "Welcome back. Click the water where you want to cast." : "Welcome to Fishing v2! Click the water to cast where you click. " +
+    "Nibbles aren't bites, wait for the splash. Sell your catch, buy better gear, and work your way up to the lava.");
+  f2RenderAll(); f2ScheduleSchool();
+}
+function closeFish2() { f2End(); clearTimeout(f2SchoolT); f2HideSchool(); $("fish2").classList.remove("on"); }
+$("f2close").addEventListener("click", closeFish2);
+$("fish2").addEventListener("click", e => { if (e.target.id === "fish2") closeFish2(); });
 
 // ---------- Achievements: every easter egg is one. Toast when found, list behind the egg counter ----------
 const ACH_NAMES = {

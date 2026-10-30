@@ -293,7 +293,16 @@
   #f2zones button small { color:#888; margin-left:.3rem; }
   #f2zones button.low small { color:#ff5050; }
   #f2zones button.on { border-color:#ffd100; color:#ffd100; background:#2a1f0c; }
-  .f2grid { display:grid; grid-template-columns:minmax(200px, 250px) 1fr minmax(240px, 310px); gap:.9rem; height:min(68vh, 520px); }
+  .f2grid { display:grid; grid-template-columns:minmax(190px, 235px) 1fr minmax(240px, 300px); gap:.9rem; height:min(70vh, 560px); }
+  #f2pond canvas.f2gl { position:absolute; inset:0; width:100%; height:100%; display:block; }
+  #f2pond.gl { border-radius:8px; background:#000; box-shadow:none; }
+  #f2pond.gl::before, #f2pond.gl #f2bob, #f2pond.gl #f2school { display:none; }
+  #f2hud { position:absolute; left:8px; top:6px; z-index:3; font-size:.74rem; color:#fff; text-shadow:1px 1px 2px #000, 0 0 4px #000; text-align:left;
+           pointer-events:none; line-height:1.45; }
+  #f2ev { position:absolute; right:8px; top:6px; z-index:3; display:none; background:rgba(0,0,0,.6); border:1px solid #c9a14a; padding:.3rem .55rem;
+          font-size:.72rem; text-align:left; pointer-events:none; line-height:1.4; }
+  #f2ev.on { display:block; }
+  #f2ev b { color:#ffd100; }
   .f2grid .fcol { overflow:auto; font-size:.8rem; }
   .f2grid .fcol h3 { color:var(--gold); font-size:.72rem; letter-spacing:.15em; text-transform:uppercase; margin:.6rem 0 .3rem; }
   .f2grid .fcol h3:first-child { margin-top:0; }
@@ -790,7 +799,7 @@
   <div id="fishspot" aria-label="Fishing spot"><i></i><i></i><i></i></div>
   <div id="fishpick" class="ov"><div class="fpbox"><h2>🎣 Gone Fishin'</h2>
     <div class="fpbtns"><button id="fp1">Fishing Classic<small>The original. Cast, wait, click, catch.</small></button>
-      <button id="fp2"><span class="new">NEW</span><br>Fishing v2<small>Zones, gear, gold, reeling, schools of fish and Nat Pagle's requests</small></button></div></div></div>
+      <button id="fp2"><span class="new">NEW</span><br>Fishing v2<small>Now in 3D: real water, zones, gear, weather, day and night, cooking and the DT Extravaganza</small></button></div></div></div>
   <div id="fish2" class="ov"><div class="fbox f2box">
     <button id="f2close" aria-label="Close">✕</button>
     <h2>Fishing v2</h2>
@@ -801,13 +810,13 @@
         <h3>Gear</h3><div id="f2gear"></div><div id="f2stats"></div>
         <h3>Nat Pagle wants</h3><div id="f2quest"></div></div>
       <div class="fmain">
-        <div id="f2pond"><div id="f2school"><span id="f2schooltag"></span><i></i><i></i><i></i><i></i></div><div id="f2bob"></div></div>
+        <div id="f2pond"><div id="f2hud"></div><div id="f2ev"></div><div id="f2school"><span id="f2schooltag"></span><i></i><i></i><i></i><i></i></div><div id="f2bob"></div></div>
         <div id="f2reel"><div id="f2track"><div id="f2green"></div><div id="f2needle"></div></div><div id="f2prog"><i></i></div>
           <div id="f2reeltxt">Hold the mouse (or Space) to reel. Keep the needle in the green.</div></div>
         <div id="f2msg"></div>
         <button id="f2cast">🎣 Cast</button>
       </div>
-      <div class="fcol"><div id="f2tabs"><button data-t="bag" class="on">🎒 Bag</button><button data-t="shop">🛒 Vendor</button><button data-t="journal">📖 Journal</button></div>
+      <div class="fcol"><div id="f2tabs"><button data-t="bag" class="on">🎒 Bag</button><button data-t="shop">🛒 Vendor</button><button data-t="cook">🔥 Cook</button><button data-t="journal">📖 Journal</button></div>
         <div id="f2panel"></div></div>
     </div>
   </div></div>
@@ -845,7 +854,7 @@
 <script>
 // GitHub Pages caches pages for 10 min. On open, compare with version.txt (never cached) and
 // reload under a fresh ?v= URL if this copy is outdated. Bump VERSION and version.txt together.
-const VERSION = "21";
+const VERSION = "23";
 document.getElementById("ver").textContent = "v" + VERSION;
 fetch("version.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(v => {
   v = v.trim();
@@ -902,6 +911,9 @@ function foundEgg(id) {
   checkOffer(2600);   // after the achievement banner had its moment
 }
 let ctx = null, muted = false, eggOn = false, lastSec = null, finished = false;
+// "Ticks off" silences the countdown and the other eggs, but never the fishing games
+const fishingOpen = () => ["fish", "fish2", "fishpick"].some(id => { const el = document.getElementById(id); return el && el.classList.contains("on"); });
+const sfxOff = () => muted && !fishingOpen();
 
 $("sub").textContent = "Launch: " + LAUNCH.toLocaleString(undefined, { dateStyle:"full", timeStyle:"long" });
 
@@ -944,7 +956,7 @@ function loadSfx() {
     .then(b => ctx.decodeAudioData(b)).then(buf => { sfxBuf[k] = buf; }).catch(() => {}));
 }
 function playSfx(k, gain) {
-  if (!ctx || muted || !sfxBuf[k]) return false;
+  if (!ctx || sfxOff() || !sfxBuf[k]) return false;
   const src = ctx.createBufferSource(), g = ctx.createGain();
   src.buffer = sfxBuf[k]; g.gain.value = gain;
   src.connect(g); out(g, false); src.start();
@@ -990,7 +1002,7 @@ function tick(final) {
   o.connect(g); out(g, true); o.start(t); o.stop(t + 0.4);
 }
 function fanfare() {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime;
   [261.6, 329.6, 392, 523.3, 659.3, 784].forEach((f, i) => {
     tone(f, "sawtooth", t + i * 0.12, 1.8, 0.12);
@@ -1129,7 +1141,7 @@ const TF_LINES = [
 ];
 let tfOn = false;
 function thunder() {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime, len = ctx.sampleRate * 3;
   const nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
   for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
@@ -1185,7 +1197,7 @@ const MURLOC_LINES = [
   "Here's Mrglglgl!", "Mrgl, I am your father", "To mrgl or not to mrgl", "AAAAUGHIBBRGUBUGBUGRGUBURGLE!"
 ].map(t => [t]);
 function gurgle(when) {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime + when, dur = 0.35 + Math.random() * 0.3;
   const o = ctx.createOscillator(), lfo = ctx.createOscillator(), depth = ctx.createGain(),
         bp = ctx.createBiquadFilter(), g = ctx.createGain();
@@ -1545,7 +1557,7 @@ function raidLog(text, cls, names, pts) {
   $("raid").scrollTop = $("raid").scrollHeight;
 }
 function sadTrombone() {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime;
   [[392, 0], [370, 0.45], [349, 0.9], [330, 1.35]].forEach(([f, d], i) => tone(f, "sawtooth", t + d, i === 3 ? 1.4 : 0.45, 0.08));
 }
@@ -1635,7 +1647,7 @@ function raidReady() {
 // ---------- Easter egg: hidden FUSION button -> Naga + Dirty Tactics = Dirty Nagatics ----------
 let fusing = false, fusionTimers = [];
 function whoosh(f0, f1, dur) {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime, len = Math.floor(ctx.sampleRate * dur);
   const nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
   for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
@@ -1646,7 +1658,7 @@ function whoosh(f0, f1, dur) {
   n.connect(bp).connect(g); out(g, true); n.start(t);
 }
 function fusionBoom() {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime;
   const o = ctx.createOscillator(), g = ctx.createGain();
   o.type = "sine"; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(28, t + 1.2);
@@ -1670,7 +1682,7 @@ function startFusion() {
   fusionStep("s0");
   // background music takes a break
   if (discoGain) discoGain.gain.value = 0; else if (yt && yt.pauseVideo) yt.pauseVideo();
-  if (fusionReady && !muted) {
+  if (fusionReady && !sfxOff()) {
     fusionWaiting = true;
     fusionYt.setVolume(Math.max(vol(), 70));
     fusionYt.seekTo(0, true);
@@ -1707,7 +1719,7 @@ const anyOverlay = () => !!document.querySelector(".ov.on, #fusion.on, #raidbox.
 let inGoldshire = false, castTimer = null, castStart = 0, castFrom = null, holdTimer = null, holdFrom = null, castOsc = null, gsPlayer = null;
 function castSound(stop) {
   if (castOsc) { try { castOsc.stop(); } catch (e) {} castOsc = null; }
-  if (stop || !ctx || muted) return;
+  if (stop || !ctx || sfxOff()) return;
   const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
   o.type = "triangle"; o.frequency.setValueAtTime(220, t); o.frequency.exponentialRampToValueAtTime(880, t + 10);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 0.5); g.gain.setValueAtTime(0.05, t + 9.8);
@@ -1809,7 +1821,7 @@ const WHELP_SVG = '<svg viewBox="0 0 40 30"><path class="wing" d="M17 13 L3 2 L9
   '<circle cx="18.4" cy="9" r="1" fill="#ffeb3b"/><circle cx="21.6" cy="9" r="1" fill="#ffeb3b"/></svg>';
 let leeroyOn = false, leeroyYt = null, leeroyReady = false;
 function chirp(when) {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime + when, o = ctx.createOscillator(), g = ctx.createGain(), f = 1400 + Math.random() * 900;
   o.type = "square"; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * .6, t + .12);
   g.gain.setValueAtTime(0.04, t); g.gain.exponentialRampToValueAtTime(0.0001, t + .14);
@@ -1822,7 +1834,7 @@ function leeroy() {
   const box = $("leeroy"), txt = $("ljtxt"), W = innerWidth, H = innerHeight;
   // the swarm lasts as long as the sound clip (6-15 s); without the clip it falls back to chirps
   let total = 8500;
-  const withClip = leeroyReady && !muted;
+  const withClip = leeroyReady && !sfxOff();
   if (withClip) {
     pauseBg();
     total = Math.min(15000, Math.max(6000, (leeroyYt.getDuration() || 8.5) * 1000));
@@ -1939,7 +1951,7 @@ function splashAt(x, y, quiet) {
   const p = $("pond"), sp = document.createElement("div");
   sp.className = "splash"; sp.style.left = x + "%"; sp.style.top = y + "%"; p.appendChild(sp);
   setTimeout(() => sp.remove(), 800);
-  if (quiet || !ctx || muted) return;
+  if (quiet || !ctx || sfxOff()) return;
   const t = ctx.currentTime, len = Math.floor(ctx.sampleRate * .35), nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
   for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;
   const n = ctx.createBufferSource(), lp = ctx.createBiquadFilter(), g = ctx.createGain();
@@ -1991,7 +2003,7 @@ function fishCatch() {
     const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
     if (playSfx("legendary", .6)) return;
   }
-  if (ctx && !muted) [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", ctx.currentTime + i * .08, .5, .07));
+  if (ctx && !sfxOff()) [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", ctx.currentTime + i * .08, .5, .07));
 }
 $("pond").addEventListener("click", () => {
   if (fishState === "idle") fishCast();
@@ -2016,44 +2028,591 @@ $("fishpick").addEventListener("click", e => { if (e.target.id === "fishpick") $
 $("fp1").addEventListener("click", () => { $("fishpick").classList.remove("on"); openFishing(); });
 $("fp2").addEventListener("click", () => { $("fishpick").classList.remove("on"); openFish2(); });
 
-// ---------- Fishing v2: zones with their own fish, gear from a vendor, gold, nibbles, reeling, schools and Nat Pagle's requests ----------
+// ---------- Fishing v2, 3D pond: three.js scene + a real-time wave simulation on a height grid ----------
+// Pond coordinates are the same percent space the game uses: x 0..100 left to right, y 0..100 far to near.
+function makePond3D(T, host, hooks) {
+  const RX = 9, RZ = 5.6, NX = 160, NZ = 100, W = RX * 2.06, D = RZ * 2.06, DX = W / (NX - 1), DZ = D / (NZ - 1);
+  const renderer = new T.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  const cvs = renderer.domElement; cvs.className = "f2gl"; host.appendChild(cvs);
+  const scene = new T.Scene();
+  const cam = new T.PerspectiveCamera(42, 1.6, .1, 220);
+  cam.position.set(0, 4.6, 12.8); cam.lookAt(0, .1, -3.4);
+  const hemi = new T.HemisphereLight(0xcfe3ff, 0x3a4a2a, .7); scene.add(hemi);
+  const sunL = new T.DirectionalLight(0xffffff, .8); sunL.position.set(-8, 12, -6); scene.add(sunL);
+  scene.fog = new T.Fog(0x9fc4e8, 32, 80);
+
+  // ---- value noise + seeded random for terrain and decor
+  const hash2 = (x, z) => { const s = Math.sin(x * 127.1 + z * 311.7) * 43758.5453; return s - Math.floor(s); };
+  function vnoise(x, z) {
+    const xi = Math.floor(x), zi = Math.floor(z), xf = x - xi, zf = z - zi, u = xf * xf * (3 - 2 * xf), v = zf * zf * (3 - 2 * zf);
+    const a = hash2(xi, zi), b = hash2(xi + 1, zi), c = hash2(xi, zi + 1), d = hash2(xi + 1, zi + 1);
+    return (a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v) * 2 - 1;
+  }
+  const rng = seed => () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  // the basin: an elliptical bowl, shore rising around it, hills in the back
+  function ground(x, z) {
+    const e = Math.hypot(x / RX, z / RZ), n = vnoise(x * .35, z * .35);
+    if (e < 1) return -1.75 * Math.pow(1 - e * e, .6) + .12 + n * .05 * (1 - e);
+    let y = .12 + (e - 1) * .9 + n * .4 * Math.min(1, (e - 1) * 2);
+    if (z < -RZ) y += Math.max(0, -z - RZ - 2) * .16;
+    return y;
+  }
+
+  // ---- shared uniforms
+  const col = c => new T.Color(c);
+  const U = {
+    uTime: { value: 0 }, uSkyTop: { value: col(0x4f8fd9) }, uSkyBot: { value: col(0xcfe6ff) }, uSunDir: { value: new T.Vector3(-.5, .8, -.4).normalize() },
+    uSunCol: { value: col(0xffffff) }, uLight: { value: 1 }, uDeep: { value: col(0x0d3b5c) }, uShallow: { value: col(0x3f9fb8) },
+    uShore: { value: col(0x4f8a2e) }, uSand: { value: col(0xb8a36a) }, uRock: { value: col(0x6d6a62) }, uLava: { value: 0 },
+    uRX: { value: RX }, uRZ: { value: RZ }, uFogCol: { value: col(0xcfe6ff) }, uFogNear: { value: 32 }, uFogFar: { value: 80 }
+  };
+  const FOG = `uniform vec3 uFogCol; uniform float uFogNear, uFogFar;
+    vec3 fogged(vec3 c, vec3 w) { return mix(c, uFogCol, smoothstep(uFogNear, uFogFar, length(w - cameraPosition))); }`;
+
+  // ---- sky dome with stars
+  const sky = new T.Mesh(new T.SphereGeometry(150, 24, 12), new T.ShaderMaterial({
+    uniforms: U, side: T.BackSide, depthWrite: false, fog: false,
+    vertexShader: "varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }",
+    fragmentShader: "uniform vec3 uSkyTop, uSkyBot; varying vec3 vD; void main(){ gl_FragColor = vec4(mix(uSkyBot, uSkyTop, smoothstep(-.05, .45, vD.y)), 1.); }"
+  }));
+  scene.add(sky);
+  const starGeo = new T.BufferGeometry(), sp = [];
+  for (let i = 0; i < 400; i++) { const a = Math.random() * 6.283, b = .08 + Math.random() * 1.3;
+    sp.push(Math.cos(a) * Math.cos(b) * 140, Math.sin(b) * 140, Math.sin(a) * Math.cos(b) * 140 - 30); }
+  starGeo.setAttribute("position", new T.Float32BufferAttribute(sp, 3));
+  const starMat = new T.PointsMaterial({ color: 0xffffff, size: .9, transparent: true, opacity: 0, fog: false, depthWrite: false });
+  scene.add(new T.Points(starGeo, starMat));
+
+  // ---- terrain
+  const tg = new T.PlaneGeometry(90, 56, 150, 96); tg.rotateX(-Math.PI / 2); tg.translate(0, 0, -12);
+  const tp = tg.attributes.position;
+  const shade = new Float32Array(tp.count);
+  for (let i = 0; i < tp.count; i++) {
+    const x = tp.getX(i), z = tp.getZ(i);
+    tp.setY(i, ground(x, z)); shade[i] = .88 + .14 * vnoise(x * .9, z * .9) + .06 * vnoise(x * 3.1, z * 3.1);
+  }
+  tg.setAttribute("aShade", new T.BufferAttribute(shade, 1));
+  tg.computeVertexNormals();
+  const terrain = new T.Mesh(tg, new T.ShaderMaterial({
+    uniforms: U,
+    vertexShader: "attribute float aShade; varying float vS; varying vec3 vW; varying vec3 vN; void main(){ vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; vN = normal; vS = aShade; gl_Position = projectionMatrix * viewMatrix * w; }",
+    fragmentShader: `uniform vec3 uShore, uSand, uRock, uDeep, uSunCol; uniform vec3 uSunDir; uniform float uTime, uLight, uLava;
+      varying vec3 vW; varying vec3 vN; varying float vS; ${FOG}
+      void main(){
+        vec3 n = normalize(vN); float slope = 1. - n.y;
+        vec3 c = mix(uSand, uShore, smoothstep(.3, .55, vW.y));
+        c = mix(c, uRock, smoothstep(.18, .4, slope));
+        c *= vS;
+        float under = 0.;
+        if (vW.y < .08) {
+          under = clamp(-vW.y / 1.75, 0., 1.);
+          c = mix(c, uDeep * .7, under * .7);
+          float ca = abs(sin(vW.x * 2.3 + uTime * 1.1) * sin(vW.z * 2.7 - uTime * .9) + .5 * sin((vW.x + vW.z) * 1.7 + uTime * .7));
+          c += pow(ca, 3.) * .3 * (1. - under) * uLight * (1. - uLava);
+        }
+        float dif = max(dot(n, uSunDir), 0.) * .75 * uLight + .3 * uLight + .08;
+        c *= dif * mix(vec3(1.), uSunCol, .4);
+        if (uLava > .5) c += vW.y < .08 ? vec3(1., .35, .05) * .9 : vec3(.35, .06, 0.) * smoothstep(1.2, 0., vW.y);
+        gl_FragColor = vec4(fogged(c, vW), 1.);
+      }`
+  }));
+  scene.add(terrain);
+
+  // ---- water: height grid simulated on the CPU, drawn with fresnel reflections of the sky
+  let h = new Float32Array(NX * NZ), hp = new Float32Array(NX * NZ);
+  const mask = new Uint8Array(NX * NZ);
+  const wg = new T.PlaneGeometry(W, D, NX - 1, NZ - 1); wg.rotateX(-Math.PI / 2);
+  const depthA = new Float32Array(NX * NZ);
+  for (let j = 0; j < NZ; j++) for (let i = 0; i < NX; i++) {
+    const k = j * NX + i, x = -W / 2 + i * DX, z = -D / 2 + j * DZ;
+    if (i > 0 && j > 0 && i < NX - 1 && j < NZ - 1 && (x / RX) ** 2 + (z / RZ) ** 2 < 1) mask[k] = 1;
+    depthA[k] = Math.max(0, -ground(x, z));
+  }
+  wg.setAttribute("aDepth", new T.BufferAttribute(depthA, 1));
+  const wpos = wg.attributes.position.array, wnor = wg.attributes.normal.array;
+  const water = new T.Mesh(wg, new T.ShaderMaterial({
+    uniforms: U, transparent: true,
+    vertexShader: "attribute float aDepth; varying vec3 vW; varying vec3 vN; varying float vDepth; void main(){ vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; vN = normal; vDepth = aDepth; gl_Position = projectionMatrix * viewMatrix * w; }",
+    fragmentShader: `uniform vec3 uSkyTop, uSkyBot, uDeep, uShallow, uSunCol, uSunDir; uniform float uTime, uLight, uLava, uRX, uRZ;
+      varying vec3 vW; varying vec3 vN; varying float vDepth; ${FOG}
+      void main(){
+        float e = length(vec2(vW.x / uRX, vW.z / uRZ)); if (e > 1.) discard;
+        vec3 N = normalize(vN + vec3(sin(vW.x * 3. + uTime * 1.3) * .025 + sin(vW.z * 7.1 - uTime * 2.) * .012, 0., cos(vW.z * 3.4 + uTime * 1.1) * .025));
+        vec3 V = normalize(cameraPosition - vW);
+        float fres = .03 + .97 * pow(1. - max(dot(N, V), 0.), 5.);
+        vec3 R = reflect(-V, N);
+        vec3 skyc = mix(uSkyBot, uSkyTop, clamp(R.y * 1.6, 0., 1.));
+        float d = clamp(vDepth / 1.6, 0., 1.);
+        vec3 body = mix(uShallow, uDeep, d) * (.3 + .7 * uLight);
+        vec3 c = mix(body, skyc, min(1., fres * 1.1));
+        c += uSunCol * pow(max(dot(R, uSunDir), 0.), 160.) * 2.2 * uLight;
+        c += smoothstep(.95, 1., e) * .07 * uLight;
+        float a = mix(.5, .92, d) + fres * .35;
+        if (uLava > .5) {
+          float n = sin(vW.x * 1.7 + uTime * .4) * sin(vW.z * 2.1 - uTime * .3) + .35 * sin((vW.x - vW.z) * 3. + uTime);
+          float hot = clamp(.5 + n * .3 + (1. - N.y) * 7., 0., 1.);
+          c = mix(vec3(.22, .03, 0.), vec3(1., .5, .08), hot) + vec3(1., .85, .45) * pow(hot, 6.); a = 1.;
+        }
+        gl_FragColor = vec4(fogged(c, vW), clamp(a, 0., 1.));
+      }`
+  }));
+  water.renderOrder = 2;
+  scene.add(water);
+  function simStep(c2, damp) {
+    for (let j = 1; j < NZ - 1; j++) {
+      let k = j * NX + 1;
+      for (let i = 1; i < NX - 1; i++, k++) {
+        if (!mask[k]) continue;
+        hp[k] = (2 * h[k] - hp[k] + c2 * (h[k - 1] + h[k + 1] + h[k - NX] + h[k + NX] - 4 * h[k])) * damp;
+      }
+    }
+    const t = h; h = hp; hp = t;
+  }
+  function upload() {
+    for (let k = 0; k < NX * NZ; k++) wpos[k * 3 + 1] = h[k];
+    for (let j = 1; j < NZ - 1; j++) for (let i = 1; i < NX - 1; i++) {
+      const k = j * NX + i, sx = (h[k + 1] - h[k - 1]) / (2 * DX), sz = (h[k + NX] - h[k - NX]) / (2 * DZ), l = Math.hypot(sx, 1, sz);
+      wnor[k * 3] = -sx / l; wnor[k * 3 + 1] = 1 / l; wnor[k * 3 + 2] = -sz / l;
+    }
+    wg.attributes.position.needsUpdate = true; wg.attributes.normal.needsUpdate = true;
+  }
+  function disturb(x, z, amp, r) {
+    r = r || 2;
+    const ci = Math.round((x + W / 2) / DX), cj = Math.round((z + D / 2) / DZ), R = Math.ceil(r * 2);
+    for (let j = cj - R; j <= cj + R; j++) for (let i = ci - R; i <= ci + R; i++) {
+      if (i < 1 || j < 1 || i >= NX - 1 || j >= NZ - 1) continue;
+      const k = j * NX + i; if (!mask[k]) continue;
+      const d2 = ((i - ci) ** 2 + (j - cj) ** 2) / (r * r);
+      if (d2 < 4) h[k] += amp * Math.exp(-d2 * 2);
+    }
+  }
+  function surf(x, z) {
+    const fi = (x + W / 2) / DX, fj = (z + D / 2) / DZ, i = Math.floor(fi), j = Math.floor(fj);
+    if (i < 0 || j < 0 || i >= NX - 1 || j >= NZ - 1) return 0;
+    const u = fi - i, v = fj - j, k = j * NX + i;
+    return (h[k] * (1 - u) + h[k + 1] * u) * (1 - v) + (h[k + NX] * (1 - u) + h[k + NX + 1] * u) * v;
+  }
+  const toWorld = (px, py) => {
+    let x = (px - 50) / 50 * RX, z = (py - 50) / 50 * RZ;
+    const e = Math.hypot(x / RX, z / RZ); if (e > .88) { x *= .88 / e; z *= .88 / e; }
+    return [x, z];
+  };
+  const toPct = (x, z) => [x / RX * 50 + 50, z / RZ * 50 + 50];
+
+  // ---- decor around the pond, one style per zone
+  let decor = null;
+  const lam = c => new T.MeshLambertMaterial({ color: c });
+  const geo = { cone: new T.ConeGeometry(1, 1, 7), cyl: new T.CylinderGeometry(1, 1, 1, 6), sph: new T.SphereGeometry(1, 10, 7),
+    box: new T.BoxGeometry(1, 1, 1), rock: new T.DodecahedronGeometry(1, 0) };
+  function part(g, m, x, y, z, sx, sy, sz, rx, ry, rz) {
+    const o = new T.Mesh(geo[g], m); o.position.set(x, y, z); o.scale.set(sx, sy, sz); o.rotation.set(rx || 0, ry || 0, rz || 0); return o;
+  }
+  function buildDecor(style, seed) {
+    if (decor) scene.remove(decor);
+    decor = new T.Group();
+    const r = rng(seed), M = {
+      trunk: lam(0x5a3a1e), pine: lam(0x1f4f24), pine2: lam(0x2c6a2a), hay: lam(0xd8b84a), palmLeaf: lam(0x2f8a2a),
+      acacia: lam(0x6b7a2a), red: lam(0xc0452b), purple: lam(0x8e44ad), orange: lam(0xd8782a), rock: lam(0x3a2a22), grey: lam(0x7a7468),
+      ember: new T.MeshBasicMaterial({ color: 0xff6a10 })
+    };
+    const count = { pine: 46, farm: 24, acacia: 16, palm: 26, autumn: 34, rock: 40 }[style] || 30;
+    for (let n = 0; n < count; n++) {
+      const a = r() * Math.PI * 2, e = 1.22 + r() * 2.1, x = Math.cos(a) * RX * e, z = Math.sin(a) * RZ * e;
+      if (z > RZ * .55) continue;   // keep the near shore (in front of the camera) clear
+      const y = ground(x, z), s = .8 + r() * .7, g = new T.Group(); g.position.set(x, y, z); g.rotation.y = r() * 6;
+      if (style === "pine") {
+        g.add(part("cyl", M.trunk, 0, .4 * s, 0, .12 * s, .8 * s, .12 * s));
+        g.add(part("cone", r() < .5 ? M.pine : M.pine2, 0, 1.9 * s, 0, .95 * s, 2.6 * s, .95 * s));
+        g.add(part("cone", M.pine2, 0, 2.8 * s, 0, .65 * s, 1.6 * s, .65 * s));
+      } else if (style === "farm") {
+        if (r() < .55) g.add(part("cone", M.hay, 0, .5 * s, 0, .7 * s, 1.1 * s, .7 * s));
+        else g.add(part("rock", M.grey, 0, .2 * s, 0, .6 * s, .45 * s, .6 * s, r(), r(), r()));
+      } else if (style === "acacia") {
+        g.add(part("cyl", M.trunk, 0, .9 * s, 0, .1 * s, 1.8 * s, .1 * s, 0, 0, .15));
+        g.add(part("cyl", M.acacia, .2 * s, 1.85 * s, 0, 1.5 * s, .22 * s, 1.5 * s));
+      } else if (style === "palm") {
+        g.add(part("cyl", M.trunk, 0, 1.3 * s, 0, .11 * s, 2.6 * s, .11 * s, 0, 0, .18));
+        for (let l = 0; l < 6; l++) g.add(part("box", M.palmLeaf, Math.cos(l) * .7 * s + .45 * s, 2.55 * s, Math.sin(l) * .7 * s, 1.5 * s, .05, .3 * s, 0, -l, -.35));
+      } else if (style === "autumn") {
+        g.add(part("cyl", M.trunk, 0, .7 * s, 0, .12 * s, 1.4 * s, .12 * s));
+        g.add(part("sph", [M.red, M.purple, M.orange][Math.floor(r() * 3)], 0, 1.9 * s, 0, 1 * s, .9 * s, 1 * s));
+      } else {
+        g.add(part("rock", M.rock, 0, .3 * s, 0, .9 * s, .7 * s, .9 * s, r(), r(), r()));
+        if (r() < .5) g.add(part("sph", M.ember, .3 * s, .55 * s, .2, .08 * s, .08 * s, .08 * s));
+      }
+      decor.add(g);
+    }
+    scene.add(decor);
+  }
+
+  // ---- rod, line, bobber
+  const TIP = new T.Vector3(), BUTT = new T.Vector3();
+  function placeTip() {
+    const dist = 3.6, hh = Math.tan(cam.fov * Math.PI / 360) * dist, hw = hh * cam.aspect;
+    cam.updateMatrixWorld();
+    TIP.copy(cam.localToWorld(new T.Vector3(hw * .5, -hh * .15, -dist)));
+    BUTT.copy(cam.localToWorld(new T.Vector3(hw * 1.15, -hh * 1.4, -dist * .5)));
+  }
+  placeTip();
+  const rod = new T.Mesh(new T.CylinderGeometry(.025, .06, 1, 6), lam(0x3a2414));
+  function placeRod(tip) {
+    const d = new T.Vector3().subVectors(tip, BUTT);
+    rod.scale.set(1, d.length(), 1); rod.position.copy(BUTT).addScaledVector(d, .5);
+    rod.quaternion.setFromUnitVectors(new T.Vector3(0, 1, 0), d.normalize());
+  }
+  placeRod(TIP); scene.add(rod);
+  const LN = 28, lineGeo = new T.BufferGeometry(); lineGeo.setAttribute("position", new T.Float32BufferAttribute(new Float32Array(LN * 3), 3));
+  const line = new T.Line(lineGeo, new T.LineBasicMaterial({ color: 0xeeeeee, transparent: true, opacity: .55 }));
+  line.frustumCulled = false; line.visible = false; scene.add(line);
+  const bob = new T.Group();
+  bob.add(new T.Mesh(new T.SphereGeometry(.16, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), lam(0xd8261e)));
+  bob.add(new T.Mesh(new T.SphereGeometry(.16, 20, 10, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), lam(0xf4f4f4)));
+  const stick = new T.Mesh(new T.CylinderGeometry(.018, .018, .24, 6), lam(0x222222)); stick.position.y = .2; bob.add(stick);
+  bob.visible = false; scene.add(bob);
+  const B = { mode: "none", x: 0, z: 0, y: 0, vy: 0, t: 0, tx: 0, tz: 0, sx: 0, sz: 0, land: null, prog: 0, tens: .5, fade: 0, tip: TIP.clone() };
+  // aim ring on the water
+  const aimRing = new T.Mesh(new T.RingGeometry(.22, .3, 32), new T.MeshBasicMaterial({ color: 0xffd100, transparent: true, opacity: .55, depthWrite: false }));
+  aimRing.rotation.x = -Math.PI / 2; aimRing.visible = false; aimRing.renderOrder = 3; scene.add(aimRing);
+
+  // ---- fish under the water
+  const fishBody = new T.SphereGeometry(1, 10, 6), fishTail = new T.ConeGeometry(.5, 1, 4);
+  function makeFish(color, opacity) {
+    const g = new T.Group(), m = new T.MeshBasicMaterial({ color, transparent: true, opacity, depthWrite: false });
+    const b = new T.Mesh(fishBody, m); b.scale.set(.32, .07, .12);
+    const tl = new T.Mesh(fishTail, m); tl.rotation.z = Math.PI / 2; tl.position.x = -.4; tl.scale.set(.22, .2, .22);
+    g.add(b, tl); g.userData.tail = tl; [g, b, tl].forEach(o => { o.renderOrder = 1; });
+    scene.add(g); return g;
+  }
+  const fishes = [];
+  for (let i = 0; i < 8; i++) {
+    const [x, z] = toWorld(15 + Math.random() * 70, 20 + Math.random() * 60);
+    fishes.push({ g: makeFish(0x08202a, .5), x, z, vx: 0, vz: 0, tx: x, tz: z, sp: .5 + Math.random() * .6, s: .7 + Math.random() * .8 });
+  }
+  let lured = null, school = null;
+  const schoolFish = [];
+  for (let i = 0; i < 16; i++) { const f = makeFish(0x0a2630, .45); f.visible = false; schoolFish.push({ g: f, a: Math.random() * 6.28, r: .3 + Math.random() * .9, sp: .8 + Math.random() * .8 }); }
+  const jumper = makeFish(0xffffff, 1); jumper.visible = false;
+  const J = { t: -1, from: new T.Vector3() };
+
+  // ---- splashes and rain
+  const SP = 90, spPos = new Float32Array(SP * 3), spVel = new Float32Array(SP * 3), spLife = new Float32Array(SP);
+  const spGeo = new T.BufferGeometry(); spGeo.setAttribute("position", new T.BufferAttribute(spPos, 3));
+  const spMat = new T.PointsMaterial({ color: 0xffffff, size: .09, transparent: true, opacity: .9, depthWrite: false });
+  const splashes = new T.Points(spGeo, spMat); splashes.frustumCulled = false; scene.add(splashes);
+  function splash(x, z, n, power) {
+    for (let k = 0, made = 0; k < SP && made < n; k++) {
+      if (spLife[k] > 0) continue;
+      const a = Math.random() * 6.28, v = (.6 + Math.random()) * (power || 1);
+      spPos[k * 3] = x; spPos[k * 3 + 1] = .05; spPos[k * 3 + 2] = z;
+      spVel[k * 3] = Math.cos(a) * v * .9; spVel[k * 3 + 1] = 1.8 + Math.random() * 2 * (power || 1); spVel[k * 3 + 2] = Math.sin(a) * v * .9;
+      spLife[k] = .5 + Math.random() * .4; made++;
+    }
+  }
+  const RN = 700, rnPos = new Float32Array(RN * 6), rnGeo = new T.BufferGeometry();
+  for (let i = 0; i < RN; i++) { const x = (Math.random() - .5) * 30, y = Math.random() * 14, z = -14 + Math.random() * 24;
+    rnPos.set([x, y, z, x - .05, y + .45, z], i * 6); }
+  rnGeo.setAttribute("position", new T.BufferAttribute(rnPos, 3));
+  const rain = new T.LineSegments(rnGeo, new T.LineBasicMaterial({ color: 0xb8c8d8, transparent: true, opacity: .35 }));
+  rain.frustumCulled = false; rain.visible = false; scene.add(rain);
+
+  // ---- zone look + time of day + weather
+  let theme = null, tod = "day", wx = "clear", flash = 0, nextBolt = 8;
+  const C = { top: col(0), bot: col(0), deep: col(0), shallow: col(0), sunCol: col(0xffffff), light: 1 };
+  const Tg = { top: col(0), bot: col(0), deep: col(0), shallow: col(0), sunCol: col(0xffffff), light: 1, sunY: .8, stars: 0 };
+  function retarget() {
+    if (!theme) return;
+    const top = col(theme.skyTop), bot = col(theme.skyBot), sc = col(0xfff6e8);
+    let light = 1, sunY = .8, stars = 0;
+    if (!theme.lava) {
+      if (tod === "dusk") { top.lerp(col(0x2b2d6e), .6); bot.lerp(col(0xff8a4a), .65); sc.set(0xffa060); light = .7; sunY = .18; }
+      else if (tod === "night") { top.lerp(col(0x03050f), .92); bot.lerp(col(0x16213f), .85); sc.set(0x8aa0d0); light = .3; sunY = .6; stars = 1; }
+      else if (tod === "dawn") { top.lerp(col(0x5a6ab0), .4); bot.lerp(col(0xffb0a0), .55); sc.set(0xffc0a0); light = .75; sunY = .22; }
+    }
+    const grey = col(0x7a828c);
+    if (wx === "cloudy") { top.lerp(grey, .45); bot.lerp(grey, .35); light *= .82; stars *= .3; }
+    if (wx === "rain") { top.lerp(col(0x55606a), .7); bot.lerp(grey, .6); light *= .62; stars = 0; }
+    if (wx === "storm") { top.lerp(col(0x22272e), .85); bot.lerp(col(0x454c55), .75); light *= .45; stars = 0; }
+    if (theme.lava) light = Math.max(light, .6);
+    Object.assign(Tg, { light, sunY, stars });
+    Tg.top.copy(top); Tg.bot.copy(bot); Tg.sunCol.copy(sc); Tg.deep.set(theme.deep); Tg.shallow.set(theme.shallow);
+  }
+
+  // ---- main loop
+  let raf = null, last = 0, running = false, ambT = 0;
+  const v3 = new T.Vector3();
+  function frame(now) {
+    if (!running) return;
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
+    U.uTime.value += dt;
+    const lava = theme && theme.lava;
+    // environment eases toward its target
+    const k = Math.min(1, dt * 1.2);
+    C.top.lerp(Tg.top, k); C.bot.lerp(Tg.bot, k); C.deep.lerp(Tg.deep, k); C.shallow.lerp(Tg.shallow, k); C.sunCol.lerp(Tg.sunCol, k);
+    C.light += (Tg.light - C.light) * k;
+    if (wx === "storm" && !lava && (nextBolt -= dt) <= 0) { flash = 1; nextBolt = 6 + Math.random() * 9; setTimeout(() => hooks.thunder && hooks.thunder(), 300 + Math.random() * 900); }
+    flash = Math.max(0, flash - dt * 3);
+    const fl = flash > 0 ? flash * (Math.random() < .5 ? 1 : .4) : 0;
+    U.uSkyTop.value.copy(C.top).lerp(col(0xdde8ff), fl * .7); U.uSkyBot.value.copy(C.bot).lerp(col(0xffffff), fl * .6);
+    U.uDeep.value.copy(C.deep); U.uShallow.value.copy(C.shallow); U.uSunCol.value.copy(C.sunCol); U.uLight.value = C.light + fl * .8;
+    U.uFogCol.value.copy(U.uSkyBot.value); scene.fog.color.copy(U.uSkyBot.value);
+    U.uSunDir.value.set(-.5, Tg.sunY, -.6).normalize();
+    hemi.intensity = .25 + .55 * U.uLight.value; sunL.intensity = .75 * U.uLight.value; sunL.color.copy(C.sunCol);
+    sunL.position.copy(U.uSunDir.value).multiplyScalar(20);
+    starMat.opacity += (Tg.stars - starMat.opacity) * k;
+    // ambient life on the water: wind, rain drops, lava bubbles
+    ambT += dt;
+    const rainy = wx === "rain" || wx === "storm";
+    if (lava) { if (Math.random() < dt * 2.2) { const [x, z] = toWorld(10 + Math.random() * 80, 10 + Math.random() * 80); disturb(x, z, .16, 1.6); if (Math.random() < .4) splash(x, z, 6, .5); } }
+    else if (Math.random() < dt * (wx === "storm" ? 9 : 3)) { const [x, z] = toWorld(Math.random() * 100, Math.random() * 100); disturb(x, z, wx === "storm" ? -.05 : -.015, 1.5); }
+    rain.visible = rainy && !lava;
+    if (rain.visible) {
+      const fall = (wx === "storm" ? 24 : 17) * dt;
+      for (let i = 0; i < RN; i++) {
+        const o = i * 6; rnPos[o + 1] -= fall; rnPos[o + 4] -= fall;
+        if (rnPos[o + 1] < 0) {
+          const x = rnPos[o], z = rnPos[o + 2];
+          if ((x / RX) ** 2 + (z / RZ) ** 2 < .95 && Math.random() < .5) disturb(x, z, -.035, .9);
+          const nx = (Math.random() - .5) * 30, nz = -14 + Math.random() * 24, ny = 12 + Math.random() * 3;
+          rnPos.set([nx, ny, nz, nx - .05, ny + .45, nz], o);
+        }
+      }
+      rnGeo.attributes.position.needsUpdate = true;
+    }
+    // bobber
+    updateBob(dt);
+    updateFish(dt);
+    // splash particles
+    let any = false;
+    for (let i = 0; i < SP; i++) {
+      if (spLife[i] <= 0) { spPos[i * 3 + 1] = -50; continue; }
+      any = true; spLife[i] -= dt;
+      spVel[i * 3 + 1] -= 9.8 * dt;
+      spPos[i * 3] += spVel[i * 3] * dt; spPos[i * 3 + 1] += spVel[i * 3 + 1] * dt; spPos[i * 3 + 2] += spVel[i * 3 + 2] * dt;
+      if (spPos[i * 3 + 1] < 0 && spVel[i * 3 + 1] < 0) spLife[i] = 0;
+    }
+    spMat.color.set(lava ? 0xffa030 : 0xffffff);
+    if (any) spGeo.attributes.position.needsUpdate = true;
+    // the waves themselves
+    const steps = Math.max(1, Math.min(4, Math.round(dt * 120)));
+    for (let s = 0; s < steps; s++) simStep(lava ? .14 : .3, lava ? .975 : .993);
+    upload();
+    renderer.render(scene, cam);
+  }
+  function updateBob(dt) {
+    const m = B.mode;
+    B.tip.copy(TIP);
+    if (m === "reel") B.tip.x += (Math.random() - .5) * .08 * B.tens, B.tip.y += (Math.random() - .5) * .08 * B.tens - .25 * B.tens;
+    placeRod(B.tip);
+    if (m === "none") { bob.visible = false; line.visible = false; return; }
+    bob.visible = true; line.visible = m !== "drift";
+    B.t += dt;
+    if (m === "fly") {
+      const p = Math.min(1, B.t / .7);
+      B.x = B.tip.x + (B.tx - B.tip.x) * p; B.z = B.tip.z + (B.tz - B.tip.z) * p;
+      B.y = B.tip.y * (1 - p) + Math.sin(p * Math.PI) * 2.3;
+      if (p >= 1) {
+        B.mode = "float"; B.vy = -1.2; B.y = 0; disturb(B.x, B.z, -.22, 2.2); splash(B.x, B.z, 16, .8);
+        hooks.land && hooks.land(); if (B.land) { const f = B.land; B.land = null; f(); }
+      }
+    } else if (m === "yank") {
+      const p = Math.min(1, B.t / .35);
+      B.x = B.sx + (B.tip.x - B.sx) * p; B.z = B.sz + (B.tip.z - B.sz) * p; B.y = B.y * (1 - p) + B.tip.y * p + Math.sin(p * Math.PI) * .6;
+      if (p >= 1) B.mode = "none";
+    } else {
+      if (m === "reel") {
+        // dragged toward the near shore as you reel, thrashing harder the more tension there is
+        const goalX = B.sx + (2.2 - B.sx) * B.prog, goalZ = B.sz + (RZ * .82 - B.sz) * B.prog;
+        B.x += (goalX - B.x) * Math.min(1, dt * 3) + (Math.random() - .5) * .06 * B.tens;
+        B.z += (goalZ - B.z) * Math.min(1, dt * 3) + (Math.random() - .5) * .06 * B.tens;
+        if (Math.random() < dt * (2 + B.tens * 10)) { disturb(B.x, B.z, -.06 - B.tens * .08, 1.2); if (B.tens > .7) splash(B.x, B.z, 4, .5); }
+      }
+      const s = surf(B.x, B.z);
+      let target = s - .03;
+      if (m === "bite") { target -= .14 + .12 * Math.sin(B.t * 24); if (Math.random() < dt * 8) disturb(B.x, B.z, -.05, 1.1); }
+      if (m === "reel") target -= .1 + .1 * B.tens;
+      if (m === "drift") { target -= Math.max(0, B.t - 1.2) * .3; if (B.t > 2.6) B.mode = "none"; }
+      const acc = 70 * (target - B.y) - 8 * B.vy;
+      B.vy += acc * dt; B.y += B.vy * dt;
+      if (Math.abs(B.vy) > .15) disturb(B.x, B.z, -B.vy * dt * .5, 1.1);
+    }
+    bob.position.set(B.x, B.y, B.z);
+    const gx = (surf(B.x + .12, B.z) - surf(B.x - .12, B.z)) / .24, gz = (surf(B.x, B.z + .12) - surf(B.x, B.z - .12)) / .24;
+    bob.rotation.set(gz * 1.4 + (B.mode === "bite" ? Math.sin(B.t * 30) * .25 : 0), 0, -gx * 1.4);
+    // line from the rod tip to the bobber, sagging when slack
+    const sag = B.mode === "reel" ? .05 + (1 - B.tens) * .35 : B.mode === "fly" ? .2 : B.mode === "yank" ? .05 : .9;
+    const a = lineGeo.attributes.position.array, end = v3.set(B.x, B.y + .3, B.z);
+    for (let i = 0; i < LN; i++) {
+      const t = i / (LN - 1), mx = (B.tip.x + end.x) / 2, my = (B.tip.y + end.y) / 2 - sag, mz = (B.tip.z + end.z) / 2;
+      a[i * 3] = (1 - t) ** 2 * B.tip.x + 2 * (1 - t) * t * mx + t * t * end.x;
+      a[i * 3 + 1] = (1 - t) ** 2 * B.tip.y + 2 * (1 - t) * t * my + t * t * end.y;
+      a[i * 3 + 2] = (1 - t) ** 2 * B.tip.z + 2 * (1 - t) * t * mz + t * t * end.z;
+    }
+    lineGeo.attributes.position.needsUpdate = true;
+  }
+  function inside(x, z, lim) { return (x / RX) ** 2 + (z / RZ) ** 2 < lim * lim; }
+  function updateFish(dt) {
+    const lava = theme && theme.lava, t = U.uTime.value;
+    fishes.forEach(f => {
+      f.g.visible = !lava;
+      let tx = f.tx, tz = f.tz, sp = f.sp;
+      if (f === lured && (B.mode === "float" || B.mode === "bite" || B.mode === "reel")) { tx = B.x - .35; tz = B.z + .05; sp = B.mode === "float" ? .35 : 1.6; }
+      else if (Math.hypot(tx - f.x, tz - f.z) < .4 || !inside(tx, tz, .85)) {
+        const [x, z] = toWorld(10 + Math.random() * 80, 15 + Math.random() * 70); f.tx = x; f.tz = z;
+      }
+      const dx = tx - f.x, dz = tz - f.z, d = Math.hypot(dx, dz) || 1;
+      f.vx += (dx / d * sp - f.vx) * Math.min(1, dt * 1.5); f.vz += (dz / d * sp - f.vz) * Math.min(1, dt * 1.5);
+      if (d > .05) { f.x += f.vx * dt; f.z += f.vz * dt; }
+      f.g.position.set(f.x, -.42 - f.s * .1, f.z);
+      f.g.rotation.y = -Math.atan2(f.vz, f.vx);
+      f.g.scale.setScalar(f.s);
+      f.g.userData.tail.rotation.y = Math.sin(t * (6 + sp * 8) + f.s * 9) * .5;
+    });
+    schoolFish.forEach((f, i) => {
+      f.g.visible = !!school && !lava;
+      if (!school) return;
+      f.a += f.sp * dt;
+      const x = school.x + Math.cos(f.a) * f.r * 1.3, z = school.z + Math.sin(f.a) * f.r * .8;
+      f.g.position.set(x, -.3 - (i % 3) * .08, z);
+      f.g.rotation.y = -Math.atan2(Math.cos(f.a), -Math.sin(f.a));
+      f.g.userData.tail.rotation.y = Math.sin(t * 14 + i) * .5;
+    });
+    if (school && Math.random() < dt * 2.5) { disturb(school.x + (Math.random() - .5) * 1.6, school.z + (Math.random() - .5), -.04, 1); }
+    // the fish you just caught flies out of the water toward you
+    if (J.t >= 0) {
+      J.t += dt; const p = Math.min(1, J.t / .8);
+      jumper.visible = p < 1;
+      jumper.position.set(J.from.x + (B.tip.x - J.from.x) * p, Math.sin(p * Math.PI) * 2.4 + p * B.tip.y * .6, J.from.z + (B.tip.z - J.from.z) * p);
+      jumper.rotation.set(0, J.t * 3, Math.sin(J.t * 25) * .5);
+      if (p >= 1) J.t = -1;
+    }
+  }
+
+  const ray = new T.Raycaster(), plane = new T.Plane(new T.Vector3(0, 1, 0), 0), hit = new T.Vector3(), m2 = new T.Vector2();
+  function pickWorld(e) {
+    const r = cvs.getBoundingClientRect();
+    m2.set((e.clientX - r.left) / r.width * 2 - 1, -(e.clientY - r.top) / r.height * 2 + 1);
+    ray.setFromCamera(m2, cam);
+    return ray.ray.intersectPlane(plane, hit) && inside(hit.x, hit.z, .92) ? hit : null;
+  }
+  function resize() {
+    const w = host.clientWidth, hh = host.clientHeight;
+    if (!w || !hh) return;
+    renderer.setSize(w, hh, false); cam.aspect = w / hh;
+    cam.fov = w / hh < 1.2 ? 52 : 42; cam.updateProjectionMatrix(); placeTip();
+  }
+  new ResizeObserver(resize).observe(host);
+  const RCOL = { poor: 0x9d9d9d, common: 0xdddddd, uncommon: 0x1eff00, rare: 0x0070dd, epic: 0xa335ee, legendary: 0xff8000 };
+
+  return {
+    gl: true,
+    pick(e) { const w = pickWorld(e); return w ? (([x, y]) => ({ x, y }))(toPct(w.x, w.z)) : null; },
+    aim(e, on) { const w = on && pickWorld(e); aimRing.visible = !!w; if (w) aimRing.position.set(w.x, surf(w.x, w.z) + .02, w.z); },
+    setZone(z) {
+      theme = z.theme; U.uLava.value = theme.lava ? 1 : 0;
+      U.uShore.value.set(theme.shore); U.uSand.value.set(theme.sand); U.uRock.value.set(theme.rock);
+      h.fill(0); hp.fill(0); buildDecor(theme.decor, z.req * 7 + 3); retarget();
+      C.top.copy(Tg.top); C.bot.copy(Tg.bot); C.deep.copy(Tg.deep); C.shallow.copy(Tg.shallow); C.light = Tg.light;
+      school = null; lured = null; B.mode = "none";
+    },
+    env(t, w) { tod = t; wx = w; retarget(); },
+    cast(px, py, cb) {
+      const [x, z] = toWorld(px, py);
+      Object.assign(B, { mode: "fly", t: 0, tx: x, tz: z, land: cb, vy: 0 }); aimRing.visible = false;
+    },
+    bob(mode) {
+      if (mode === "nibble") { B.vy -= 1.4; disturb(B.x, B.z, -.05, 1.1); return; }
+      if (mode === "bite") { B.mode = "bite"; B.t = 0; disturb(B.x, B.z, -.18, 1.8); splash(B.x, B.z, 10, .6); return; }
+      if (mode === "reel") { B.mode = "reel"; B.sx = B.x; B.sz = B.z; B.prog = 0; return; }
+      if (mode === "none") { if (B.mode !== "none" && B.mode !== "fly") { B.mode = "yank"; B.t = 0; B.sx = B.x; B.sz = B.z; } else B.mode = "none"; }
+    },
+    reel(prog, tens) { B.prog = Math.max(0, Math.min(1, prog)); B.tens = tens; },
+    lure(on) {
+      if (!on) { lured = null; return; }
+      let best = null, bd = 1e9; fishes.forEach(f => { const d = Math.hypot(f.x - B.tx, f.z - B.tz); if (d < bd) { bd = d; best = f; } }); lured = best;
+    },
+    school(on, px, py) { if (!on) { school = null; return; } const [x, z] = toWorld(px, py); school = { x, z }; },
+    catchFish(rar) {
+      if (rar) {
+        J.t = 0; J.from.set(B.x, 0, B.z); jumper.children.forEach(c => c.material.color.set(RCOL[rar]));
+        const s = { poor: .8, common: 1, uncommon: 1.2, rare: 1.5, epic: 1.9, legendary: 2.6 }[rar]; jumper.scale.setScalar(s);
+        splash(B.x, B.z, 24, 1.2); disturb(B.x, B.z, -.3, 2.4);
+        if (lured) { const [x, z] = toWorld(10 + Math.random() * 80, 20 + Math.random() * 60); lured.x = x; lured.z = z; lured.tx = x; lured.tz = z; }
+      }
+      lured = null; B.mode = "yank"; B.t = 0; B.sx = B.x; B.sz = B.z;
+    },
+    lost() { lured = null; B.mode = "drift"; B.t = 0; splash(B.x, B.z, 8, .6); },
+    poke(px, py, amp) { const [x, z] = toWorld(px, py); disturb(x, z, amp, 1.5); },
+    start() { if (running) return; running = true; last = 0; resize(); raf = requestAnimationFrame(frame); },
+    stop() { running = false; cancelAnimationFrame(raf); },
+    _debug: { disturb, surf, B, frame: t => { running = true; frame(t); running = false; cancelAnimationFrame(raf); } }
+  };
+}
+
+// ---------- Fishing v2: zones, gear, gold, nibbles, reeling, schools, day/night + weather, cooking, Nat Pagle and the DT Extravaganza ----------
 const F2_ZONES = [
-  { id: "elwynn", name: "Elwynn Lake", req: 1, mult: 1, school: "School of Smallfish", fish: {
+  { id: "elwynn", name: "Elwynn Lake", req: 1, mult: 1, school: "School of Smallfish",
+    night: "Moonlit Smallfish", rain: "Drowned Kobold Candle (still lit?)",
+    recipe: { n: "Goldshire Fish Stew", q: "common", buff: { luck: 10 }, casts: 15 },
+    theme: { skyTop: 0x4f8fd9, skyBot: 0xcfe6ff, deep: 0x0d3b5c, shallow: 0x3f9fb8, shore: 0x4f8a2e, sand: 0xb8a36a, rock: 0x6d6a62, decor: "pine" },
+    fish: {
     poor: ["Old Boot", "Hogger's Toenail", "Soggy Goldshire Pamphlet", "Kobold Candle (wet)"],
     common: ["Raw Brilliant Smallfish", "Raw Longjaw Mud Snapper", "Raw Slitherskin Mackerel", "Murloc Scale", "A Perfectly Normal Fish"],
     uncommon: ["Raw Bristle Whisker Catfish", "Goldshire Inn Room Key (do not ask)", "Murloc Tadpole"],
     rare: ["Hogger's Rubber Duck", "Stormwind Guard's Lost Helmet"],
     epic: ["Marshal Dughan's Reading Glasses"],
     legendary: ["The Elwynn Lake Monster (gnome-sized)"] } },
-  { id: "westfall", name: "Westfall Coast", req: 50, mult: 1.6, school: "School of Albacore", fish: {
+  { id: "westfall", name: "Westfall Coast", req: 50, mult: 1.6, school: "School of Albacore",
+    night: "Ghost of the Deadmines Cod", rain: "Storm-Tossed Albacore",
+    recipe: { n: "Westfall Stew (now with fish)", q: "common", buff: { speed: 15 }, casts: 15 },
+    theme: { skyTop: 0x6a9fd8, skyBot: 0xf3e3b8, deep: 0x0b4655, shallow: 0x46a9a5, shore: 0xa89a45, sand: 0xd8c28a, rock: 0x8a7a5a, decor: "farm" },
+    fish: {
     poor: ["Defias Bandana (smells)", "Harvest Golem Bolt", "Empty Bottle of Westfall Stew", "Soggy Wanted Poster"],
     common: ["Raw Rainbow Fin Albacore", "Raw Rockscale Cod", "Oily Blackmouth", "Murloc Fin", "Fish That Looks Like Andre"],
     uncommon: ["Deadmines Treasure Map", "Gnoll Paw (still twitching)", "Shiny Murloc Bauble"],
     rare: ["VanCleef's Spare Hat", "Cookie's Missing Ladle"],
     epic: ["Smite's Mighty Hammer (waterlogged)"],
     legendary: ["The Juggernaut's Anchor"] } },
-  { id: "barrens", name: "Barrens Oasis", req: 100, mult: 2.4, school: "School of Deviate Fish", fish: {
+  { id: "barrens", name: "Barrens Oasis", req: 100, mult: 2.4, school: "School of Deviate Fish",
+    night: "Barrens Chat Moonfish", rain: "Rare Barrens Raindrop (it never rains here)",
+    recipe: { n: "Kodo-Fish Kabob", q: "uncommon", buff: { reel: 15 }, casts: 15 },
+    theme: { skyTop: 0x7aa6d6, skyBot: 0xf2d7a0, deep: 0x2c3a1c, shallow: 0x6f8f4a, shore: 0xb59a5a, sand: 0xc9b07a, rock: 0x8a6a4a, decor: "acacia" },
+    fish: {
     poor: ["Barrens Chat Log (9 km long)", "Plainstrider Feather", "Chuck Norris' Discarded Toothpick", "Sand in Everything"],
     common: ["Deviate Fish", "Raw Bristle Whisker Catfish", "Raw Loch Frenzy", "Raptor Tooth", "Oasis Water (murky)"],
     uncommon: ["Mankrik's Wife's Earring", "Map to the Wailing Caverns (wrong)", "Kodo Dropping (petrified)"],
     rare: ["Old Crafty's Cousin", "Chuck Norris' Fishing Line"],
     epic: ["Deviate Fish That Turned You Into a Pirate"],
     legendary: ["[Mankrik's Wife] (found her!)"] } },
-  { id: "stv", name: "Booty Bay", req: 150, mult: 3.5, school: "School of Tastyfish", fish: {
+  { id: "stv", name: "Booty Bay", req: 150, mult: 3.5, school: "School of Tastyfish",
+    night: "Midnight Tastyfish", rain: "Monsoon Mightfish",
+    recipe: { n: "Booty Bay Grog-Battered Fish", q: "uncommon", buff: { luck: 20 }, casts: 15 },
+    theme: { skyTop: 0x3a8fd0, skyBot: 0xbfefff, deep: 0x075a6a, shallow: 0x3fd6c4, shore: 0x2f7a2a, sand: 0xe8d8a0, rock: 0x5a6a4a, decor: "palm" },
+    fish: {
     poor: ["Ganked Corpse Run Map", "Booty Bay Bar Tab (unpaid)", "Broken Parrot Cage", "Gurubashi Coin (fake)"],
     common: ["Raw Spotted Yellowtail", "Raw Glossy Mightfish", "Stonescale Eel", "Firefin Snapper", "Big-Mouth Clam"],
     uncommon: ["Speckled Tastyfish", "Pirate Hat (soggy)", "Bloodsail Buccaneer's Eyepatch"],
     rare: ["Keefer's Angelfish", "Mr. Pinchy (he grants wishes)"],
     epic: ["Dezian Queenfish"],
     legendary: ["Gurubashi Arena Chest (very wet)"] } },
-  { id: "azshara", name: "Azshara Coast", req: 225, mult: 5, school: "School of Naga Snappers", fish: {
+  { id: "azshara", name: "Azshara Coast", req: 225, mult: 5, school: "School of Naga Snappers",
+    night: "Elune's Glowing Koi", rain: "Tempest Naga Snapper",
+    recipe: { n: "Naga Sushi Platter", q: "rare", buff: { skill: 25, speed: 20 }, casts: 20 },
+    theme: { skyTop: 0x3a3a8a, skyBot: 0xe0a0c0, deep: 0x140f4a, shallow: 0x5b4bc6, shore: 0x8a5a2a, sand: 0xc8a888, rock: 0x6a5a7a, decor: "autumn" },
+    fish: {
     poor: ["Naga Scale (shed)", "Highborne Hairpin (bent)", "Seaweed Wig", "Ruined Love Letter to Azshara"],
     common: ["Raw Nightfin Snapper", "Raw Sunscale Salmon", "Raw Whitescale Salmon", "Raw Redgill", "Winter Squid"],
     uncommon: ["Fish That Is Clearly a Naga", "Azshara's Lost Mirror", "Satyr Horn Bottle Opener"],
     rare: ["Dirty Nagatics Fan Club Badge", "Sea Turtle (sadly not a mount)"],
     epic: ["Queen Azshara's Spare Crown"],
     legendary: ["The Leviathan That Owes DT Money"] } },
-  { id: "mc", name: "Molten Core (lava)", req: 275, mult: 8, fire: true, school: "Pool of Molten Snappers", fish: {
+  { id: "mc", name: "Molten Core (lava)", req: 275, mult: 8, fire: true, school: "Pool of Molten Snappers",
+    night: "Ember Wyrmling (night shift)", rain: "Steam Eel (it's raining on lava)",
+    recipe: { n: "Molten Fish Fry", q: "epic", buff: { luck: 30, reel: 20 }, casts: 20 },
+    theme: { skyTop: 0x120302, skyBot: 0x4a1206, deep: 0x330000, shallow: 0xff6600, shore: 0x2a1a14, sand: 0x3a2418, rock: 0x1e1410, decor: "rock", lava: true },
+    fish: {
     poor: ["Charred Bobber", "Molten Fishbone", "Melted Raid Strategy", "Ash (formerly a fish)"],
     common: ["Lava Eel", "Magma Shrimp", "Firefin Snapper (extra crispy)", "Molten Mudfish", "Core Hound Drool"],
     uncommon: ["Core Hound Puppy (very hot)", "Sulfuron's Spare Hammer Head", "Lava Rock With a Face"],
@@ -2100,20 +2659,33 @@ const F2_EARLY = ["Just a nibble. You yanked the rod and scared it off.", "That 
 const F2_LATE = ["Too slow. It stole the bait and left.", "Missed it! It'll tell all its friends.", "It got away while you were tabbed out."];
 const F2_SNAP = ["Your line snapped! {f} swims off with your hook as a souvenir.", "SNAP. {f} is gone, and so is your dignity."];
 const F2_ESCAPE = ["You let the line go slack and {f} slipped off the hook.", "{f} wriggled free. So close."];
+// one in-game day lasts 6 minutes: day, dusk, night, dawn
+const F2_DAY = 360, F2_TOD = [[0, "day", "☀️ Day"], [190, "dusk", "🌇 Dusk"], [225, "night", "🌙 Night"], [335, "dawn", "🌅 Dawn"]];
+const F2_WX = { clear: "☀ Clear", cloudy: "☁ Cloudy", rain: "🌧 Rain", storm: "⛈ Storm" };
 const F2_SAVE_KEY = "fish2";
 let f2 = null, f2State = "idle", f2T = [], f2Nib = null, f2Hook = null, f2Reel = null, f2Hold = false, f2SchoolT = null, f2School = null, f2Tab = "bag";
-const f2New = () => ({ skill: 1, gold: 0, caught: 0, zone: "elwynn", gear: { pole: "pole0" }, owned: ["pole0"], lure: null, bag: [],
-  journal: {}, mastered: [], quest: null });
+let f2Tok = 0, f2Tick = null, f2Ev = null, f2EvT = null, f2P3 = null, f2Three = null;
+const f2New = () => ({ skill: 1, gold: 0, caught: 0, zone: "elwynn", gear: { pole: "pole0" }, owned: ["pole0"], lure: null, food: null, bag: [],
+  journal: {}, mastered: [], quest: null, clock: 20, wx: "clear", wxLeft: 120, trophies: 0 });
 function f2Load() {
   try { f2 = Object.assign(f2New(), JSON.parse(localStorage.getItem(F2_SAVE_KEY) || "{}")); } catch (e) { f2 = f2New(); }
 }
 function f2Save() { try { localStorage.setItem(F2_SAVE_KEY, JSON.stringify(f2)); } catch (e) {} }
 const f2Gear = id => F2_GEAR.find(g => g.id === id);
 const f2Zone = (id = f2.zone) => F2_ZONES.find(z => z.id === id);
-function f2Stat(k) {
+const f2Tod = () => { const t = f2.clock % F2_DAY; let r = F2_TOD[0]; F2_TOD.forEach(p => { if (t >= p[0]) r = p; }); return r; };
+// what the time of day and weather do for you
+function f2EnvBonus(k) {
+  const tod = f2Tod()[1], wx = f2.wx;
+  if (k === "luck") return (tod === "night" ? 10 : 0) + (wx === "storm" ? 10 : 0);
+  if (k === "speed") return (wx === "rain" ? 20 : wx === "storm" ? 35 : 0) + (tod === "dawn" || tod === "dusk" ? 10 : 0);
+  return 0;
+}
+function f2Stat(k, noEnv) {
   let v = F2_SLOTS.reduce((n, sl) => n + ((f2Gear(f2.gear[sl]) || {})[k] || 0), 0);
   if (f2.lure) v += (F2_LURES.find(l => l.id === f2.lure.id) || {})[k] || 0;
-  return v;
+  if (f2.food) v += f2.food.buff[k] || 0;
+  return v + (noEnv ? 0 : f2EnvBonus(k));
 }
 const f2Eff = () => f2.skill + f2Stat("skill");
 const f2Cap = () => 12 + f2Stat("cap");
@@ -2124,9 +2696,54 @@ function f2Money(c) {
 }
 const f2Esc = t => String(t).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 const f2Name = (n, r) => '<span style="color:' + RARITY[r] + '">' + f2Esc(n) + "</span>";
+const f2BuffText = b => Object.entries(b).map(([k, v]) => "+" + v + (k === "speed" ? "% bite speed" : " " + k)).join(", ");
 function f2Msg(html) { $("f2msg").innerHTML = html; }
-function f2Clear() { f2T.forEach(clearTimeout); f2T = []; clearInterval(f2Nib); clearInterval(f2Reel); f2Reel = null; f2Hold = false; }
 function f2Later(ms, fn) { f2T.push(setTimeout(fn, ms)); }
+function f2Sound(fn) { if (ctx && !sfxOff()) fn(ctx.currentTime); }
+
+// ----- the pond: 3D when WebGL + three.js are available, the old 2D pond otherwise
+const P2 = {
+  gl: false,
+  pick(e) { const r = $("f2pond").getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100 }; },
+  aim() {}, env() {}, reel() {}, lure() {}, poke() {}, start() {}, stop() {},
+  setZone(z) { $("f2pond").dataset.z = z.id; },
+  cast(px, py, cb) { const b = $("f2bob"); b.style.left = px + "%"; b.style.top = py + "%"; b.className = "on"; cb(); },
+  bob(m) {
+    const b = $("f2bob");
+    if (m === "nibble") { b.className = "on nib"; setTimeout(() => { if (b.className === "on nib") b.className = "on"; }, 400); }
+    else b.className = m === "none" ? "" : m === "bite" ? "on bite" : "on";
+  },
+  school(on, px, py) {
+    const s = $("f2school"); s.classList.toggle("on", !!on);
+    if (on) { s.style.left = px + "%"; s.style.top = py + "%"; $("f2schooltag").textContent = f2Zone().school; }
+  },
+  catchFish() { $("f2bob").className = ""; }, lost() { $("f2bob").className = ""; }
+};
+let P = P2;
+function f2Load3D() {
+  if (f2Three) return f2Three;
+  f2Three = new Promise((res, rej) => {
+    try { const c = document.createElement("canvas"); if (!(c.getContext("webgl") || c.getContext("experimental-webgl"))) return rej(new Error("no webgl")); }
+    catch (e) { return rej(e); }
+    if (window.THREE) return res(window.THREE);
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+    s.onload = () => res(window.THREE); s.onerror = rej; document.head.appendChild(s);
+  }).then(T => {
+    f2P3 = makePond3D(T, $("f2pond"), { thunder: () => f2Sound(() => boom()) });
+    $("f2pond").classList.add("gl");
+    return f2P3;
+  });
+  f2Three.catch(() => {});
+  return f2Three;
+}
+// switch to the 3D pond as soon as it's loaded and nothing is in the water
+function f2UseBestPond() {
+  if (!f2P3 || P === f2P3 || f2State !== "idle") return;
+  P.stop(); P = f2P3; P.setZone(f2Zone()); P.env(f2Tod()[1], f2.wx);
+  if (f2School) P.school(true, f2School.x, f2School.y);
+  if ($("fish2").classList.contains("on")) P.start();
+}
 
 // ----- rendering
 function f2RenderZones() {
@@ -2141,24 +2758,35 @@ function f2RenderZones() {
     b.addEventListener("click", () => f2Travel(z.id));
     box.appendChild(b);
   });
-  $("f2pond").dataset.z = f2.zone;
+}
+function f2RenderHud() {
+  const [, , label] = f2Tod(), bon = [];
+  if (f2EnvBonus("luck")) bon.push("+" + f2EnvBonus("luck") + " luck");
+  if (f2EnvBonus("speed")) bon.push("+" + f2EnvBonus("speed") + "% bites");
+  const z = f2Zone(), special = [];
+  if (f2Tod()[1] === "night") special.push("🌙 " + z.night);
+  if (f2.wx === "rain" || f2.wx === "storm") special.push("🌧 " + z.rain);
+  $("f2hud").innerHTML = label + " · " + F2_WX[f2.wx] + (bon.length ? ' <span style="color:#9f9">(' + bon.join(", ") + ")</span>" : "") +
+    (special.length ? '<br><span style="color:#8cf">Biting now: ' + special.map(f2Esc).join(", ") + "</span>" : "") +
+    (f2School ? '<br><span style="color:#ffd100">' + f2Esc(z.school) + " spotted!</span>" : "");
 }
 function f2RenderChar() {
-  $("f2gold").innerHTML = "💰 " + f2Money(f2.gold);
+  $("f2gold").innerHTML = "💰 " + f2Money(f2.gold) + (f2.trophies ? ' · 🏆 ' + f2.trophies : "");
   $("f2skillbar").firstElementChild.style.width = (f2.skill / 3) + "%";
   const bonus = f2Stat("skill");
-  $("f2skilltxt").textContent = "Fishing " + f2.skill + "/300" + (bonus ? " (+" + bonus + " from gear) = " + f2Eff() : "");
+  $("f2skilltxt").textContent = "Fishing " + f2.skill + "/300" + (bonus ? " (+" + bonus + ") = " + f2Eff() : "");
   $("f2gear").innerHTML = F2_SLOTS.map(sl => {
     const g = f2Gear(f2.gear[sl]);
     return '<div class="f2slot"><span>' + sl + "</span><span>" + (g ? f2Name(g.n, g.q) : '<span style="color:#555">empty</span>') + "</span></div>";
   }).join("") + (() => {
     const l = f2.lure && F2_LURES.find(x => x.id === f2.lure.id);
-    return '<div class="f2slot"><span>lure</span><span>' + (l ? f2Name(l.n, l.q) + " (" + f2.lure.casts + ")" : '<span style="color:#555">none</span>') + "</span></div>";
+    return '<div class="f2slot"><span>lure</span><span>' + (l ? f2Name(l.n, l.q) + " (" + f2.lure.casts + ")" : '<span style="color:#555">none</span>') + "</span></div>" +
+      '<div class="f2slot"><span>food</span><span>' + (f2.food ? f2Name(f2.food.n, f2.food.q) + " (" + f2.food.casts + ")" : '<span style="color:#555">not fed</span>') + "</span></div>";
   })();
   const st = [];
   if (f2Stat("luck")) st.push("Luck +" + f2Stat("luck"));
   if (f2Stat("speed")) st.push("Bite speed +" + f2Stat("speed") + "%");
-  if (f2Stat("reel")) st.push("Reel strength +" + f2Stat("reel"));
+  if (f2Stat("reel")) st.push("Reel +" + f2Stat("reel"));
   if (f2Stat("fire")) st.push("🔥 Fireproof");
   $("f2stats").innerHTML = st.join(" · ") || "No bonuses yet. Visit the vendor.";
   const q = f2.quest;
@@ -2170,6 +2798,7 @@ function f2RenderChar() {
   $("f2qskip").addEventListener("click", () => { f2NewQuest(); f2RenderChar(); playSfx("menuButton", .5); });
 }
 const f2BagUsed = () => f2.bag.length;
+const f2Commons = zid => f2.bag.filter(it => it.z === zid && it.r === "common").reduce((n, it) => n + it.c, 0);
 function f2RenderPanel() {
   document.querySelectorAll("#f2tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === f2Tab));
   const p = $("f2panel");
@@ -2196,7 +2825,7 @@ function f2RenderPanel() {
     };
     let html = '<div class="f2head"><span>Nat Pagle\'s Supplies</span><span>' + f2Money(f2.gold) + "</span></div>";
     for (const sl of F2_SLOTS) {
-      html += "<h4>" + sl + (sl === "bag" ? "s" : sl === "boots" ? "" : "s") + "</h4>";
+      html += "<h4>" + sl + (sl === "boots" ? "" : "s") + "</h4>";
       F2_GEAR.filter(g => g.slot === sl && g.price).forEach(g => { html += row(g, f2.owned.includes(g.id), f2.gear[sl] === g.id); });
     }
     html += "<h4>Lures (one at a time, used up per cast)</h4>";
@@ -2204,29 +2833,40 @@ function f2RenderPanel() {
     p.innerHTML = html;
     p.querySelectorAll("[data-buy]").forEach(b => b.addEventListener("click", () => f2Buy(b.dataset.buy)));
     p.querySelectorAll("[data-equip]").forEach(b => b.addEventListener("click", () => f2Equip(b.dataset.equip)));
+  } else if (f2Tab === "cook") {
+    let html = '<div class="f2head"><span>🔥 Campfire</span><span>' + (f2.food ? "Well Fed (" + f2.food.casts + ")" : "Hungry") + "</span></div>" +
+      '<div style="color:#999;margin-bottom:.4rem">Cook 3 common fish from a zone into its dish. Eating it gives a buff for a number of casts (one dish at a time).</div>';
+    F2_ZONES.forEach(z => {
+      const have = f2Commons(z.id), r = z.recipe;
+      html += '<div class="f2row"><span class="nm">' + f2Name(r.n, r.q) + '<span class="st">' + f2BuffText(r.buff) + ", " + r.casts + " casts · needs 3 common fish from " +
+        f2Esc(z.name) + " (" + have + ")</span></span>" + '<button class="f2btn" data-cook="' + z.id + '"' + (have < 3 ? " disabled" : "") + ">Cook</button></div>";
+    });
+    p.innerHTML = html;
+    p.querySelectorAll("[data-cook]").forEach(b => b.addEventListener("click", () => f2Cook(b.dataset.cook)));
   } else {
     const z = f2Zone(), j = f2.journal[z.id] || {};
-    const all = Object.values(z.fish).flat(), got = all.filter(n => n in j).length;
+    const all = f2AllFish(z), got = all.filter(n => n in j).length;
     let html = '<div class="f2head"><span>' + f2Esc(z.name) + "</span><span>" + got + "/" + all.length + (f2.mastered.includes(z.id) ? " ⭐" : "") + "</span></div>";
-    for (const [r, list] of Object.entries(z.fish)) {
-      html += '<h4 style="color:' + RARITY[r] + '">' + r + "</h4><ul>" + list.map(n => n in j
-        ? '<li style="color:' + RARITY[r] + '">' + f2Esc(n) + (j[n] ? ' <span style="color:#888">(record ' + j[n] + " lb)</span>" : "") + "</li>"
-        : '<li class="missing">???</li>').join("") + "</ul>";
-    }
-    html += '<div style="color:#888;margin-top:.6rem">Complete a zone\'s journal for a bonus from Nat Pagle. Other zones: switch with the tabs on top.</div>';
+    const li = (n, r, pre) => n in j
+      ? '<li style="color:' + RARITY[r] + '">' + (pre || "") + f2Esc(n) + (j[n] ? ' <span style="color:#888">(record ' + j[n] + " lb)</span>" : "") + "</li>"
+      : '<li class="missing">' + (pre || "") + "???</li>";
+    for (const [r, list] of Object.entries(z.fish)) html += '<h4 style="color:' + RARITY[r] + '">' + r + "</h4><ul>" + list.map(n => li(n, r)).join("") + "</ul>";
+    html += '<h4 style="color:#8cf">special</h4><ul>' + li(z.night, "rare", "🌙 ") + li(z.rain, "rare", "🌧 ") + "</ul>";
+    html += '<div style="color:#888;margin-top:.6rem">🌙 only bites at night, 🌧 only in rain or storms. Complete a zone for a bonus from Nat Pagle.</div>';
     p.innerHTML = html;
   }
 }
-function f2RenderAll() { f2RenderZones(); f2RenderChar(); f2RenderPanel(); }
+const f2AllFish = z => Object.values(z.fish).flat().concat([z.night, z.rain]);
+function f2RenderAll() { f2RenderZones(); f2RenderHud(); f2RenderChar(); f2RenderPanel(); }
 
-// ----- vendor, bag
+// ----- vendor, bag, cooking
 function f2Buy(id) {
   const g = f2Gear(id), l = F2_LURES.find(x => x.id === id), it = g || l;
   if (!it || f2.gold < it.price) return;
   f2.gold -= it.price;
   if (g) { f2.owned.push(id); f2.gear[g.slot] = id; f2Msg("You bought and equipped " + f2Name(g.n, g.q) + "."); }
   else { f2.lure = { id, casts: l.casts }; f2Msg("You apply " + f2Name(l.n, l.q) + " to your hook. +" + (l.skill || 0) + " skill for " + l.casts + " casts."); }
-  if (!playSfx("coin", .8) && ctx && !muted) tone(1318.5, "triangle", ctx.currentTime, .3, .06);
+  if (!playSfx("coin", .8)) f2Sound(t => tone(1318.5, "triangle", t, .3, .06));
   f2Save(); f2RenderAll();
 }
 function f2Equip(id) { const g = f2Gear(id); f2.gear[g.slot] = id; playSfx("menuButton", .5); f2Save(); f2RenderAll(); }
@@ -2236,22 +2876,82 @@ function f2Sell(which) {
   const sum = sold.reduce((n, it) => n + it.v * it.c, 0);
   f2.bag = f2.bag.filter(it => !sold.includes(it)); f2.gold += sum;
   f2Msg("Sold for " + f2Money(sum) + ".");
-  if (!playSfx("coin", .7) && ctx && !muted) tone(1318.5, "triangle", ctx.currentTime, .3, .06);
+  if (!playSfx("coin", .7)) f2Sound(t => tone(1318.5, "triangle", t, .3, .06));
   f2Save(); f2RenderAll();
 }
-// returns false when there's no room
-function f2AddBag(n, r, v) {
+function f2AddBag(n, r, v, z) {
   const stack = r !== "poor" && f2.bag.find(it => it.n === n && it.c < 20);
   if (stack) { stack.c++; return true; }
   if (f2BagUsed() >= f2Cap()) return false;
-  f2.bag.push({ n, r, v, c: 1 }); return true;
+  f2.bag.push({ n, r, v, c: 1, z }); return true;
+}
+function f2Cook(zid) {
+  const z = f2Zone(zid), r = z.recipe;
+  if (f2Commons(zid) < 3) return;
+  let need = 3;
+  f2.bag.filter(it => it.z === zid && it.r === "common").sort((a, b) => b.c - a.c).forEach(it => { const use = Math.min(need, it.c); it.c -= use; need -= use; });
+  f2.bag = f2.bag.filter(it => it.c > 0);
+  f2.food = { n: r.n, q: r.q, buff: r.buff, casts: r.casts };
+  f2Msg("You cook " + f2Name(r.n, r.q) + " and eat it. Well Fed: " + f2BuffText(r.buff) + " for " + r.casts + " casts.");
+  f2Sound(() => whoosh(300, 1200, .7));
+  f2Save(); f2RenderAll();
 }
 
-// ----- quests
+// ----- Nat Pagle's requests
 function f2NewQuest() {
   const eff = f2Eff(), zones = F2_ZONES.filter(z => z.req <= eff + 10 && (!z.fire || f2Stat("fire")));
   const z = pick(zones), r = Math.random() < .7 ? "common" : "uncommon", fish = pick(z.fish[r]), need = 2 + Math.floor(Math.random() * (r === "common" ? 4 : 2));
   f2.quest = { zone: z.id, fish, r, need, have: 0, reward: Math.round(F2_VALUE[r] * z.mult * need * 4 + 100 * z.mult) };
+}
+
+// ----- the Dirty Tactics Fishing Extravaganza: most fish in 90 seconds against the guild
+function f2ScheduleEv(ms) { clearTimeout(f2EvT); f2EvT = setTimeout(f2StartEv, ms); }
+function f2StartEv() {
+  if (!$("fish2").classList.contains("on")) return;
+  f2Ev = { left: 90, me: 0, rivals: shuffle(GUILD).slice(0, 4).map(n => ({ n, c: 0, rate: .1 + Math.random() * .07 })) };
+  f2Msg('<span style="color:#ffd100">🏆 The Dirty Tactics Fishing Extravaganza has begun! Most fish in 90 seconds wins. Junk doesn\'t count.</span>');
+  playSfx("readyCheck", .6);
+  f2RenderEv();
+}
+function f2RenderEv() {
+  const box = $("f2ev");
+  if (!f2Ev) { box.classList.remove("on"); return; }
+  const rows = [{ n: "You", c: f2Ev.me, me: true }].concat(f2Ev.rivals).sort((a, b) => b.c - a.c || (a.me ? 1 : -1));
+  box.innerHTML = "<b>🏆 Extravaganza " + Math.floor(f2Ev.left / 60) + ":" + pad(f2Ev.left % 60) + "</b>" +
+    rows.map((r, i) => "<div" + (r.me ? ' style="color:#ffd100"' : "") + ">" + (i + 1) + ". " + f2Esc(r.n) + " · " + r.c + "</div>").join("");
+  box.classList.add("on");
+}
+function f2EndEv() {
+  const ev = f2Ev; f2Ev = null; f2RenderEv();
+  // ties go to the guildie. They were there first
+  const rank = 1 + ev.rivals.filter(r => r.c >= ev.me).length, top = ev.rivals.slice().sort((a, b) => b.c - a.c)[0], z = f2Zone();
+  const prize = [0, 4000, 1200, 400][rank] ? Math.round([0, 4000, 1200, 400][rank] * z.mult) : 0;
+  let msg;
+  if (rank === 1) { f2.trophies++; msg = "🏆 You win the Extravaganza with " + ev.me + " fish! Prize: " + f2Money(prize) + " and a trophy."; playSfx("achievement", .5); }
+  else msg = "The Extravaganza is over. " + f2Esc(top.n) + " wins with " + top.c + " fish" + (top.n === "Jacob" ? ". Of course. Jacob, get a life." : ".") +
+    " You came " + rank + (rank === 2 ? "nd" : rank === 3 ? "rd" : "th") + (prize ? " and get " + f2Money(prize) + "." : ".");
+  f2.gold += prize;
+  f2Msg('<span style="color:#ffd100">' + msg + "</span>");
+  f2Save(); f2RenderChar();
+  f2ScheduleEv(300000 + Math.random() * 120000);
+}
+
+// ----- clock: time of day, weather, the extravaganza timer
+function f2Second() {
+  if (!$("fish2").classList.contains("on")) return;
+  const before = f2Tod()[1];
+  f2.clock++;
+  let changed = before !== f2Tod()[1];
+  if (--f2.wxLeft <= 0) {
+    const r = Math.random(), old = f2.wx;
+    f2.wx = r < .45 ? "clear" : r < .67 ? "cloudy" : r < .9 ? "rain" : "storm";
+    f2.wxLeft = 90 + Math.floor(Math.random() * 120);
+    if (f2.wx !== old) { changed = true; f2Msg({ clear: "The sky clears up.", cloudy: "Clouds roll in.", rain: "It starts to rain. Fish love this.",
+      storm: "A storm is brewing! The fish go crazy." }[f2.wx]); }
+  }
+  if (changed) { P.env(f2Tod()[1], f2.wx); f2RenderHud(); f2RenderChar(); }
+  if (f2Ev) { f2Ev.left--; f2Ev.rivals.forEach(r => { if (Math.random() < r.rate) r.c++; }); f2RenderEv(); if (f2Ev.left <= 0) f2EndEv(); }
+  if (f2.clock % 10 === 0) f2Save();
 }
 
 // ----- the actual fishing
@@ -2259,6 +2959,7 @@ function f2Travel(id) {
   if (f2State !== "idle" || id === f2.zone) return;
   f2.zone = id; f2Save(); f2HideSchool();
   const z = f2Zone(), eff = f2Eff();
+  P.setZone(z); P.env(f2Tod()[1], f2.wx);
   f2Msg("You travel to " + f2Esc(z.name) + "." + (z.fire && !f2Stat("fire") ? ' <span class="err">You need fireproof gear to fish in lava.</span>'
     : eff < z.req ? ' <span class="err">Your fishing skill (' + eff + ") is low for this zone (" + z.req + "). Most fish will get away.</span>" : ""));
   f2RenderAll(); f2ScheduleSchool();
@@ -2267,64 +2968,73 @@ function f2ScheduleSchool() {
   clearTimeout(f2SchoolT);
   f2SchoolT = setTimeout(() => {
     if (!$("fish2").classList.contains("on")) return;
-    f2School = { x: 20 + Math.random() * 60, y: 25 + Math.random() * 50 };
-    const s = $("f2school"); s.style.left = f2School.x + "%"; s.style.top = f2School.y + "%"; s.classList.add("on");
-    $("f2schooltag").textContent = f2Zone().school;
-    f2SchoolT = setTimeout(() => { f2HideSchool(); f2ScheduleSchool(); }, 15000);
-  }, 12000 + Math.random() * 18000);
+    f2School = { x: 22 + Math.random() * 56, y: 25 + Math.random() * 45 };
+    P.school(true, f2School.x, f2School.y); f2RenderHud();
+    f2SchoolT = setTimeout(() => { f2HideSchool(); f2ScheduleSchool(); }, 18000);
+  }, 10000 + Math.random() * 15000);
 }
-function f2HideSchool() { f2School = null; $("f2school").classList.remove("on"); }
+function f2HideSchool() { f2School = null; P.school(false); if ($("f2hud")) f2RenderHud(); }
 function f2Roll(inSchool) {
   const z = f2Zone(), luck = f2Stat("luck") + (inSchool ? 25 : 0);
   const w = { poor: Math.max(3, F2_BASE_W.poor - luck * .35), common: Math.max(8, F2_BASE_W.common - luck * .2),
     uncommon: F2_BASE_W.uncommon + luck * .25, rare: F2_BASE_W.rare + luck * .17, epic: F2_BASE_W.epic + luck * .09, legendary: F2_BASE_W.legendary + luck * .04 };
-  let r = Math.random() * Object.values(w).reduce((a, b) => a + b, 0);
-  for (const [k, v] of Object.entries(w)) if ((r -= v) < 0) return [k, pick(z.fish[k])];
-  return ["common", pick(z.fish.common)];
+  let r = Math.random() * Object.values(w).reduce((a, b) => a + b, 0), res = ["common", pick(z.fish.common)];
+  for (const [k, v] of Object.entries(w)) if ((r -= v) < 0) { res = [k, pick(z.fish[k])]; break; }
+  // night and rain fish replace some of the rare-or-better catches when the conditions are right
+  if (res[0] === "rare" || res[0] === "epic") {
+    const sp = [];
+    if (f2Tod()[1] === "night") sp.push(z.night);
+    if (f2.wx === "rain" || f2.wx === "storm") sp.push(z.rain);
+    if (sp.length && Math.random() < .5) res = ["rare", pick(sp)];
+  }
+  return res;
 }
 function f2Cast(x, y) {
   if (f2State !== "idle") return;
+  f2UseBestPond();
   const z = f2Zone();
-  f2Clear();
+  f2Stop();
   if (z.fire && !f2Stat("fire")) {
     f2Msg('<span class="err">Your line burns up instantly. That\'s lava. You need fireproof gear (check the vendor).</span>');
-    if (ctx && !muted) whoosh(800, 200, .4);
+    f2Sound(() => whoosh(800, 200, .4));
     return;
   }
-  // cast where you clicked, a little off because nobody casts perfectly
-  x = Math.max(8, Math.min(92, (x ?? 20 + Math.random() * 60) + (Math.random() - .5) * 6));
-  y = Math.max(12, Math.min(88, (y ?? 25 + Math.random() * 50) + (Math.random() - .5) * 6));
-  const b = $("f2bob"); b.style.left = x + "%"; b.style.top = y + "%"; b.className = "on";
+  x = Math.max(8, Math.min(92, (x ?? 20 + Math.random() * 60) + (Math.random() - .5) * 5));
+  y = Math.max(12, Math.min(88, (y ?? 25 + Math.random() * 50) + (Math.random() - .5) * 5));
+  const inSchool = !!f2School && Math.abs(x - f2School.x) < 10 && Math.abs(y - f2School.y) < 13;
+  if (f2.lure && --f2.lure.casts <= 0) { f2.lure = null; f2Later(900, () => f2Msg("Your lure is used up.")); }
+  if (f2.food && --f2.food.casts <= 0) { f2.food = null; f2Later(1200, () => f2Msg("You are no longer Well Fed.")); }
   playSfx("fishCast", .7);
-  const inSchool = !!f2School && Math.abs(x - f2School.x) < 9 && Math.abs(y - f2School.y) < 12;
-  if (f2.lure && --f2.lure.casts <= 0) { f2.lure = null; f2Later(400, () => f2Msg("Your lure is used up.")); }
   f2State = "wait";
+  const tok = ++f2Tok;
   f2Msg(inSchool ? "Right into the " + f2Esc(z.school) + "! Waiting..." : "Waiting for a bite... (careful, nibbles aren't bites)");
   f2RenderChar();
-  // little fake nibbles to tempt you into pulling early
-  f2Nib = setInterval(() => {
-    if (f2State !== "wait" || Math.random() < .5) return;
-    b.className = "on nib"; setTimeout(() => { if (f2State === "wait") b.className = "on"; }, 400);
-  }, 1300);
-  const wait = (2000 + Math.random() * 6500) * (1 - Math.min(.6, f2Stat("speed") / 100)) * (inSchool ? .6 : 1);
-  f2Later(wait, () => {
-    clearInterval(f2Nib);
-    const [r, n] = f2Roll(inSchool);
-    f2Hook = { r, n, inSchool };
-    f2State = "bite"; b.className = "on bite";
-    playSfx("fishBite" + (1 + Math.floor(Math.random() * 3)), .8);
-    f2Msg("<b>!!!</b> Click now!");
-    // bigger fish give you less time to react
-    const win = { poor: 1300, common: 1200, uncommon: 1050, rare: 950, epic: 850, legendary: 750 }[r];
-    f2Later(win, () => { if (f2State === "bite") { f2State = "idle"; b.className = ""; f2Msg(pick(F2_LATE)); } });
+  P.cast(x, y, () => {
+    if (tok !== f2Tok || f2State !== "wait") return;
+    P.lure(true);
+    // little fake nibbles to tempt you into pulling early
+    f2Nib = setInterval(() => {
+      if (f2State !== "wait" || Math.random() < .5) return;
+      P.bob("nibble"); f2Sound(t => tone(1200 + Math.random() * 300, "sine", t, .05, .02));
+    }, 1300);
+    const wait = (2000 + Math.random() * 6500) * (1 - Math.min(.65, f2Stat("speed") / 100)) * (inSchool ? .6 : 1);
+    f2Later(wait, () => {
+      clearInterval(f2Nib);
+      const [r, n] = f2Roll(inSchool);
+      f2Hook = { r, n, inSchool };
+      f2State = "bite"; P.bob("bite");
+      playSfx("fishBite" + (1 + Math.floor(Math.random() * 3)), .8);
+      f2Msg("<b>!!!</b> Click now!");
+      const win = { poor: 1300, common: 1200, uncommon: 1050, rare: 950, epic: 850, legendary: 750 }[r];
+      f2Later(win, () => { if (f2State === "bite") { f2Stop(); P.catchFish(null); f2Msg(pick(F2_LATE)); } });
+    });
   });
 }
 function f2Strike() {
   f2T.forEach(clearTimeout); f2T = [];
   const h = f2Hook, z = f2Zone(), eff = f2Eff();
-  // too low skill for the zone: most fish just shake off
   if (eff < z.req && Math.random() < Math.min(.9, .3 + (z.req - eff) / 60)) {
-    f2End(); f2Msg("The fish got away. Your fishing skill is too low for " + f2Esc(z.name) + ".");
+    f2Stop(); P.lost(); f2Msg("The fish shook itself free. Your fishing skill is too low for " + f2Esc(z.name) + ".");
     return;
   }
   const needsReel = F2_REEL[h.r] && (h.r !== "uncommon" || Math.random() < .4);
@@ -2339,6 +3049,7 @@ function f2StartReel() {
   $("f2reel").classList.add("on");
   f2Msg("Something big is on the line! Reel it in.");
   $("f2cast").textContent = "🎣 Hold to reel";
+  P.bob("reel");
   f2Reel.id = setInterval(f2ReelStep, 30);
 }
 function f2ReelStep() {
@@ -2351,22 +3062,25 @@ function f2ReelStep() {
   R.P += inZone ? (.2 + R.reel / 300) / Math.sqrt(R.diff) * dt : -.13 * dt * (R.T === 0 ? 2 : 1);
   $("f2needle").style.left = (R.T * 100) + "%";
   $("f2prog").firstElementChild.style.width = Math.max(0, Math.min(1, R.P)) * 100 + "%";
+  P.reel(R.P, Math.min(1, R.T));
   const f = f2Name(f2Hook.n, f2Hook.r);
-  if (R.T >= 1) { f2End(); f2Msg(pick(F2_SNAP).replace("{f}", f)); if (ctx && !muted) tone(1800, "square", ctx.currentTime, .08, .04); }
-  else if (R.P <= 0) { f2End(); f2Msg(pick(F2_ESCAPE).replace("{f}", f)); }
+  if (R.T >= 1) { f2Stop(); P.lost(); f2Msg(pick(F2_SNAP).replace("{f}", f)); f2Sound(t => tone(1800, "square", t, .08, .04)); }
+  else if (R.P <= 0) { f2Stop(); P.lost(); f2Msg(pick(F2_ESCAPE).replace("{f}", f)); }
   else if (R.P >= 1) f2Land();
 }
-function f2End() {
+// stop everything that's running; the pond keeps whatever animation it's in
+function f2Stop() {
   clearInterval(f2Reel && f2Reel.id); f2Reel = null; f2Hold = false; f2T.forEach(clearTimeout); f2T = []; clearInterval(f2Nib);
-  f2State = "idle"; $("f2bob").className = ""; $("f2reel").classList.remove("on"); $("f2cast").textContent = "🎣 Cast";
+  f2State = "idle"; $("f2reel").classList.remove("on"); $("f2cast").textContent = "🎣 Cast";
+  P.lure(false);
 }
 function f2Land() {
   const h = f2Hook, z = f2Zone();
-  f2End();
+  f2Stop();
   if (f2Stat("boom") && Math.random() < f2Stat("boom")) {
-    f2Msg('<span class="err">Your Goblin Fishing Pole exploded.</span> The fish is fine. Your eyebrows are not.'); boom(); return;
+    P.lost(); f2Msg('<span class="err">Your Goblin Fishing Pole exploded.</span> The fish is fine. Your eyebrows are not.'); f2Sound(() => boom()); return;
   }
-  // skill ups: fast at first, slower later, barely any in zones far below you
+  P.catchFish(h.r);
   let up = f2.skill < 75 ? (Math.random() < .9) + (Math.random() < .4) : Math.random() < (f2.skill < 150 ? .75 : f2.skill < 225 ? .55 : .4) ? 1 : 0;
   if (f2.skill - z.req > 100 && Math.random() < .6) up = 0;
   const oldSkill = f2.skill;
@@ -2377,22 +3091,20 @@ function f2Land() {
   const j = f2.journal[z.id] = f2.journal[z.id] || {};
   const isNew = !(h.n in j), rec = lb && (!j[h.n] || lb > j[h.n]);
   if (isNew || rec) j[h.n] = Math.max(j[h.n] || 0, lb);
-  const room = f2AddBag(h.n, h.r, val);
-  let msg = (room ? "You caught " : "You caught ") + f2Name(h.n, h.r) + (lb ? " (" + lb + " lb)" : "");
+  const room = f2AddBag(h.n, h.r, val, z.id);
+  let msg = "You caught " + f2Name(h.n, h.r) + (lb ? " (" + lb + " lb)" : "");
   if (!room) msg += ' · <span class="err">Inventory is full.</span> It flops back into the water.';
   else if (isNew) msg += " · New journal entry!";
   else if (rec) msg += " · New size record!";
   if (f2.skill > oldSkill) msg += '<br><span style="color:#4080ff">Your skill in Fishing has increased to ' + f2.skill + ".</span>";
-  // Nat Pagle's request
+  if (f2Ev && h.r !== "poor") { f2Ev.me++; f2RenderEv(); }
   const q = f2.quest;
   if (q && room && q.zone === z.id && q.fish === h.n && ++q.have >= q.need) {
     f2.gold += q.reward;
     msg += '<br><span style="color:#ffd100">Request complete! Nat Pagle pays you ' + f2Money(q.reward) + ".</span>";
     f2NewQuest(); playSfx("coin", .8);
   }
-  // a zone's whole journal
-  const all = Object.values(z.fish).flat();
-  if (!f2.mastered.includes(z.id) && all.every(n => n in j)) {
+  if (!f2.mastered.includes(z.id) && f2AllFish(z).every(n => n in j)) {
     f2.mastered.push(z.id);
     const bonus = Math.round(5000 * z.mult);
     f2.gold += bonus;
@@ -2405,22 +3117,23 @@ function f2Land() {
     const fl = $("legendflash"); fl.classList.remove("on"); void fl.offsetWidth; fl.classList.add("on");
     if (playSfx("legendary", .6)) return;
   }
-  if (ctx && !muted) [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", ctx.currentTime + i * .08, .5, .07));
+  f2Sound(t0 => [523.3, 659.3, 784, 1046.5, 1318.5, 1568].slice(0, ladder).forEach((f, i) => tone(f, "triangle", t0 + i * .08, .5, .07)));
 }
+function f2TooEarly() { f2Stop(); P.catchFish(null); f2Msg(pick(F2_EARLY)); }
 function f2PondDown(e) {
   if (f2State === "reel") { e.preventDefault(); f2Hold = true; return; }
-  const r = $("f2pond").getBoundingClientRect();
-  const x = (e.clientX - r.left) / r.width * 100, y = (e.clientY - r.top) / r.height * 100;
-  if (f2State === "idle") f2Cast(x, y);
-  else if (f2State === "wait") { f2End(); f2Msg(pick(F2_EARLY)); }
+  if (f2State === "idle") { const pt = P.pick(e); if (pt) f2Cast(pt.x, pt.y); }
+  else if (f2State === "wait") f2TooEarly();
   else if (f2State === "bite") f2Strike();
 }
 $("f2pond").addEventListener("pointerdown", f2PondDown);
+$("f2pond").addEventListener("pointermove", e => P.aim(e, f2State === "idle"));
+$("f2pond").addEventListener("pointerleave", e => P.aim(e, false));
 $("f2cast").addEventListener("pointerdown", e => {
   if (f2State === "reel") { e.preventDefault(); f2Hold = true; }
   else if (f2State === "idle") f2Cast();
   else if (f2State === "bite") f2Strike();
-  else if (f2State === "wait") { f2End(); f2Msg(pick(F2_EARLY)); }
+  else if (f2State === "wait") f2TooEarly();
 });
 addEventListener("pointerup", () => { f2Hold = false; });
 addEventListener("keydown", e => {
@@ -2428,7 +3141,7 @@ addEventListener("keydown", e => {
   if (e.key === " ") {
     e.preventDefault();
     if (f2State === "reel") f2Hold = true;
-    else if (!e.repeat) { if (f2State === "idle") f2Cast(); else if (f2State === "bite") f2Strike(); else if (f2State === "wait") { f2End(); f2Msg(pick(F2_EARLY)); } }
+    else if (!e.repeat) { if (f2State === "idle") f2Cast(); else if (f2State === "bite") f2Strike(); else if (f2State === "wait") f2TooEarly(); }
   } else if (e.key === "Escape") closeFish2();
 });
 addEventListener("keyup", e => { if (e.key === " ") f2Hold = false; });
@@ -2436,13 +3149,21 @@ document.querySelectorAll("#f2tabs button").forEach(b => b.addEventListener("cli
 function openFish2() {
   foundEgg("fishing");
   f2Load(); if (!f2.quest) f2NewQuest();
-  f2End(); f2HideSchool();
+  f2Stop(); P.bob("none");
   $("fish2").classList.add("on");
+  ensureAudio();
+  P.setZone(f2Zone()); P.env(f2Tod()[1], f2.wx); P.start();
   f2Msg(f2.caught ? "Welcome back. Click the water where you want to cast." : "Welcome to Fishing v2! Click the water to cast where you click. " +
-    "Nibbles aren't bites, wait for the splash. Sell your catch, buy better gear, and work your way up to the lava.");
+    "Nibbles aren't bites, wait for the splash. Sell your catch, buy better gear, cook, and work your way up to the lava.");
   f2RenderAll(); f2ScheduleSchool();
+  clearInterval(f2Tick); f2Tick = setInterval(f2Second, 1000);
+  if (!f2Ev) f2ScheduleEv(120000 + Math.random() * 90000);
+  f2Load3D().then(f2UseBestPond, () => {});
 }
-function closeFish2() { f2End(); clearTimeout(f2SchoolT); f2HideSchool(); $("fish2").classList.remove("on"); }
+function closeFish2() {
+  f2Stop(); P.bob("none"); clearTimeout(f2SchoolT); f2HideSchool(); clearInterval(f2Tick); clearTimeout(f2EvT); f2Ev = null; f2RenderEv();
+  P.stop(); f2Save(); $("fish2").classList.remove("on");
+}
 $("f2close").addEventListener("click", closeFish2);
 $("fish2").addEventListener("click", e => { if (e.target.id === "fish2") closeFish2(); });
 
@@ -2460,7 +3181,7 @@ function achievementToast(id) {
   $("achname").textContent = ACH_NAMES[id] || id;
   const t = $("achtoast"); t.classList.add("on");
   clearTimeout(achTimer); achTimer = setTimeout(() => t.classList.remove("on"), 4500);
-  if (!playSfx("achievement", .3) && ctx && !muted)
+  if (!playSfx("achievement", .3) && ctx && !sfxOff())
     [[659.3, 0], [784, .1], [987.8, .2], [1318.5, .32]].forEach(([f, d]) => tone(f, "triangle", ctx.currentTime + d, .7, .07));
 }
 function openAchievements() {
@@ -2519,7 +3240,7 @@ function dance() {
   if (dancing) return;
   dancing = true; foundEgg("dance");
   document.body.classList.add("dancing");
-  if (ctx && !muted) {
+  if (ctx && !sfxOff()) {
     pauseBg();
     const t0 = ctx.currentTime + .05, bass = [110, 110, 146.8, 130.8];
     for (let i = 0; i < 32; i++) {
@@ -2566,7 +3287,7 @@ function duelRequest() {
   dueler = pick(GUILD);
   $("duelq").textContent = dueler + " has challenged you to a duel.";
   $("duel").classList.add("on");
-  if (ctx && !muted) tone(880, "triangle", ctx.currentTime, .3, .06);
+  if (ctx && !sfxOff()) tone(880, "triangle", ctx.currentTime, .3, .06);
   clearTimeout(duelHide);
   duelHide = setTimeout(() => { $("duel").classList.remove("on"); scheduleDuel(); }, 30000);
 }
@@ -2580,7 +3301,7 @@ $("dueln").addEventListener("click", () => {
   setTimeout(() => duelText("DUEL!", false, 900), 3000);
   setTimeout(() => {
     duelText(dueler + " has defeated you in a duel.", true, 4000);
-    if (ctx && !muted) sadTrombone();
+    if (ctx && !sfxOff()) sadTrombone();
   }, 4200);
 });
 $("duelx").addEventListener("click", () => {
@@ -2655,7 +3376,7 @@ $("hogger").addEventListener("click", () => {
   playSfx("gnollAggro", .7);
   h.src = "img/hogger_attack.webp"; h.style.transform = "scaleX(-1)";   // the attack pose faces right; mirror it to face the player
   setTimeout(() => {
-    if (!playSfx("gnollAttack", .8) && ctx && !muted) beat(ctx.currentTime, true);
+    if (!playSfx("gnollAttack", .8) && ctx && !sfxOff()) beat(ctx.currentTime, true);
     const rf = $("redflash"); rf.classList.remove("on"); void rf.offsetWidth; rf.classList.add("on");
   }, 550);
   setTimeout(() => {
@@ -2666,7 +3387,7 @@ $("hogger").addEventListener("click", () => {
     $("deathbtn").textContent = "Release Spirit"; $("recapbtn").style.display = "";
     buildRecap();
     $("deathbox").classList.add("on");
-    if (!playSfx("wipe", .6) && ctx && !muted) sadTrombone();
+    if (!playSfx("wipe", .6) && ctx && !sfxOff()) sadTrombone();
   }, 1300);
 });
 // Death Recap: the last 5 hits that killed you (the last one is the killing blow)
@@ -2697,7 +3418,7 @@ $("deathbtn").addEventListener("click", () => {
     $("deathbox").classList.remove("on");
     document.body.classList.remove("ghost", "dead");
     $("corpse").classList.remove("on"); $("ghostmsg").classList.remove("on");
-    if (ctx && !muted) [523.3, 659.3, 784, 1046.5].forEach((f, i) => tone(f, "sine", ctx.currentTime + i * .12, 1.2, .08));
+    if (ctx && !sfxOff()) [523.3, 659.3, 784, 1046.5].forEach((f, i) => tone(f, "sine", ctx.currentTime + i * .12, 1.2, .08));
     hogDead = false; scheduleHogger();
     return;
   }
@@ -2752,7 +3473,7 @@ let mailItems = [], mailSel = null, errT = null;
 function uiError(text) {
   const e = $("uierr"); e.textContent = text; e.classList.add("on");
   clearTimeout(errT); errT = setTimeout(() => e.classList.remove("on"), 2200);
-  if (ctx && !muted) tone(220, "square", ctx.currentTime, .15, .04);
+  if (ctx && !sfxOff()) tone(220, "square", ctx.currentTime, .15, .04);
 }
 function goldSeller() {
   const name = "Xk" + Math.random().toString(36).slice(2, 7) + "zq";
@@ -2777,7 +3498,7 @@ function openMail() {
   for (let i = mailItems.length; i < 7; i++) { const e = document.createElement("div"); e.className = "mrow empty"; list.appendChild(e); }
   showLetter(0);
   $("mail").classList.add("on");
-  if (ctx && !muted) tone(1046.5, "triangle", ctx.currentTime, .3, .05);
+  if (ctx && !sfxOff()) tone(1046.5, "triangle", ctx.currentTime, .3, .05);
 }
 function showLetter(i) {
   mailSel = mailItems[i];
@@ -2803,7 +3524,7 @@ function banned() {
   $("mail").classList.remove("on");
   $("ban").classList.add("on");
   pauseBg();
-  if (ctx && !muted) [196, 185, 175, 147].forEach((f, i) => tone(f, "sawtooth", ctx.currentTime + i * .35, .5, .06));
+  if (ctx && !sfxOff()) [196, 185, 175, 147].forEach((f, i) => tone(f, "sawtooth", ctx.currentTime + i * .35, .5, .06));
 }
 const closeMail = () => $("mail").classList.remove("on");
 $("mailicon").addEventListener("click", openMail);
@@ -2855,7 +3576,7 @@ function openPunt() {
 function closePunt() { $("punt").classList.remove("on"); pState = "off"; cancelAnimationFrame(pRaf); }
 function puntFlash(text) { pMsg = text; pMsgT = 1600; }
 function boom() {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
   o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(30, t + .5);
   g.gain.setValueAtTime(1, t); g.gain.exponentialRampToValueAtTime(.0001, t + .6);
@@ -2869,7 +3590,7 @@ function puntClick() {
     pState = "fly"; pOrcKick = 450;
     const v = 7 + pPower * 23, a = pAngle * Math.PI / 180;
     pG.vx = v * Math.cos(a); pG.vy = -v * Math.sin(a); pG.y -= 2;
-    if (!playSfx("gnomeKick", .8) && ctx && !muted) beat(ctx.currentTime, true);
+    if (!playSfx("gnomeKick", .8) && ctx && !sfxOff()) beat(ctx.currentTime, true);
   }
 }
 function puntLand() {
@@ -3005,14 +3726,14 @@ function checkOffer(delay) {
 $("offerbuy").addEventListener("click", e => {
   e.stopPropagation();
   $("offer").classList.remove("on");
-  if (!playSfx("coin", .9) && ctx && !muted) tone(1318.5, "triangle", ctx.currentTime, .4, .08);
+  if (!playSfx("coin", .9) && ctx && !sfxOff()) tone(1318.5, "triangle", ctx.currentTime, .4, .08);
   const p = $("paid"); p.classList.remove("on"); void p.offsetWidth; p.classList.add("on");
   setTimeout(() => { p.classList.remove("on"); foundEgg("offer"); }, 2800);
 });
 // clicking anywhere else does nothing except a little "no"
 $("offer").addEventListener("click", () => {
   const b = $("offerbox"); b.classList.remove("nope"); void b.offsetWidth; b.classList.add("nope");
-  if (ctx && !muted) tone(180, "square", ctx.currentTime, .12, .04);
+  if (ctx && !sfxOff()) tone(180, "square", ctx.currentTime, .12, .04);
 });
 
 // ---------- Easter egg: hidden keyhole -> saucy Great Vault slideshow ----------
@@ -3025,7 +3746,7 @@ const VAULT_SLIDE = 3800;
 let vaultOn = false, vaultYt = null, vaultReady = false, vaultTimers = [], vaultHearts = null, vaultWithSong = false, vaultLoop = null;
 function loungeLoop() {
   // fallback when the song can't play: a slow, smoky two-chord synth vamp
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const chords = [[146.8, 174.6, 220, 261.6], [196, 246.9, 293.7, 349.2]];
   let k = 0;
   const play = () => { const t = ctx.currentTime; chords[k++ % 2].forEach(f => tone(f, "triangle", t, 2.2, .035)); tone(73.4 + (k % 2) * 24.6, "sine", t, 2, .12); };
@@ -3037,7 +3758,7 @@ function openVault() {
   pauseBg();
   const box = $("vault"), imgs = $("vstage").querySelectorAll("img"), cap = $("vcap");
   box.classList.add("on");
-  vaultWithSong = vaultReady && !muted;
+  vaultWithSong = vaultReady && !sfxOff();
   if (vaultWithSong) { vaultYt.setVolume(Math.max(vol(), 60)); vaultYt.seekTo(0, true); vaultYt.playVideo(); }
   else loungeLoop();
   const pics = shuffle(VAULT_PICS), caps = shuffle(VAULT_CAPS), at = (ms, fn) => vaultTimers.push(setTimeout(fn, ms));
@@ -3134,7 +3855,7 @@ function openBolt() {
 }
 function closeBolt() { boltOn = false; clearInterval(boltTimer); $("bolt").classList.remove("on"); }
 function boltSound(spell) {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime;
   if (playSfx(spell === "fire" ? "firebolt" : "frostbolt", .8)) return;
   if (spell === "fire") { whoosh(500, 2200, .25); tone(98, "sawtooth", t, .25, .05); }
@@ -3243,7 +3964,7 @@ function fireReset() {
 }
 function fireWarn(text) {
   const w = $("firewarn"); w.textContent = text; w.classList.remove("on"); void w.offsetWidth; w.classList.add("on");
-  if (firePhase > 0 && !playSfx(FIRE_VOICE[firePhase] || "readyCheck", FIRE_VOICE[firePhase] ? 1 : .5) && ctx && !muted)
+  if (firePhase > 0 && !playSfx(FIRE_VOICE[firePhase] || "readyCheck", FIRE_VOICE[firePhase] ? 1 : .5) && ctx && !sfxOff())
     tone(880, "square", ctx.currentTime, .15, .03);
 }
 function openFire() {
@@ -3441,7 +4162,7 @@ function openRaid() { buildRaid(); $("raidbox").classList.add("on"); foundEgg("r
 // Trigger: typing "olympus".
 let scaring = false;
 function scream() {
-  if (!ctx || muted) return;
+  if (!ctx || sfxOff()) return;
   const t = ctx.currentTime, len = ctx.sampleRate;
   const nb = ctx.createBuffer(1, len, ctx.sampleRate), nd = nb.getChannelData(0);
   for (let i = 0; i < len; i++) nd[i] = Math.random() * 2 - 1;

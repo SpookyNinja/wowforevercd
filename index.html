@@ -436,10 +436,6 @@
   /* pond events */
   #f2fx { position:absolute; inset:0; z-index:3; pointer-events:none; overflow:hidden; }
   #f2fx > div { position:absolute; pointer-events:auto; cursor:pointer; transform:translate(-50%,-100%); user-select:none; }
-  .f2murloc { width:50px; }
-  .f2murloc img { width:100%; display:block; filter:drop-shadow(0 4px 4px rgba(0,0,0,.5)); animation:f2bobble .5s ease-in-out infinite alternate; }
-  .f2murloc.bonk img { animation:none; transform:scale(1.3) rotate(25deg); opacity:0; transition:.35s; }
-  @keyframes f2bobble { to { transform:translateY(4px) rotate(-3deg); } }
   .f2nat { width:110px; }
   .f2nat .nmask { height:78px; overflow:hidden; border-bottom:2px solid rgba(200,230,255,.5); border-radius:0 0 50% 50% / 0 0 8px 8px; }
   .f2nat img { width:100%; display:block; animation:f2rise 1.2s ease-out both; }
@@ -3834,9 +3830,8 @@ $("lkleave").addEventListener("click", f2LockClose);
 $("f2destx").addEventListener("click", () => $("f2dest").classList.remove("on"));
 $("fish2").addEventListener("mousemove", f2TipMove);
 $("fish2").addEventListener("mouseleave", () => { $("f2tip").style.display = "none"; });
-// ---------- random pond events: murlocs, Nat Pagle, feeding frenzy, a stealthed rogue, messages in bottles ----------
-const F2_MURLOC = ["img/murloc2.webp", "img/murloc3.webp", "img/murloc1.webp", "img/murloc3.webp"];
-F2_MURLOC.concat(["img/natpagle.webp"]).forEach(src => { new Image().src = src; });
+// ---------- random pond events: Nat Pagle, feeding frenzy, a stealthed rogue, messages in bottles ----------
+new Image().src = "img/natpagle.webp";
 const F2_TRASH = ["Half a Murloc Sandwich", "Gnome Toupee", "Signed Photo of Hogger", "Expired Hearthstone Coupon", "Leeroy's Missing Plan",
   "Soggy Raid Calendar", "Used Bandage (eww)", "Broken Ready Check", "One (1) Grain of Barrens Sand", "A Lost DKP Point",
   "Goblin Instruction Manual (explodes)", "Bag of Kaj'Cola Bottle Caps", "Kobold Candle Wax Sculpture", "Defias Mask (worn by a gnoll)",
@@ -3888,10 +3883,9 @@ function f2RunEvent() {
   if (!$("fish2").classList.contains("on")) return;
   const z = f2Zone(), lava = z.theme.lava, opts = [["frenzy", 2], ["rogue", 2]];
   if (!lava) opts.push(["bottle", 3], ["nat", 2]);
-  if (!lava && z.id !== "cave") opts.push(["murloc", 3]);
   let r = Math.random() * opts.reduce((n, o) => n + o[1], 0), ev = opts[0][0];
   for (const [k, w] of opts) if ((r -= w) < 0) { ev = k; break; }
-  ({ murloc: f2EvMurlocs, nat: f2EvNat, frenzy: f2EvFrenzy, rogue: f2EvRogue, bottle: f2EvBottle })[ev]();
+  ({ nat: f2EvNat, frenzy: f2EvFrenzy, rogue: f2EvRogue, bottle: f2EvBottle })[ev]();
   f2ScheduleEvent(50000 + Math.random() * 50000);
 }
 // a mover: something drifting across the overlay from (x0,y0) to (x1,y1) in % over dur ms, calling tick(p) each step
@@ -3905,34 +3899,6 @@ function f2Move(el, x0, y0, x1, y1, dur, tick, done) {
     if (p >= 1) { clearInterval(iv); done(); }
   }, 30);
   f2FxT.push(iv);
-}
-function f2EvMurlocs() {
-  const n = 3 + Math.floor(Math.random() * 3);
-  f2Msg('<span class="ev">🐸 Mrglglglgl! A pack of murlocs is swimming for your bag. Click them!</span>');
-  playSfx("murloc", .7);
-  for (let i = 0; i < n; i++) f2FxT.push(setTimeout(f2Murloc, i * 1500 + Math.random() * 600));
-}
-function f2Murloc() {
-  const el = f2FxEl("f2murloc"), img = document.createElement("img"); img.src = F2_MURLOC[0]; img.alt = "Murloc"; el.appendChild(img);
-  let fr = 0, last = 0;
-  const anim = setInterval(() => { img.src = F2_MURLOC[++fr % F2_MURLOC.length]; }, 170); f2FxT.push(anim);
-  el.addEventListener("pointerdown", () => {
-    clearInterval(anim); el.classList.add("bonk"); f2PokeAt(el, -.2); setTimeout(() => el.remove(), 400);
-    playSfx("murloc", .6);
-    const g = Math.round(40 * f2Zone().mult); f2.gold += g;
-    f2Msg("You bonk a murloc on the head. It drops " + f2Money(g) + " and flees, mrgling sadly."); f2Save(); f2RenderChar();
-  });
-  f2Move(el, 15 + Math.random() * 70, 50, 30 + Math.random() * 40, 96, 7500 + Math.random() * 3000, p => {
-    el.style.width = (50 + p * 90) + "px";
-    if (Math.random() < .15) f2PokeAt(el, -.05);
-  }, () => {
-    clearInterval(anim); el.remove();
-    const fish = f2.bag.filter(it => !it.kind);
-    if (!fish.length) { f2Msg("A murloc rummages through your empty bag and leaves disappointed. Mrgl."); return; }
-    const it = pick(fish); it.c--; if (it.c <= 0) f2.bag = f2.bag.filter(x => x !== it);
-    f2Msg('<span class="err">A murloc snatched your ' + f2Esc(it.n) + "!</span> Mrglglglgl!");
-    playSfx("murloc", .8); f2Save(); f2RenderAll();
-  });
 }
 function f2EvNat() {
   const x = 22 + Math.random() * 56, y = 56 + Math.random() * 14;

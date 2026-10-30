@@ -3715,8 +3715,8 @@ function f2Strike(L) {
 function f2StartReel(L) {
   const h = L.hook, diff = F2_REEL[h.r], reel = f2Stat("reel");
   L.st = "reel";
-  const zw = Math.max(.14, .34 - diff * .1 + reel / 300);
-  f2Reel = { L, T: .5, P: .3, force: 0, forceT: 0, diff, zw, reel };
+  const zw = Math.max(.2, .42 - diff * .1 + reel / 300);
+  f2Reel = { L, T: .5, P: .4, force: 0, forceT: 0, diff, zw, reel };
   const g = $("f2green"); g.style.left = (50 - zw * 50) + "%"; g.style.width = (zw * 100) + "%";
   $("f2reel").classList.add("on");
   f2Msg(h.kind === "chest" ? "Something heavy and square is on the line..." : "Something big is on the line! Reel it in.");
@@ -3727,11 +3727,11 @@ function f2StartReel(L) {
 function f2ReelStep() {
   const R = f2Reel; if (!R) return;
   const dt = .03, L = R.L;
-  if ((R.forceT -= dt) <= 0) { R.force = (Math.random() * 2 - 1) * R.diff * .7; R.forceT = .3 + Math.random() * .7; }
+  if ((R.forceT -= dt) <= 0) { R.force = (Math.random() * 2 - 1) * R.diff * .5; R.forceT = .3 + Math.random() * .7; }
   R.T += ((f2Hold ? 1 : -.8) + R.force) * dt;
   if (R.T <= 0) R.T = 0;
   const inZone = Math.abs(R.T - .5) <= R.zw / 2;
-  R.P += inZone ? (.2 + R.reel / 300) / Math.sqrt(R.diff) * dt : -.13 * dt * (R.T === 0 ? 2 : 1);
+  R.P += inZone ? (.26 + R.reel / 300) / Math.sqrt(R.diff) * dt : -.09 * dt * (R.T === 0 ? 2 : 1);
   $("f2needle").style.left = (R.T * 100) + "%";
   $("f2prog").firstElementChild.style.width = Math.max(0, Math.min(1, R.P)) * 100 + "%";
   P.reel(R.P, Math.min(1, R.T), L.i);

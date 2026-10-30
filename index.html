@@ -433,6 +433,36 @@
   #f2panel li.missing { color:#4a4030; font-style:italic; }
   #f2close { position:absolute; top:.55rem; right:.6rem; z-index:5; background:linear-gradient(#8a1a10, #4a0a06); border:1px solid #e0a63a; border-radius:3px; color:#ffd100;
              font:bold .85rem Arial,sans-serif; padding:.15rem .5rem; cursor:pointer; }
+  /* pond events */
+  #f2fx { position:absolute; inset:0; z-index:3; pointer-events:none; overflow:hidden; }
+  #f2fx > div { position:absolute; pointer-events:auto; cursor:pointer; transform:translate(-50%,-100%); user-select:none; }
+  .f2murloc { width:50px; }
+  .f2murloc img { width:100%; display:block; filter:drop-shadow(0 4px 4px rgba(0,0,0,.5)); animation:f2bobble .5s ease-in-out infinite alternate; }
+  .f2murloc.bonk img { animation:none; transform:scale(1.3) rotate(25deg); opacity:0; transition:.35s; }
+  @keyframes f2bobble { to { transform:translateY(4px) rotate(-3deg); } }
+  .f2nat { width:110px; }
+  .f2nat .nmask { height:78px; overflow:hidden; border-bottom:2px solid rgba(200,230,255,.5); border-radius:0 0 50% 50% / 0 0 8px 8px; }
+  .f2nat img { width:100%; display:block; animation:f2rise 1.2s ease-out both; }
+  .f2nat.sink img { animation:f2sink 1s ease-in both; }
+  @keyframes f2rise { from { transform:translateY(100%); } }
+  @keyframes f2sink { to { transform:translateY(100%); } }
+  .f2nat .nbub { position:absolute; bottom:100%; left:50%; transform:translateX(-50%); margin-bottom:4px; white-space:nowrap; background:#fff8e0; color:#3a2a10;
+                 font:bold .72rem Arial,sans-serif; padding:.2rem .45rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,.5); animation:f2in .4s .8s both; }
+  .f2rogue { font-size:38px; opacity:.16; filter:blur(1.5px); animation:f2shimmer .9s ease-in-out infinite alternate; }
+  .f2rogue:hover { opacity:.3; }
+  .f2rogue.seen { opacity:1; filter:none; animation:none; transform:translate(-50%,-100%) scale(1.3); transition:.3s; }
+  @keyframes f2shimmer { to { filter:blur(3px) hue-rotate(60deg); transform:translate(-48%,-100%) skewX(6deg); } }
+  .f2bottle { font-size:30px; animation:f2float 1.4s ease-in-out infinite alternate; filter:drop-shadow(0 0 6px rgba(255,255,220,.7)); }
+  @keyframes f2float { from { transform:translate(-50%,-100%) rotate(-20deg); } to { transform:translate(-50%,-90%) rotate(15deg); } }
+  .f2treas { font-size:22px; opacity:.35; animation:f2glint 1.6s ease-in-out infinite; }
+  .f2treas:hover { opacity:1; transform:translate(-50%,-100%) scale(1.4); }
+  @keyframes f2glint { 50% { opacity:.8; filter:drop-shadow(0 0 8px #ffd100); } }
+  #f2msg .ev { color:#7fd0ff; }
+  .f2paper { width:min(440px, 90%); padding:1.2rem 1.4rem; border-radius:4px; color:#3a2a10; text-align:center; box-shadow:0 0 30px #000;
+             background:radial-gradient(ellipse at 50% 40%, #f4e6c0, #d8c08a 75%, #b89a60); font:italic 1.02rem "Palatino Linotype", Georgia, serif; line-height:1.5; }
+  .f2paper .ptitle { font:bold .8rem Arial,sans-serif; letter-spacing:.15em; text-transform:uppercase; color:#7a5a20; margin-bottom:.6rem; font-style:normal; }
+  .f2paper p { margin-bottom:.7rem; }
+  #f2notefoot { font:bold .82rem Arial,sans-serif; color:#8a3a10; margin-bottom:.7rem; font-style:normal; }
   /* tooltip */
   #f2tip { position:fixed; z-index:90; display:none; max-width:270px; pointer-events:none; text-align:left; font:.76rem Arial,sans-serif; color:#fff; line-height:1.4;
            background:rgba(8,10,28,.95); border:1px solid #9a9ab0; border-radius:4px; padding:.4rem .55rem; box-shadow:0 2px 10px #000; }
@@ -904,7 +934,7 @@
         <div class="f2card"><div class="f2title">📜 Nat Pagle wants</div><div id="f2quest"></div></div>
       </div>
       <div class="fmain">
-        <div id="f2pond"><div id="f2hud"></div><div id="f2ev"></div><div id="f2school"><span id="f2schooltag"></span><i></i><i></i><i></i><i></i></div><div id="f2bob"></div></div>
+        <div id="f2pond"><div id="f2fx"></div><div id="f2hud"></div><div id="f2ev"></div><div id="f2school"><span id="f2schooltag"></span><i></i><i></i><i></i><i></i></div><div id="f2bob"></div></div>
         <div id="f2reel"><div id="f2track"><div id="f2green"></div><div id="f2needle"></div></div><div id="f2prog"><i></i></div>
           <div id="f2reeltxt">Hold the mouse (or Space) to reel. Keep the needle in the green.</div></div>
         <div class="f2bar"><div id="f2msg"></div><button id="f2cast">🎣 Cast</button></div>
@@ -914,6 +944,8 @@
     </div>
     <div id="f2lock" class="f2modal"><div class="f2mbox"><h3 id="lktitle"></h3><div id="lkpins"></div><div id="lkinfo"></div>
       <div class="f2mbtns"><button class="f2btn buy" id="lkpick">🔓 Set pin (Space)</button><button class="f2btn" id="lksmash">🔨 Smash it open</button><button class="f2btn" id="lkleave">Leave it</button></div></div></div>
+    <div id="f2note" class="f2modal"><div class="f2paper"><div class="ptitle">A message in a bottle</div><p id="f2notetext"></p><div id="f2notefoot"></div>
+      <button class="f2btn" id="f2noteok">Roll it back up</button></div></div>
     <div id="f2dest" class="f2modal"><div class="f2mbox"><h3>⛵ Where should Captain Grief take you?</h3><div id="f2destbtns"></div>
       <button class="f2btn" id="f2destx">Not now</button></div></div>
   </div></div>
@@ -1047,7 +1079,8 @@ const SFX = { breath: "sfx/flamebreath.ogg", gnollAggro: "sfx/gnoll_aggro.ogg", 
   fishBite3: "sfx/fish_bite3.ogg", menuOpen: "sfx/menu_open.ogg", menuButton: "sfx/menu_button.ogg", coin: "sfx/coin.ogg",
   countdown: "sfx/countdown.ogg", legendary: "sfx/legendary.ogg",
   firebolt: "sfx/firebolt.ogg", frostbolt: "sfx/frostbolt.ogg",
-  ragCharge: "sfx/rag_charge.ogg", ragPurge: "sfx/rag_purge.ogg", ragSlay: "sfx/rag_slay.ogg", ragRain: "sfx/rag_rain.ogg" };
+  ragCharge: "sfx/rag_charge.ogg", ragPurge: "sfx/rag_purge.ogg", ragSlay: "sfx/rag_slay.ogg", ragRain: "sfx/rag_rain.ogg",
+  stealth: "sfx/stealth.ogg" };
 const sfxBuf = {};
 function loadSfx() {
   Object.entries(SFX).forEach(([k, url]) => fetch(url).then(r => r.ok ? r.arrayBuffer() : Promise.reject())
@@ -2853,66 +2886,66 @@ const F2_ZONES = [
     recipe: { n: "Goldshire Fish Stew", q: "common", buff: { luck: 10 }, casts: 15 },
     theme: { skyTop: 0x4f8fd9, skyBot: 0xcfe6ff, deep: 0x0d3b5c, shallow: 0x3f9fb8, shore: 0x4f8a2e, sand: 0xb8a36a, rock: 0x6d6a62, decor: "pine", reeds: 0x5a7a2a, pads: 0x3f7a2a, mtn: 0x5a6a7a },
     fish: {
-    poor: ["Old Boot", "Hogger's Toenail", "Soggy Goldshire Pamphlet", "Kobold Candle (wet)"],
-    common: ["Raw Brilliant Smallfish", "Raw Longjaw Mud Snapper", "Raw Slitherskin Mackerel", "Murloc Scale", "A Perfectly Normal Fish"],
-    uncommon: ["Raw Bristle Whisker Catfish", "Goldshire Inn Room Key (do not ask)", "Murloc Tadpole"],
-    rare: ["Hogger's Rubber Duck", "Stormwind Guard's Lost Helmet"],
-    epic: ["Marshal Dughan's Reading Glasses"],
+    poor: ["Old Boot", "Hogger's Toenail", "Soggy Goldshire Pamphlet", "Kobold Candle (wet)", "Soggy Quest Log", "Moist Bread Crust"],
+    common: ["Raw Brilliant Smallfish", "Raw Longjaw Mud Snapper", "Raw Slitherskin Mackerel", "Murloc Scale", "A Perfectly Normal Fish", "Raw Rainbow Trout", "A Fish That Owes You Money"],
+    uncommon: ["Raw Bristle Whisker Catfish", "Goldshire Inn Room Key (do not ask)", "Murloc Tadpole", "Hogger's Bath Toy", "Wanted Poster: Hogger"],
+    rare: ["Hogger's Rubber Duck", "Stormwind Guard's Lost Helmet", "Mrs. Pinchy (Mr. Pinchy's wife)"],
+    epic: ["Marshal Dughan's Reading Glasses", "Deed to Elwynn Lake (signed by Dughan)"],
     legendary: ["The Elwynn Lake Monster (gnome-sized)"] } },
   { id: "westfall", icon: "🌾", name: "Westfall Coast", req: 50, mult: 1.6, school: "School of Albacore",
     night: "Ghost of the Deadmines Cod", rain: "Storm-Tossed Albacore",
     recipe: { n: "Westfall Stew (now with fish)", q: "common", buff: { speed: 15 }, casts: 15 },
     theme: { skyTop: 0x6a9fd8, skyBot: 0xf3e3b8, deep: 0x0b4655, shallow: 0x46a9a5, shore: 0xa89a45, sand: 0xd8c28a, rock: 0x8a7a5a, decor: "farm", reeds: 0x8a8a3a, mtn: 0x7a7a6a },
     fish: {
-    poor: ["Defias Bandana (smells)", "Harvest Golem Bolt", "Empty Bottle of Westfall Stew", "Soggy Wanted Poster"],
-    common: ["Raw Rainbow Fin Albacore", "Raw Rockscale Cod", "Oily Blackmouth", "Murloc Fin", "Fish That Looks Like Andre"],
-    uncommon: ["Deadmines Treasure Map", "Gnoll Paw (still twitching)", "Shiny Murloc Bauble"],
-    rare: ["VanCleef's Spare Hat", "Cookie's Missing Ladle"],
-    epic: ["Smite's Mighty Hammer (waterlogged)"],
+    poor: ["Defias Bandana (smells)", "Harvest Golem Bolt", "Empty Bottle of Westfall Stew", "Soggy Wanted Poster", "Defias Candle Stub", "Mushy Westfall Tomato"],
+    common: ["Raw Rainbow Fin Albacore", "Raw Rockscale Cod", "Oily Blackmouth", "Murloc Fin", "Fish That Looks Like Andre", "Raw Westfall Perch", "Suspiciously Square Fish"],
+    uncommon: ["Deadmines Treasure Map", "Gnoll Paw (still twitching)", "Shiny Murloc Bauble", "Sentinel Hill Guard's Spoon", "Harvest Watcher's Hat"],
+    rare: ["VanCleef's Spare Hat", "Cookie's Missing Ladle", "VanCleef's Diary (pages missing)"],
+    epic: ["Smite's Mighty Hammer (waterlogged)", "Defias Brotherhood Membership Card"],
     legendary: ["The Juggernaut's Anchor"] } },
   { id: "barrens", icon: "🦒", name: "Barrens Oasis", req: 100, mult: 2.4, school: "School of Deviate Fish",
     night: "Barrens Chat Moonfish", rain: "Rare Barrens Raindrop (it never rains here)",
     recipe: { n: "Kodo-Fish Kabob", q: "uncommon", buff: { reel: 15 }, casts: 15 },
     theme: { skyTop: 0x7aa6d6, skyBot: 0xf2d7a0, deep: 0x2c3a1c, shallow: 0x6f8f4a, shore: 0xb59a5a, sand: 0xc9b07a, rock: 0x8a6a4a, decor: "acacia", reeds: 0x8a8a3a, mtn: 0x9a7a5a },
     fish: {
-    poor: ["Barrens Chat Log (9 km long)", "Plainstrider Feather", "Chuck Norris' Discarded Toothpick", "Sand in Everything"],
-    common: ["Deviate Fish", "Raw Bristle Whisker Catfish", "Raw Loch Frenzy", "Raptor Tooth", "Oasis Water (murky)"],
-    uncommon: ["Mankrik's Wife's Earring", "Map to the Wailing Caverns (wrong)", "Kodo Dropping (petrified)"],
-    rare: ["Old Crafty's Cousin", "Chuck Norris' Fishing Line"],
-    epic: ["Deviate Fish That Turned You Into a Pirate"],
+    poor: ["Barrens Chat Log (9 km long)", "Plainstrider Feather", "Chuck Norris' Discarded Toothpick", "Sand in Everything", "Crossroads Bar Napkin", "Quillboar Sock"],
+    common: ["Deviate Fish", "Raw Bristle Whisker Catfish", "Raw Loch Frenzy", "Raptor Tooth", "Oasis Water (murky)", "Raw Oasis Carp", "Fish Wearing Sunglasses"],
+    uncommon: ["Mankrik's Wife's Earring", "Map to the Wailing Caverns (wrong)", "Kodo Dropping (petrified)", "Chuck Norris Fan Club Card", "Thunder Lizard Scale"],
+    rare: ["Old Crafty's Cousin", "Chuck Norris' Fishing Line", "Barrens Chat Moderator Badge (never used)"],
+    epic: ["Deviate Fish That Turned You Into a Pirate", "Mankrik's Search Party Map (accurate!)"],
     legendary: ["[Mankrik's Wife] (found her!)"] } },
   { id: "stv", icon: "🏴‍☠️", name: "Booty Bay", req: 150, mult: 3.5, school: "School of Tastyfish",
     night: "Midnight Tastyfish", rain: "Monsoon Mightfish",
     recipe: { n: "Booty Bay Grog-Battered Fish", q: "uncommon", buff: { luck: 20 }, casts: 15 },
     theme: { skyTop: 0x3a8fd0, skyBot: 0xbfefff, deep: 0x075a6a, shallow: 0x3fd6c4, shore: 0x2f7a2a, sand: 0xe8d8a0, rock: 0x5a6a4a, decor: "palm", reeds: 0x3a7a2a, pads: 0x2f8a3a, mtn: 0x3a6a5a },
     fish: {
-    poor: ["Ganked Corpse Run Map", "Booty Bay Bar Tab (unpaid)", "Broken Parrot Cage", "Gurubashi Coin (fake)"],
-    common: ["Raw Spotted Yellowtail", "Raw Glossy Mightfish", "Stonescale Eel", "Firefin Snapper", "Big-Mouth Clam"],
-    uncommon: ["Speckled Tastyfish", "Pirate Hat (soggy)", "Bloodsail Buccaneer's Eyepatch"],
-    rare: ["Keefer's Angelfish", "Mr. Pinchy (he grants wishes)"],
-    epic: ["Dezian Queenfish"],
+    poor: ["Ganked Corpse Run Map", "Booty Bay Bar Tab (unpaid)", "Broken Parrot Cage", "Gurubashi Coin (fake)", "Raptor Feather (soggy)", "Gnomish Shark Repellent (expired)"],
+    common: ["Raw Spotted Yellowtail", "Raw Glossy Mightfish", "Stonescale Eel", "Firefin Snapper", "Big-Mouth Clam", "Raw Rockscale Cod", "Bloodfin Catfish"],
+    uncommon: ["Speckled Tastyfish", "Pirate Hat (soggy)", "Bloodsail Buccaneer's Eyepatch", "Wanted Poster: Jacob", "Green Hills of Stranglethorn - Page 4"],
+    rare: ["Keefer's Angelfish", "Mr. Pinchy (he grants wishes)", "Hakkar's Bathwater (do not drink)"],
+    epic: ["Dezian Queenfish", "Captain Smotts' Golden Tooth"],
     legendary: ["Gurubashi Arena Chest (very wet)"] } },
   { id: "azshara", icon: "🌸", name: "Azshara Coast", req: 225, mult: 5, school: "School of Naga Snappers",
     night: "Elune's Glowing Koi", rain: "Tempest Naga Snapper",
     recipe: { n: "Naga Sushi Platter", q: "rare", buff: { skill: 25, speed: 20 }, casts: 20 },
     theme: { skyTop: 0x3a3a8a, skyBot: 0xe0a0c0, deep: 0x140f4a, shallow: 0x5b4bc6, shore: 0x8a5a2a, sand: 0xc8a888, rock: 0x6a5a7a, decor: "autumn", pads: 0x6a5a9a, mtn: 0x5a4a7a },
     fish: {
-    poor: ["Naga Scale (shed)", "Highborne Hairpin (bent)", "Seaweed Wig", "Ruined Love Letter to Azshara"],
-    common: ["Raw Nightfin Snapper", "Raw Sunscale Salmon", "Raw Whitescale Salmon", "Raw Redgill", "Winter Squid"],
-    uncommon: ["Fish That Is Clearly a Naga", "Azshara's Lost Mirror", "Satyr Horn Bottle Opener"],
-    rare: ["Dirty Nagatics Fan Club Badge", "Sea Turtle (sadly not a mount)"],
-    epic: ["Queen Azshara's Spare Crown"],
+    poor: ["Naga Scale (shed)", "Highborne Hairpin (bent)", "Seaweed Wig", "Ruined Love Letter to Azshara", "Elven Bathrobe (soggy)", "Broken Moonwell Bucket"],
+    common: ["Raw Nightfin Snapper", "Raw Sunscale Salmon", "Raw Whitescale Salmon", "Raw Redgill", "Winter Squid", "Raw Glossy Mightfish", "Lightning Eel"],
+    uncommon: ["Fish That Is Clearly a Naga", "Azshara's Lost Mirror", "Satyr Horn Bottle Opener", "Fusion Leftovers (Naga flavour)", "Highborne Love Potion (empty)"],
+    rare: ["Dirty Nagatics Fan Club Badge", "Sea Turtle (sadly not a mount)", "Sunken Kaldorei Statue Head"],
+    epic: ["Queen Azshara's Spare Crown", "Tidal Charm (still charming)"],
     legendary: ["The Leviathan That Owes DT Money"] } },
   { id: "mc", icon: "🌋", name: "Molten Core", req: 275, mult: 8, fire: true, school: "Pool of Molten Snappers",
     night: "Ember Wyrmling (night shift)", rain: "Steam Eel (it's raining on lava)",
     recipe: { n: "Molten Fish Fry", q: "epic", buff: { luck: 30, reel: 20 }, casts: 20 },
     theme: { skyTop: 0x120302, skyBot: 0x4a1206, deep: 0x330000, shallow: 0xff6600, shore: 0x2a1a14, sand: 0x3a2418, rock: 0x1e1410, decor: "rock", lava: true, indoor: true },
     fish: {
-    poor: ["Charred Bobber", "Molten Fishbone", "Melted Raid Strategy", "Ash (formerly a fish)"],
-    common: ["Lava Eel", "Magma Shrimp", "Firefin Snapper (extra crispy)", "Molten Mudfish", "Core Hound Drool"],
-    uncommon: ["Core Hound Puppy (very hot)", "Sulfuron's Spare Hammer Head", "Lava Rock With a Face"],
-    rare: ["Ragnaros' Rubber Duck", "Fiery Core"],
-    epic: ["Golemagg's Lost Sock"],
+    poor: ["Charred Bobber", "Molten Fishbone", "Melted Raid Strategy", "Ash (formerly a fish)", "Melted Hearthstone", "Fire-Resistant Sock (it wasn't)"],
+    common: ["Lava Eel", "Magma Shrimp", "Firefin Snapper (extra crispy)", "Molten Mudfish", "Core Hound Drool", "Smoldering Sardine", "Ash-Coated Anchovy"],
+    uncommon: ["Core Hound Puppy (very hot)", "Sulfuron's Spare Hammer Head", "Lava Rock With a Face", "Lava Pack Lunch", "Molten Giant's Toenail"],
+    rare: ["Ragnaros' Rubber Duck", "Fiery Core", "Majordomo's Spare Key"],
+    epic: ["Golemagg's Lost Sock", "Lucifron's Lost Curse Scroll"],
     legendary: ["Eye of Sulfuras"] } },
   // only reachable with a boat pass: three lines at once, richer waters
   { id: "sea", icon: "⛵", name: "The Great Sea", req: 0, mult: 6, special: true, school: "Swarm of Mackerel",
@@ -2920,33 +2953,33 @@ const F2_ZONES = [
     recipe: { n: "Sailor's Fish Pie", q: "rare", buff: { luck: 25, speed: 10 }, casts: 20 },
     theme: { skyTop: 0x3f86d6, skyBot: 0xd8ecff, deep: 0x062a4a, shallow: 0x1d6f9a, shore: 0x1d5f8a, sand: 0x1d5f8a, rock: 0x1d5f8a, decor: "sea", boat: true, drift: true, fog: [24, 120] },
     fish: {
-    poor: ["Seaweed Tangle", "Message in a Bottle (blank)", "Barnacled Boot", "Pirate's Wooden Leg"],
-    common: ["Raw Mackerel", "Raw Sea Bass", "Giant Clam Meat", "Raw Deep Sea Cod", "Flying Fish (crashed)"],
-    uncommon: ["Swordfish Bill", "Kraken Sucker Cup", "Sunken Ship's Bell"],
-    rare: ["Great White Tooth", "Narwhal Horn (gnome-carved)"],
-    epic: ["Admiral's Lost Spyglass"],
+    poor: ["Seaweed Tangle", "Message in a Bottle (blank)", "Barnacled Boot", "Pirate's Wooden Leg", "Wet Treasure Map (blank)", "Seagull Feather"],
+    common: ["Raw Mackerel", "Raw Sea Bass", "Giant Clam Meat", "Raw Deep Sea Cod", "Flying Fish (crashed)", "Raw Spotted Yellowtail", "Raw Whitescale Salmon"],
+    uncommon: ["Swordfish Bill", "Kraken Sucker Cup", "Sunken Ship's Bell", "Mermaid's Comb", "Ship in a Bottle"],
+    rare: ["Great White Tooth", "Narwhal Horn (gnome-carved)", "Pirate King's Parrot (stuffed)"],
+    epic: ["Admiral's Lost Spyglass", "Davy Jones' Locker Key"],
     legendary: ["The Sea Serpent That Ate the Last Boat"] } },
   { id: "cave", icon: "🦇", name: "Blackfathom Deeps", req: 0, mult: 7, special: true, school: "Swarm of Glowfin",
     night: "Shadow Eel (always night down here)", rain: "Waterfall Leech",
     recipe: { n: "Glowcap Fish Soup", q: "rare", buff: { reel: 25, luck: 15 }, casts: 20 },
     theme: { skyTop: 0x050c12, skyBot: 0x10303a, deep: 0x03202a, shallow: 0x1a8a96, shore: 0x4a4844, sand: 0x5a544a, rock: 0x4a443e, decor: "cave", indoor: true, fog: [10, 48] },
     fish: {
-    poor: ["Glowing Pebble", "Naga Toenail Clipping", "Soggy Torch", "Twilight Cultist Robe (wet)"],
-    common: ["Blind Cave Fish", "Raw Glowfin", "Murk Eel", "Cave Shrimp", "Fungal Carp"],
-    uncommon: ["Aku'mai Scale", "Luminous Mushroom Cap", "Ancient Night Elf Coin"],
-    rare: ["Twilight's Hammer Pamphlet", "Glowing Abyssal Pearl"],
-    epic: ["Aku'mai's Toothbrush"],
+    poor: ["Glowing Pebble", "Naga Toenail Clipping", "Soggy Torch", "Twilight Cultist Robe (wet)", "Bat Guano", "Adventurer's Helmet Lamp (dead)"],
+    common: ["Blind Cave Fish", "Raw Glowfin", "Murk Eel", "Cave Shrimp", "Fungal Carp", "Pale Cave Crab", "Deep Murk Bass"],
+    uncommon: ["Aku'mai Scale", "Luminous Mushroom Cap", "Ancient Night Elf Coin", "Lord Kelris' Bracers (soggy)", "Blackfathom Mussel"],
+    rare: ["Twilight's Hammer Pamphlet", "Glowing Abyssal Pearl", "Ghamoo-ra's Shell Fragment"],
+    epic: ["Aku'mai's Toothbrush", "Ancient Kaldorei Moonstone"],
     legendary: ["Aku'mai's Unhatched Egg"] } },
   { id: "ice", icon: "❄️", name: "Lake Kel'Theril (frozen)", req: 0, mult: 6.5, special: true, school: "Swarm of Frostfin",
     night: "Aurora Koi", rain: "Snowflake Minnow",
     recipe: { n: "Frozen Fish Sticks", q: "rare", buff: { speed: 25, skill: 15 }, casts: 20 },
     theme: { skyTop: 0x8fb4dd, skyBot: 0xeef4ff, deep: 0x0e3a5a, shallow: 0x7ec8e8, shore: 0xf2f6ff, sand: 0xd8e2ea, rock: 0x8a96a2, decor: "snow", ice: true, snow: true, mtn: 0xbac8d8 },
     fish: {
-    poor: ["Frozen Snowball", "Mitten (left)", "Owlbeast Feather", "Frostsaber Hairball"],
-    common: ["Raw Frostfin", "Ice Perch", "Winterspring Trout", "Snowy Smelt", "Chillwind Char"],
-    uncommon: ["Frozen Treasure Map", "Yeti Toe", "Icy Tear of Elune"],
-    rare: ["Frost Wyrm Scale", "Winterfall Firewater (frozen solid)"],
-    epic: ["Kel'Theril Ice Crystal"],
+    poor: ["Frozen Snowball", "Mitten (left)", "Owlbeast Feather", "Frostsaber Hairball", "Frozen Dwarven Beard Clipping", "Icicle (melting)"],
+    common: ["Raw Frostfin", "Ice Perch", "Winterspring Trout", "Snowy Smelt", "Chillwind Char", "Raw Winterfin Smelt", "Frost Oil"],
+    uncommon: ["Frozen Treasure Map", "Yeti Toe", "Icy Tear of Elune", "Furbolg Fishing Lure", "Frozen Kodo Steak"],
+    rare: ["Frost Wyrm Scale", "Winterfall Firewater (frozen solid)", "Hibernating Yeti Cub (do not wake)"],
+    epic: ["Kel'Theril Ice Crystal", "Frostsaber Pup Collar"],
     legendary: ["Frozen Jacob (he wasn't wearing a hat)"] } }
 ];
 const F2_GEAR = [
@@ -3026,7 +3059,7 @@ let f2Tick = null, f2Ev = null, f2EvT = null, f2P3 = null, f2Three = null, f2Loc
 const F2L = [0, 1, 2].map(i => ({ i, st: "idle", tok: 0, T: [], nib: null, hook: null }));
 let f2N = 1;
 const f2New = () => ({ skill: 1, gold: 0, caught: 0, zone: "elwynn", gear: { pole: "pole0" }, owned: ["pole0"], lure: null, food: null, bait: null, bag: [],
-  journal: {}, mastered: [], quest: null, clock: 20, wx: "clear", wxLeft: 120, trophies: 0, picks: 3, boat: null });
+  journal: {}, mastered: [], quest: null, clock: 20, wx: "clear", wxLeft: 120, trophies: 0, picks: 3, boat: null, notes: [], claimed: [] });
 function f2Load() {
   try { f2 = Object.assign(f2New(), JSON.parse(localStorage.getItem(F2_SAVE_KEY) || "{}")); } catch (e) { f2 = f2New(); }
   f2N = f2.boat ? F2_BOAT_LINES : 1;
@@ -3081,6 +3114,7 @@ function f2Icon(it) {
   if (it.kind === "chest") return it.tier >= 4 ? "💎" : "📦";
   if (it.kind === "pass") return "🎟️";
   if (it.kind === "bait") return "🪱";
+  if (it.kind === "mystery") return "👝";
   if (it.kind === "sky") return { sky1: "☀️", sky2: "☁️", sky3: "🌧️", sky4: "⛈️", time1: "🐓", time2: "⏳", time3: "🏮" }[it.id] || "🌀";
   const w = F2_ICON_WORDS.find(([re]) => re.test(it.n));
   if (w) return w[1];
@@ -3101,7 +3135,7 @@ function f2TipMove(e) {
 }
 function f2ItemTip(it) {
   const kind = { chest: "Locked chest · open it with lockpicks", pass: "Use: board the boat to a special fishing area", sky: "Use: change the weather or time",
-    bait: "Use: put it on your hook" }[it.kind] || (it.r === "poor" ? "Junk" : "Fish");
+    bait: "Use: put it on your hook", mystery: "Use: open it and see what Nat Pagle left you" }[it.kind] || (it.r === "poor" ? "Junk" : "Fish");
   return '<div class="tn" style="color:' + RARITY[it.r] + '">' + f2Esc(it.n) + "</div><div class=\"tk\">" + kind + "</div>" +
     (it.c > 1 ? "<div>Stack of " + it.c + "</div>" : "") + (it.lb ? "<div>" + it.lb + " lb</div>" : "") +
     (it.v ? '<div class="tv">Sell price: ' + f2Money(it.v * it.c) + "</div>" : '<div class="tv">No sell price</div>');
@@ -3181,7 +3215,8 @@ function f2RenderHud() {
   if (f2.wx === "rain" || f2.wx === "storm") special.push("🌧 " + z.rain);
   $("f2hud").innerHTML = (indoor ? "🕯 Underground" : label + " · " + F2_WX[f2.wx]) + (bon.length ? ' <span style="color:#9f9">(' + bon.join(", ") + ")</span>" : "") +
     (special.length ? '<br><span style="color:#8cf">Biting now: ' + special.map(f2Esc).join(", ") + "</span>" : "") +
-    (f2School ? '<br><span style="color:#ffd100">' + f2Esc(z.school) + " spotted!</span>" : "");
+    (f2School ? '<br><span style="color:#ffd100">' + f2Esc(z.school) + " spotted!</span>" : "") +
+    (Date.now() < f2Frenzy ? '<br><span style="color:#ff8a3d">🐟 FEEDING FRENZY! ' + Math.ceil((f2Frenzy - Date.now()) / 1000) + "s</span>" : "");
 }
 function f2Slot(icon, q, inner, tip, extra) {
   return '<div class="f2gslot"' + (tip ? f2Tip(tip) : "") + '><span class="f2ico" style="border-color:' + (q ? RARITY[q] : "#3a3020") + '">' + icon + (extra || "") +
@@ -3317,7 +3352,7 @@ function f2RenderDetail() {
   const btns = [];
   if (it.kind === "chest") btns.push('<button class="f2btn buy" data-act="open">🔓 Pick the lock</button>');
   if (it.kind === "pass") btns.push('<button class="f2btn buy" data-act="board"' + (f2.boat ? " disabled" : "") + ">⛵ Board the boat</button>");
-  if (it.kind === "sky" || it.kind === "bait") btns.push('<button class="f2btn buy" data-act="use">Use</button>');
+  if (it.kind === "sky" || it.kind === "bait" || it.kind === "mystery") btns.push('<button class="f2btn buy" data-act="use">' + (it.kind === "mystery" ? "👝 Open" : "Use") + "</button>");
   if (it.v) btns.push('<button class="f2btn" data-act="sell">Sell (' + f2Money(it.v * it.c) + ")</button>");
   btns.push('<button class="f2btn" data-act="drop">Destroy</button>');
   box.innerHTML = '<div class="f2det"><span class="f2ico" style="border-color:' + RARITY[it.r] + '">' + f2Icon(it) + "</span><div>" + f2Name(it.n, it.r) +
@@ -3396,6 +3431,7 @@ function f2CraftBait(id) {
   f2Save(); f2RenderAll();
 }
 function f2UseItem(it) {
+  if (it.kind === "mystery") { f2OpenMystery(it); return; }
   if (it.kind === "sky") f2ApplySky(F2_SKY.find(x => x.id === it.id));
   else if (it.kind === "bait") {
     const b = F2_BAIT.find(x => x.id === it.id);
@@ -3507,7 +3543,7 @@ function f2SetZone(id) {
   f2.zone = id; f2N = f2.boat ? F2_BOAT_LINES : 1;
   f2HideSchool();
   P.setZone(f2Zone()); P.setLines(f2N); P.env(f2Tod()[1], f2.wx);
-  f2Save(); f2RenderAll(); f2ScheduleSchool();
+  f2Save(); f2RenderAll(); f2ScheduleSchool(); f2FxClear(); f2RenderTreasure();
 }
 
 // ----- Nat Pagle's requests
@@ -3565,6 +3601,7 @@ function f2Second() {
     }
   }
   if (changed) { P.env(f2Tod()[1], f2.wx); f2RenderHud(); f2RenderChar(); }
+  if (Date.now() < f2Frenzy + 1500) f2RenderHud();
   if (f2Ev) { f2Ev.left--; f2Ev.rivals.forEach(r => { if (Math.random() < r.rate) r.c++; }); f2RenderEv(); if (f2Ev.left <= 0) f2EndEv(); }
   if (f2.clock % 10 === 0) f2Save();
 }
@@ -3648,7 +3685,8 @@ function f2CastLine(L, x, y) {
       if (L.st !== "wait" || Math.random() < .5) return;
       P.bob("nibble", L.i); f2Sound(t => tone(1200 + Math.random() * 300, "sine", t, .05, .02));
     }, 1300);
-    const wait = (2000 + Math.random() * 6500) * (1 - Math.min(.65, f2Stat("speed") / 100)) * (inSchool ? .6 : 1);
+    let wait = (2000 + Math.random() * 6500) * (1 - Math.min(.65, f2Stat("speed") / 100)) * (inSchool ? .6 : 1);
+    if (Date.now() < f2Frenzy) wait = 250 + Math.random() * 650;
     f2Later(L, wait, () => {
       clearInterval(L.nib);
       L.hook = f2Roll(inSchool);
@@ -3794,6 +3832,211 @@ $("lkleave").addEventListener("click", f2LockClose);
 $("f2destx").addEventListener("click", () => $("f2dest").classList.remove("on"));
 $("fish2").addEventListener("mousemove", f2TipMove);
 $("fish2").addEventListener("mouseleave", () => { $("f2tip").style.display = "none"; });
+// ---------- random pond events: murlocs, Nat Pagle, feeding frenzy, a stealthed rogue, messages in bottles ----------
+const F2_MURLOC = ["img/murloc2.webp", "img/murloc3.webp", "img/murloc1.webp", "img/murloc3.webp"];
+F2_MURLOC.concat(["img/natpagle.webp"]).forEach(src => { new Image().src = src; });
+const F2_TRASH = ["Half a Murloc Sandwich", "Gnome Toupee", "Signed Photo of Hogger", "Expired Hearthstone Coupon", "Leeroy's Missing Plan",
+  "Soggy Raid Calendar", "Used Bandage (eww)", "Broken Ready Check", "One (1) Grain of Barrens Sand", "A Lost DKP Point",
+  "Goblin Instruction Manual (explodes)", "Bag of Kaj'Cola Bottle Caps", "Kobold Candle Wax Sculpture", "Defias Mask (worn by a gnoll)",
+  "Murloc Lullaby Sheet Music", "Night Elf Hair Dye (purple)", "Dwarven Beard Comb (full of crumbs)", "Orc Tooth Floss", "Tauren Cowbell",
+  "Undead Spare Rib", "Troll Hair Gel", "Human Participation Trophy", "Paladin Bubble Wrap", "Soul Shard (cracked, still screaming)",
+  "Hunter's Lost Pet Food", "Conjured Mage Water (warm)", "Rogue's Dagger (only the one)", "Scroll of Fortitude (expired)",
+  "Warrior's Anger Management Pamphlet", "Druid Shapeshift Hairball", "Shaman Totem (bent)", "Linen Cloth (crumpled)",
+  "Gnomish Universal Remote (no batteries)", "Map to the Nearest Inn (wrong)", "Guild Bank Receipt (missing 400g)", "Jacob's Spare Sock",
+  "Asmongold Hair Strand", "Thunderfury Replica (cardboard)", "Mankrik's Wife's Other Earring", "Broken Fishing Bobber",
+  "Loot Council Minutes (soggy)", "\"I Love Goldshire\" Shirt", "Pocket Full of Pocket Lint", "Bucket With a Hole", "Ogre Toenail Clipping"];
+// messages in bottles; the ones with a spot mark a treasure on that zone's shore (x/y in % of the pond view), claimable once
+const F2_NOTES = [
+  { id: "t1", zone: "elwynn", x: 14, y: 41, text: "Dear finder, I buried my lunch money on the far shore, left of the lake, under the tallest pines. Don't tell Hogger. — Marshal Dughan" },
+  { id: "t2", zone: "westfall", x: 85, y: 44, text: "Psst. The Defias stash is hidden on the right side of the coast, behind the haystacks. Password: \"more stew\"." },
+  { id: "t3", zone: "barrens", x: 50, y: 38, text: "Day 47 in the Barrens. Still no sign of Mankrik's wife. I hid my gold straight across the oasis so the quillboars won't find it." },
+  { id: "t4", zone: "stv", x: 19, y: 46, text: "Arr! Me treasure be buried on the left beach of Booty Bay, between the palms. Signed, a pirate who can't swim." },
+  { id: "t5", zone: "azshara", x: 80, y: 39, text: "Queen Azshara's secret jewellery box is behind the trees on the right side of the coast. If you find it: no, you didn't." },
+  { id: "t6", zone: "mc", x: 27, y: 37, text: "Ragnaros keeps his allowance behind the glowing rocks at the back left of the Core. BY FIRE BE... broke." },
+  { id: "t7", zone: "sea", x: 56, y: 31, text: "Message from the crow's nest: there's a floating chest straight ahead near the horizon. Squint. Then squint harder." },
+  { id: "j1", text: "To whoever finds this: please tell my guild I'm still in the Deadmines queue. — Esports" },
+  { id: "j2", text: "If you're reading this, the raid wiped again. Somebody stood in the fire. It was Sab." },
+  { id: "j3", text: "Help! I've been trapped in the Goldshire Inn since 2004. Send pants." },
+  { id: "j4", text: "Note to self: never let Jacob pull. Ever. — Every Dirty Tactics raid leader" },
+  { id: "j5", text: "LF1M healer for Stockades. Must bring own bandages. And a bottle, apparently." },
+  { id: "j6", text: "WTS [Message in a Bottle]. Price: 1 bottle. No lowballers, I know what I have." },
+  { id: "j7", text: "Dear diary, today I fished up the same Old Boot nine times. I think it likes me." },
+  { id: "j8", text: "Barrens chat says Chuck Norris once fished in this pond. The pond caught him." },
+  { id: "j9", text: "Roses are red, murlocs are green, mrglglgl mrglglgl mrgl mrgl mrglglgl." },
+  { id: "j10", text: "I came, I saw, I died to Hogger. Please return my corpse to Elwynn. Reward: 2 copper." },
+  { id: "j11", text: "DT raid tip #47: if the boss is on fire, so are you. Move." },
+  { id: "j12", text: "Whoever stole my fishing chair: I know it was a gnome. I can smell it." },
+  { id: "j13", text: "This bottle is property of Nat Pagle. If found, please return it with a fish inside." },
+  { id: "j14", text: "The real treasure was the guildies we wiped with along the way." }
+];
+let f2EventT = null, f2Frenzy = 0, f2FxT = [];
+function f2FxClear() { f2FxT.forEach(t => { clearTimeout(t); clearInterval(t); }); f2FxT = []; $("f2fx").textContent = ""; }
+function f2FxEl(cls, html) {
+  const el = document.createElement("div"); el.className = cls; if (html) el.innerHTML = html;
+  el.addEventListener("pointerdown", e => e.stopPropagation());   // clicking an event never casts
+  $("f2fx").appendChild(el); return el;
+}
+// ripple the water under something floating in the overlay
+function f2PokeAt(el, amp) {
+  const r = el.getBoundingClientRect(), pt = P.pick({ clientX: r.left + r.width / 2, clientY: r.bottom - 6 });
+  if (pt) P.poke(pt.x, pt.y, amp);
+}
+function f2ScheduleEvent(ms) { clearTimeout(f2EventT); f2EventT = setTimeout(f2RunEvent, ms); }
+function f2RunEvent() {
+  if (!$("fish2").classList.contains("on")) return;
+  const z = f2Zone(), lava = z.theme.lava, opts = [["frenzy", 2], ["rogue", 2]];
+  if (!lava) opts.push(["bottle", 3], ["nat", 2]);
+  if (!lava && z.id !== "cave") opts.push(["murloc", 3]);
+  let r = Math.random() * opts.reduce((n, o) => n + o[1], 0), ev = opts[0][0];
+  for (const [k, w] of opts) if ((r -= w) < 0) { ev = k; break; }
+  ({ murloc: f2EvMurlocs, nat: f2EvNat, frenzy: f2EvFrenzy, rogue: f2EvRogue, bottle: f2EvBottle })[ev]();
+  f2ScheduleEvent(50000 + Math.random() * 50000);
+}
+// a mover: something drifting across the overlay from (x0,y0) to (x1,y1) in % over dur ms, calling tick(p) each step
+function f2Move(el, x0, y0, x1, y1, dur, tick, done) {
+  const t0 = performance.now();
+  const iv = setInterval(() => {
+    if (!el.isConnected) { clearInterval(iv); return; }
+    const p = Math.min(1, (performance.now() - t0) / dur);
+    el.style.left = (x0 + (x1 - x0) * p) + "%"; el.style.top = (y0 + (y1 - y0) * p) + "%";
+    if (tick) tick(p);
+    if (p >= 1) { clearInterval(iv); done(); }
+  }, 30);
+  f2FxT.push(iv);
+}
+function f2EvMurlocs() {
+  const n = 3 + Math.floor(Math.random() * 3);
+  f2Msg('<span class="ev">🐸 Mrglglglgl! A pack of murlocs is swimming for your bag. Click them!</span>');
+  playSfx("murloc", .7);
+  for (let i = 0; i < n; i++) f2FxT.push(setTimeout(f2Murloc, i * 1500 + Math.random() * 600));
+}
+function f2Murloc() {
+  const el = f2FxEl("f2murloc"), img = document.createElement("img"); img.src = F2_MURLOC[0]; img.alt = "Murloc"; el.appendChild(img);
+  let fr = 0, last = 0;
+  const anim = setInterval(() => { img.src = F2_MURLOC[++fr % F2_MURLOC.length]; }, 170); f2FxT.push(anim);
+  el.addEventListener("pointerdown", () => {
+    clearInterval(anim); el.classList.add("bonk"); f2PokeAt(el, -.2); setTimeout(() => el.remove(), 400);
+    playSfx("murloc", .6);
+    const g = Math.round(40 * f2Zone().mult); f2.gold += g;
+    f2Msg("You bonk a murloc on the head. It drops " + f2Money(g) + " and flees, mrgling sadly."); f2Save(); f2RenderChar();
+  });
+  f2Move(el, 15 + Math.random() * 70, 50, 30 + Math.random() * 40, 96, 7500 + Math.random() * 3000, p => {
+    el.style.width = (50 + p * 90) + "px";
+    if (Math.random() < .15) f2PokeAt(el, -.05);
+  }, () => {
+    clearInterval(anim); el.remove();
+    const fish = f2.bag.filter(it => !it.kind);
+    if (!fish.length) { f2Msg("A murloc rummages through your empty bag and leaves disappointed. Mrgl."); return; }
+    const it = pick(fish); it.c--; if (it.c <= 0) f2.bag = f2.bag.filter(x => x !== it);
+    f2Msg('<span class="err">A murloc snatched your ' + f2Esc(it.n) + "!</span> Mrglglglgl!");
+    playSfx("murloc", .8); f2Save(); f2RenderAll();
+  });
+}
+function f2EvNat() {
+  const x = 22 + Math.random() * 56, y = 56 + Math.random() * 14;
+  const el = f2FxEl("f2nat", '<div class="nbub">Psst! Over here!</div><div class="nmask"><img src="img/natpagle.webp" alt="Nat Pagle"></div>');
+  el.style.left = x + "%"; el.style.top = y + "%";
+  f2PokeAt(el, -.25);
+  f2Msg('<span class="ev">🎣 Nat Pagle surfaces in the middle of the pond. He looks like he wants to give you something.</span>');
+  let taken = false;
+  el.addEventListener("pointerdown", () => {
+    if (taken) return; taken = true;
+    if (f2AddBag({ n: "Nat Pagle's Mystery Bag", r: "uncommon", v: 0, kind: "mystery" })) {
+      el.querySelector(".nbub").textContent = "Don't ask where I got it.";
+      f2Msg("Nat Pagle hands you a dripping " + f2Name("Nat Pagle's Mystery Bag", "uncommon") + ". Open it from your bag.");
+      playSfx("coin", .6);
+    } else { el.querySelector(".nbub").textContent = "Your bags are full, pal!"; f2Msg('<span class="err">Inventory is full.</span> Nat Pagle shrugs.'); }
+    f2Save(); f2RenderAll();
+    f2FxT.push(setTimeout(() => { el.classList.add("sink"); f2PokeAt(el, -.2); }, 1600));
+    f2FxT.push(setTimeout(() => el.remove(), 2600));
+  });
+  f2FxT.push(setTimeout(() => { if (!taken) { el.classList.add("sink"); f2PokeAt(el, -.2); setTimeout(() => el.remove(), 1000); } }, 13000));
+}
+function f2OpenMystery(it) {
+  if (--it.c <= 0) { f2.bag = f2.bag.filter(x => x !== it); f2Sel = -1; }
+  const n = 3 + Math.floor(Math.random() * 2), got = [], mult = f2Zone().mult;
+  shuffle(F2_TRASH).slice(0, n).forEach(name => {
+    const r = Math.random() < .2 ? "common" : "poor";
+    if (f2AddBag({ n: name, r, v: Math.round((15 + Math.random() * 90) * mult * (r === "common" ? 2 : 1)) })) got.push(f2Name(name, r));
+  });
+  f2Msg("You open the soggy bag. Inside: " + (got.length ? got.join(", ") : "nothing, because your bags are full") + ". Nat Pagle, you legend.");
+  playSfx("menuOpen", .5); f2Save(); f2RenderAll();
+}
+function f2EvFrenzy() {
+  f2Frenzy = Date.now() + 20000;
+  f2Msg('<span class="ev">🐟 FEEDING FRENZY! The water is boiling with fish. Everything bites right away for 20 seconds!</span>');
+  playSfx("readyCheck", .5);
+  const iv = setInterval(() => {
+    if (Date.now() > f2Frenzy) { clearInterval(iv); f2RenderHud(); return; }
+    P.poke(10 + Math.random() * 80, 15 + Math.random() * 70, -.08 - Math.random() * .08);
+  }, 120);
+  f2FxT.push(iv); f2RenderHud();
+}
+function f2EvRogue() {
+  const left = Math.random() < .5, el = f2FxEl("f2rogue", "🥷");
+  if (!playSfx("stealth", .8)) f2Sound(() => whoosh(1200, 300, .8));
+  f2Msg('<span class="ev">👀 You hear a faint "shhh"... something is sneaking around the shore.</span>');
+  let caught = false;
+  el.addEventListener("pointerdown", () => {
+    if (caught) return; caught = true; el.classList.add("seen"); el.textContent = "🥷💫";
+    const g = Math.round(150 * f2Zone().mult); f2.gold += g;
+    f2Msg("You spot the rogue and bonk him first! He drops " + f2Money(g) + " and vanishes in a puff of smoke.");
+    if (!playSfx("stealth", .6)) f2Sound(() => whoosh(300, 1500, .5));
+    f2Save(); f2RenderChar(); setTimeout(() => el.remove(), 700);
+  });
+  f2Move(el, left ? 4 : 96, 44, 62, 95, 9000, null, () => {
+    if (caught) return; el.remove();
+    let what;
+    if (f2.lure) { what = "your " + f2Esc(F2_LURES.find(l => l.id === f2.lure.id).n); f2.lure = null; }
+    else if (f2.bait) { what = "your " + f2Esc(f2.bait.n); f2.bait = null; }
+    else if (f2.food) { what = "your " + f2Esc(f2.food.n) + " (right off your plate)"; f2.food = null; }
+    else { const g = Math.min(20000, Math.floor(f2.gold * .1)); f2.gold -= g; what = f2Money(g); }
+    f2Msg('<span class="err">A rogue picked your pocket and stole ' + what + "!</span> Should've kept an eye on the shore.");
+    f2Save(); f2RenderAll();
+  });
+}
+function f2EvBottle() {
+  const el = f2FxEl("f2bottle", "🍾"), y = 58 + Math.random() * 18, fromLeft = Math.random() < .5;
+  f2Msg('<span class="ev">🍾 A bottle is drifting across the water...</span>');
+  el.addEventListener("pointerdown", () => { el.remove(); f2ReadNote(f2PickNote()); });
+  f2Move(el, fromLeft ? 2 : 96, y, fromLeft ? 96 : 2, y + (Math.random() - .5) * 10, 20000, p => { if (Math.random() < .08) f2PokeAt(el, -.04); },
+    () => { el.remove(); f2Msg("The bottle drifted away. Maybe next time."); });
+}
+function f2PickNote() {
+  const treasures = F2_NOTES.filter(n => n.zone && !f2.notes.includes(n.id));
+  if (treasures.length && Math.random() < .45) return pick(treasures);
+  const fresh = F2_NOTES.filter(n => !n.zone && !f2.notes.includes(n.id));
+  return pick(fresh.length ? fresh : F2_NOTES.filter(n => !n.zone));
+}
+function f2ReadNote(note) {
+  const isNew = !f2.notes.includes(note.id);
+  if (isNew) f2.notes.push(note.id);
+  const z = note.zone && f2Zone(note.zone);
+  $("f2notetext").textContent = note.text;
+  $("f2notefoot").innerHTML = z ? (f2.claimed.includes(note.id) ? "You already dug this one up." :
+    "📍 A glittering spot has appeared in " + z.icon + " " + f2Esc(z.name) + ". Look closely at the shore.") : "";
+  $("f2note").classList.add("on");
+  playSfx("menuOpen", .5);
+  f2Save(); f2RenderTreasure();
+}
+// treasure spots: only once their message has been found, only in their zone, only claimable once
+function f2RenderTreasure() {
+  document.querySelectorAll("#f2fx .f2treas").forEach(e => e.remove());
+  F2_NOTES.filter(n => n.zone === f2.zone && f2.notes.includes(n.id) && !f2.claimed.includes(n.id)).forEach(n => {
+    const el = f2FxEl("f2treas", "✨"); el.style.left = n.x + "%"; el.style.top = n.y + "%"; el.title = "Something glitters here...";
+    el.addEventListener("pointerdown", () => {
+      if (f2.claimed.includes(n.id)) return;
+      f2.claimed.push(n.id); el.remove();
+      const z = f2Zone(), g = Math.round(2500 * z.mult);
+      f2.gold += g;
+      const chest = f2AddBag({ n: F2_CHESTS[3].n, r: F2_CHESTS[3].r, v: F2_CHESTS[3].v, kind: "chest", tier: 3, z: z.id });
+      f2Msg('<span style="color:#ff8000">💰 You dig up the treasure from the bottle message: ' + f2Money(g) + (chest ? " and a " + f2Name(F2_CHESTS[3].n, "epic") : "") + "!</span>");
+      playSfx("achievement", .5); f2Save(); f2RenderAll();
+    });
+  });
+}
+$("f2noteok").addEventListener("click", () => $("f2note").classList.remove("on"));
+
 function openFish2() {
   foundEgg("fishing");
   f2Load(); if (!f2.quest) f2NewQuest();
@@ -3808,9 +4051,11 @@ function openFish2() {
   f2RenderAll(); f2ScheduleSchool();
   clearInterval(f2Tick); f2Tick = setInterval(f2Second, 1000);
   if (!f2Ev) f2ScheduleEv(120000 + Math.random() * 90000);
+  f2FxClear(); f2RenderTreasure(); f2ScheduleEvent(25000 + Math.random() * 20000);
   f2Load3D().then(f2UseBestPond, () => {});
 }
 function closeFish2() {
+  clearTimeout(f2EventT); f2FxClear(); f2Frenzy = 0; $("f2note").classList.remove("on");
   f2StopAll(); f2LockClose(); $("f2dest").classList.remove("on"); clearTimeout(f2SchoolT); f2HideSchool(); clearInterval(f2Tick); clearTimeout(f2EvT); f2Ev = null; f2RenderEv();
   $("f2tip").style.display = "none";
   P.stop(); f2Save(); $("fish2").classList.remove("on");
